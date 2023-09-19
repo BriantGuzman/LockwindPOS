@@ -2575,8 +2575,8 @@ System.out.println("Register Enter Key Action Error: Credit card payment termina
 			System.out.println("Terminating POS System");
 
 			try { 
-				  unregisterPOSAll();
-				  Thread.sleep(2000);
+		//		  unregisterPOSAll();
+		//		  Thread.sleep(2000);
 }catch(Exception e){
 System.out.println("error could not unregister POS");
 }
