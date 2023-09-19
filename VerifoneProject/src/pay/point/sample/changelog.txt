@@ -1,0 +1,29 @@
+Changelog 9/10/23
+add pay.point.sample to all .java files in order to get the program compiling correctly.
+
+Changelog 9/10/23
+Changed out the code on the catch block of Register.java after retrieving the invoice number from the API class because it was not assigning the information to the Invoice Class and it was throwing off the rest of the program when it was requesting the IssuerUIID from the invoice document because it kept coming out as null.
+
+
+Pending Software Development Tasks
+The discount feature is not working correctly, it is not discounting on a percent basis instead on a literal basis
+
+ChangeLog 9/11/23
+Add the button bx007 to the Register class to control the verifone device directly from the POS console.
+Added the APIVerifone class to directly communicate from the POS to the Verifone device using the APIVerifone class.
+Determined that the sesison will only be activated once the first line item exists in the Register JTable.
+
+
+Changelog 9/12/23
+Complete the integration between the Register class and the Verifone Device, I had to connect directly via the Register class because it was not working via the SampleClientRegisterEncryption class.
+For all intents this class is now deprecated: SampleClientRegisterEncryption class
+
+
+Errors that have to be fixed.
+When a customer scans the second item it should be shown on the verifone device, at the moment it does not show the second item.
+It says that the verifone device is already has a "SESSION in progress" for this reason it cannot be completed.
+
+It still tenders for the correct amount though in the next screen.
+
+
+On the JTable When a price is updated, the subtotal of the row should also be updated, it currently does not do this.

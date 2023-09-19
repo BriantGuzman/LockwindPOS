@@ -1,0 +1,6 @@
+REFERENCE CODE, SKU DESCRIPTION,DESCRIPTION LONG, BRAND,
+
+719852921318,38151-08 1/2 RB FLOOR FLANGE,BRFLAN-1/2,ANDERSON METAL,
+You can open it in notepad.
+We can add these codes to the description long box
+BRFLAN-1/2

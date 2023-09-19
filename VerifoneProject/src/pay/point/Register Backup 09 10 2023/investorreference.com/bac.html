@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Investing Tutorial</title>
+  <style>
+    /* Reset default styles */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* Global styles */
+    body {
+      font-family: Arial, sans-serif;
+      line-height: 1.5;
+      background-color: #f5f5f5;
+    }
+
+    header {
+      background-color: #003f7f;
+      color: #fff;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 28px;
+      margin: 0;
+    }
+
+    nav ul {
+      list-style-type: none;
+      margin: 0;
+      padding: 0;
+    }
+
+    nav ul li {
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    nav ul li a {
+      color: #fff;
+      text-decoration: none;
+      padding: 10px;
+    }
+
+    nav ul li a:hover {
+      background-color: #0065a0;
+    }
+
+    main {
+      padding: 20px;
+    }
+
+    section {
+      margin-bottom: 20px;
+    }
+
+    h2 {
+      font-size: 24px;
+      margin-bottom: 10px;
+    }
+
+    p {
+      margin-bottom: 10px;
+    }
+
+    footer {
+      background-color: #003f7f;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Investing Tutorial</h1>
+    <nav>
+      <ul>
+        <li><a href="#">Home</a></li>
+        <li><a href="#">Tutorials</a></li>
+        <li><a href="#">Articles</a></li>
+        <li><a href="#">About</a></li>
+        <li><a href="#">Contact</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section>
+      <h2>Investing for Beginners: A Comprehensive Guide</h2>
+      <p>Are you new to the world of investing? Are you looking to grow your wealth and secure your financial future? Our Investing for Beginners guide is here to help you navigate the exciting and sometimes complex world of investments.</p>
+      <p>Investing can seem daunting at first, but with the right knowledge and guidance, anyone can become a successful investor. Whether you're saving for retirement, planning for a major purchase, or simply looking to grow your wealth, our comprehensive guide will provide you with the essential information and strategies to get started on your investment journey.</p>
+      <p>In our Investing for Beginners guide, you will learn:</p>
+      <ol>
+        <li>The Basics of Investing: We'll demystify investment terminology and explain the fundamental concepts that underpin the world of investing. From stocks and bonds to mutual funds and real estate, you'll gain a clear understanding of the different investment options available to you.</li>
+        <li>Setting Investment Goals: We'll help you define your investment goals based on your financial aspirations, time horizon, and risk tolerance. Understanding your goals is crucial for creating a personalized investment plan that aligns with your needs.</li>
+        <li>Building a Diversified Portfolio: Discover the importance of diversification and learn how to create a well-balanced investment portfolio. We'll guide you through the process of asset allocation and show you how to mitigate risk through proper portfolio construction.</li>
+        <li>Understanding Risk and Returns: Gain insight into the relationship between risk and returns in investing. We'll explain different risk levels associated with various investment options and help you make informed decisions that align with your risk tolerance.</li>
+        <li>Investment Strategies: Explore popular investment strategies such as value investing, growth investing, and index fund investing. Learn how to analyze investment opportunities, conduct research, and make informed investment decisions.</li>
+      </ol>
+      <p>Embark on your investment journey with confidence and empower yourself with the knowledge and skills needed to make smart investment choices. Our Investing for Beginners guide is your key to unlocking the world of investment opportunities.</p>
+    </section>
+    
+    <section>
+      <h2>Latest Tutorials</h2>
+      <ul id="tutorial-list">
+        <!-- JavaScript will populate this list dynamically -->
+      </ul>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2023 Investing Tutorial. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Add your JavaScript code here
+    document.addEventListener('DOMContentLoaded', function() {
+      // Example code to dynamically populate the tutorial list
+      var tutorialList = document.getElementById('tutorial-list');
+      var tutorials = [
+        { title: 'Introduction to Stocks', url: 'tutorial1.html' },
+        { title: 'Building a Diversified Portfolio', url: 'tutorial2.html' },
+        { title: 'Understanding Mutual Funds', url: 'tutorial3.html' }
+      ];
+
+      tutorials.forEach(function(tutorial) {
+        var li = document.createElement('li');
+        var a
