@@ -591,7 +591,6 @@ public class Register  implements ActionListener,FocusListener {
 		    table							.setColumnSelectionInterval(0,0);
 		    table							.setRowSelectionInterval(0,0);
 
-//			verifone						.registerPOS();
 		    customer_management_system		.loadCustomerDatabase();
 		    printer_management_system		.loadPrinterDatabase();
 
@@ -1086,15 +1085,10 @@ public class Register  implements ActionListener,FocusListener {
   			
   		}
   		
-  		try {
-//		  registerPOS();
-//		  Thread.sleep(3000);
-  		}catch(Exception e) {
-  			System.out.println("Error at Register set default values " + e.toString());
-  		}
+  		/*
 
+	  */
 	  }
-	  
 	  public void setUILayout() {
 		  
 		  springLayout.putConstraint(SpringLayout.NORTH, panel,0,SpringLayout.NORTH, frame);
@@ -2010,8 +2004,6 @@ public Register() {
 	table.requestFocus();
 	table.changeSelection(0,0, false,false);
 
-
-
 	System.out.print("Column:count");
 	System.out.println(table.getModel().getColumnCount());
 
@@ -2021,16 +2013,37 @@ public Register() {
 	}
 	
 	
-/*// Temporarily disabled in order to complete it correctly. on 9/18/2023.
+	
+	System.out.println("Register-> Session with Verifone Device");
+      
+		if(registerStatus == false)
+	try {
+	  registerPOS();
+	  Thread.sleep(1000);
+	  registerStatus = true;
+		System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
 
+	}catch(Exception e) {
+			System.out.println("Error at Register set default values " + e.toString());
+		}
+		else {
+			System.out.println( "Failed to register POS, please register manually: " + e.toString() );
+		} 
+		
+
+	
+	
+/*// Temporarily disabled in order to complete it correctly. on 9/18/2023. */
+
+	/*
 			System.out.println("Register-> Session with Verifone Device");
-try { 
+			try { 
 			  registerPOS();
+			  registerStatus = true;
 			System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
 }catch(Exception e){
 System.out.println( "Failed to register POS, please register manually: " + e.toString() );
 }
-
 */
 
 /* 
@@ -2066,17 +2079,7 @@ System.out.println( "Failed to register POS, please register manually: " + e.toS
 //	table.setFillsViewportHeight(true);
 	
   	
-    frame.setJMenuBar(createMenuBar());
-  	frame.add(panel);
-	frame.add(bottomPanel);
-	frame.add(tablePanel);
-	//frame.add(line_item_table);
-	
-  	frame.pack();
-  	frame.setVisible(true);
-  
-  	table.requestFocus();
-  	table.changeSelection(0,0, false,false);
+   
 
  	*/
 
@@ -2315,9 +2318,9 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
  		 */
 		if(j == 1) // Column: QTY
 		{
-//			JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
+			JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
 			updateQTY();
-			  updateSubTotal();
+            updateSubTotal();
 		}
 		
 		if(j == 2) // Column: Category 
@@ -2354,13 +2357,13 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 
 			System.out.println( "Electronic Document: " + invoice.toString() + "");
 
- 		//subtotalLabel.setText( "$ "+ invoice.getTransactionSubTotal() ); // Set value to UI Label
- 		//taxesLabel.setText( "$ "+ invoice.getTransactionTaxesTotal() ); // Set value to UI Label
- 		//totalLabel.setText("$ "+ invoice.getTransactionTotal() ); // Set value to UI Label
- 		// discountLabel.setText("$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Label
+ 		subtotalLabel.setText( "$ "+ invoice.getTransactionSubTotal() ); // Set value to UI Label
+ 		taxesLabel.setText( "$ "+ invoice.getTransactionTaxesTotal() ); // Set value to UI Label
+ 		totalLabel.setText("$ "+ invoice.getTransactionTotal() ); // Set value to UI Label
+ 		discountLabel.setText("$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Label
 
-// table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
- //table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
+ 		table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
+ 		table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
 
 
 		  // refreshTotal(table,0.00,0.00);
@@ -2387,6 +2390,7 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 			
 			  try { 
 registerPOS();
+registerStatus = true;
 }
 catch(Exception a1) { 
 
@@ -2397,15 +2401,28 @@ catch(Exception a1) {
 			
 			  try { 
 
-			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
-				  startSession();
-				  sessionInProgress = true;
-			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );  // return Session Started
+				  String temp = "";
+			  		System.out.println("New Message from Verifone: ");
+				  temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
+
+//			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
+			mac_label =  temp; // returns mac_label
+
+			startSession();
+        
+	  		System.out.println("New Message from Verifone: ");
+			  temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
+            System.out.println(temp);
+            sessionInProgress = true;
+
+//			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );  // return Session Started
 
 	  			  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 
-			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns added line items
+			  		System.out.println("New Message from Verifone: ");
+				  temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
+	            System.out.println(temp);
 
 } catch(Exception e){
 		System.out.println("Error starting session: " + e.toString() );
@@ -2575,8 +2592,8 @@ System.out.println("Register Enter Key Action Error: Credit card payment termina
 			System.out.println("Terminating POS System");
 
 			try { 
-		//		  unregisterPOSAll();
-		//		  Thread.sleep(2000);
+				  unregisterPOSAll();
+				  Thread.sleep(1000);
 }catch(Exception e){
 System.out.println("error could not unregister POS");
 }
@@ -4001,7 +4018,11 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
 		if( Documents.selectFirst(responseDocElement, "RESULT", "OK").toString().equalsIgnoreCase("OK") ) {
 	
 		registerStatus = true;
-		JOptionPane.showMessageDialog(null, "Registered with CC Terminal" + registerStatus);
+//		JOptionPane.showMessageDialog(null, "Registered with CC Terminal" + registerStatus);
+		System.out.println( "Registered with CC Terminal: " + registerStatus);
+
+		//  		System.out.println("New Message from Verifone: ");
+
 		}else{
 					registerStatus = false;
 					throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error unable to Register POS"));
