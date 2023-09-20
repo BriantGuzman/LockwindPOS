@@ -3272,10 +3272,19 @@ public void refreshTotal()
 
           
           outputFile.println    ("----------------------------------------");
+          /*
           outputFile.println        (erp.getStoreName())        ;
           outputFile.println(erp.getStoreAddress() + " " + erp.getStoreSecondAddress());
           outputFile.println(""+erp.getStorePhoneNumber()+ "      " +erp.getStoreFaxNumber());
           outputFile.println();
+
+          */
+          
+          outputFile.println        (invoice.getStoreName() );
+          outputFile.println(erp.getStoreAddress() + " " + erp.getStoreSecondAddress());
+          outputFile.println(""+erp.getStorePhoneNumber()+ "      " +erp.getStoreFaxNumber());
+          outputFile.println();
+
           
           today                 =     new Date();
           fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);

@@ -23,7 +23,10 @@ import java.io.BufferedWriter;
 
 public class ElectronicDocument extends ServiceData {
 
+	
+	private ValidationPlatform validation_platform;
 	private final String xmlFilePath = "outbound/Invoice.xml";
+	
 	 
 	private DocumentBuilderFactory documentFactory;
 	private DocumentBuilder documentBuilder;
@@ -46,12 +49,9 @@ public class ElectronicDocument extends ServiceData {
     private Scanner inputFile;
     private String line;
 	
-	private String transaction_uuid;
-		// Who?
-	 private String issuer_uuid;
-	 private String consumer_uuid;
-
+	
 	 // What?
+	 private String transaction_uuid;
 	 private String transaction_type;
 	 private String transaction_number;
 	 
@@ -69,12 +69,6 @@ public class ElectronicDocument extends ServiceData {
 
 	 // How?
 	 private String method_of_communication;
-
-	 private String store_name;
-	 private String store_address;
-	 private String store_second_address;
-	 private String store_phone_number;
-	 private String store_fax_number;
 	 
 	 private String transaction_currency;
 	 private String total_value_sub;
@@ -85,11 +79,47 @@ public class ElectronicDocument extends ServiceData {
 	 private String change_value;
 	 private String balance_due;
 
+
+	 //
+	 
+
+	 private String store_name;
+	 private String store_address;
+	 private String store_second_address;
+	 private String store_phone_number;
+	 private String store_fax_number;
+
+	 private String label_issuer_uuid;
+	 private String label_issuer_name;
+	 private String label_issuer_address;
+	 private String label_issuer_city;
+	 private String label_issuer_state;
+	 private String label_issuer_zipcode;
+	 private String label_issuer_country;
+	 private String label_issuer_phone_number;
+	 private String label_issuer_email_address;
+
+	 private String label_issuer_uuid_data;
+	 private String label_issuer_name_data;
+	 private String label_issuer_address_data;
+	 private String label_issuer_city_data;
+	 private String label_issuer_state_data;
+	 private String label_issuer_zipcode_data;
+	 private String label_issuer_country_data;
+	 private String label_issuer_phone_number_data;
+	 private String label_issuer_email_address_data;
+	 
+
+	 //
+		// Who?
+	 private String consumer_uuid;
+
 	 private String label_bill_to_customer_id;
 	 private String label_bill_to_customer_id_data;
 	 private String label_bill_to_customer_code;
 	 private String label_bill_to_customer_code_data;
 
+	 
 	 private String label_bill_to_customer_name;
 	 private String label_bill_to_customer_name_data;
 	 private String label_bill_to_customer_address;
@@ -144,8 +174,8 @@ public class ElectronicDocument extends ServiceData {
 	 public ElectronicDocument() { 
 		
 		 transaction_type    	 = "";
-		 issuer_uuid 			 = "";
-	     consumer_uuid			 = "";
+		 //issuer_uuid 			 = "";
+		 consumer_uuid			 = "";
 	     transaction_type		 = "";
 	     transaction_number		 = "";
 	     
@@ -160,6 +190,12 @@ public class ElectronicDocument extends ServiceData {
 	     tender_value        	 = "";
 	     change_value        	 = "";
 
+	     
+	     label_issuer_uuid		 = "";
+		 label_issuer_uuid_data	 = "";
+		 label_issuer_name		 = null;
+		 label_issuer_name_data	 = null;
+	     
 	     store_name 			= null;
 	     store_address 			= null;
 	     store_second_address 	= null;
@@ -250,6 +286,186 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setStoreFaxNumber(String faxNumber){ this.store_fax_number = faxNumber; }
 	 public String 		getStoreFaxNumber(){ return this.store_fax_number; }
 
+	 
+
+
+	    // Accessors and Mutators for label_issuer_uuid
+	    public String getLabelIssuerUuid() {
+	        return label_issuer_uuid;
+	    }
+
+	    public void setLabelIssuerUuid(String label_issuer_uuid) {
+	        this.label_issuer_uuid = label_issuer_uuid;
+	    }
+
+	    // Accessors and Mutators for label_issuer_name
+	    public String getLabelIssuerName() {
+	        return label_issuer_name;
+	    }
+
+	    public void setLabelIssuerName(String label_issuer_name) {
+	        this.label_issuer_name = label_issuer_name;
+	    }
+
+	    // Accessors and Mutators for label_issuer_address
+	    public String getLabelIssuerAddress() {
+	        return label_issuer_address;
+	    }
+
+	    public void setLabelIssuerAddress(String label_issuer_address) {
+	        this.label_issuer_address = label_issuer_address;
+	    }
+
+	    // Accessors and Mutators for label_issuer_city
+	    public String getLabelIssuerCity() {
+	        return label_issuer_city;
+	    }
+
+	    public void setLabelIssuerCity(String label_issuer_city) {
+	        this.label_issuer_city = label_issuer_city;
+	    }
+
+	    // Accessors and Mutators for label_issuer_state
+	    public String getLabelIssuerState() {
+	        return label_issuer_state;
+	    }
+
+	    public void setLabelIssuerState(String label_issuer_state) {
+	        this.label_issuer_state = label_issuer_state;
+	    }
+
+	    // Accessors and Mutators for label_issuer_zipcode
+	    public String getLabelIssuerZipcode() {
+	        return label_issuer_zipcode;
+	    }
+
+	    public void setLabelIssuerZipcode(String label_issuer_zipcode) {
+	        this.label_issuer_zipcode = label_issuer_zipcode;
+	    }
+
+	    // Accessors and Mutators for label_issuer_country
+	    public String getLabelIssuerCountry() {
+	        return label_issuer_country;
+	    }
+
+	    public void setLabelIssuerCountry(String label_issuer_country) {
+	        this.label_issuer_country = label_issuer_country;
+	    }
+
+	    // Accessors and Mutators for label_issuer_phone_number
+	    public String getLabelIssuerPhoneNumber() {
+	        return label_issuer_phone_number;
+	    }
+
+	    public void setLabelIssuerPhoneNumber(String label_issuer_phone_number) {
+	        this.label_issuer_phone_number = label_issuer_phone_number;
+	    }
+
+	    // Accessors and Mutators for label_issuer_email_address
+	    public String getLabelIssuerEmailAddress() {
+	        return label_issuer_email_address;
+	    }
+
+	    public void setLabelIssuerEmailAddress(String label_issuer_email_address) {
+	        this.label_issuer_email_address = label_issuer_email_address;
+	    }
+
+	    // Accessors and Mutators for label_issuer_uuid_data
+	    public String getLabelIssuerUuidData() {
+	        return label_issuer_uuid_data;
+	    }
+
+	    public void setLabelIssuerUuidData(String label_issuer_uuid_data) {
+	        this.label_issuer_uuid_data = label_issuer_uuid_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_name_data
+	    public String getLabelIssuerNameData() {
+	        return label_issuer_name_data;
+	    }
+
+	    public void setLabelIssuerNameData(String label_issuer_name_data) {
+	        this.label_issuer_name_data = label_issuer_name_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_address_data
+	    public String getLabelIssuerAddressData() {
+	        return label_issuer_address_data;
+	    }
+
+	    public void setLabelIssuerAddressData(String label_issuer_address_data) {
+	        this.label_issuer_address_data = label_issuer_address_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_city_data
+	    public String getLabelIssuerCityData() {
+	        return label_issuer_city_data;
+	    }
+
+	    public void setLabelIssuerCityData(String label_issuer_city_data) {
+	        this.label_issuer_city_data = label_issuer_city_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_state_data
+	    public String getLabelIssuerStateData() {
+	        return label_issuer_state_data;
+	    }
+
+	    public void setLabelIssuerStateData(String label_issuer_state_data) {
+	        this.label_issuer_state_data = label_issuer_state_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_zipcode_data
+	    public String getLabelIssuerZipcodeData() {
+	        return label_issuer_zipcode_data;
+	    }
+
+	    public void setLabelIssuerZipcodeData(String label_issuer_zipcode_data) {
+	        this.label_issuer_zipcode_data = label_issuer_zipcode_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_country_data
+	    public String getLabelIssuerCountryData() {
+	        return label_issuer_country_data;
+	    }
+
+	    public void setLabelIssuerCountryData(String label_issuer_country_data) {
+	        this.label_issuer_country_data = label_issuer_country_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_phone_number_data
+	    public String getLabelIssuerPhoneNumberData() {
+	        return label_issuer_phone_number_data;
+	    }
+
+	    public void setLabelIssuerPhoneNumberData(String label_issuer_phone_number_data) {
+	        this.label_issuer_phone_number_data = label_issuer_phone_number_data;
+	    }
+
+	    // Accessors and Mutators for label_issuer_email_address_data
+	    public String getLabelIssuerEmailAddressData() {
+	        return label_issuer_email_address_data;
+	    }
+
+
+	    // Rest of your class code...
+
+
+
+	    public boolean setLabelIssuerNameEmailAddressData(String label_issuer_name_email_address) {
+
+	    	if(validation_platform.validateEmailAddress(label_issuer_name_email_address) == true)
+	        	{
+	        	this.label_issuer_email_address_data = label_issuer_name_email_address;
+	        	
+	        	return true;
+	        	}
+	        else {
+	        	return false;
+	        }
+	    }
+	    
+	 
 	 // ************************************************************************************************************************
 
 	 public void setBillToCustomerCodeLabel(String value) { label_bill_to_customer_code = "Bill To Customer: "; }

@@ -3,6 +3,7 @@ package pay.point.sample;
 
 public class ValidationPlatform {
 
+	private String emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
 	
 	public String validateReferenceCode(String gtin) {
 		
@@ -99,6 +100,23 @@ public class ValidationPlatform {
 		}
 		
 		
+			public boolean validateEmailAddress(String emailAddress) { // added on 9/20/2023
+
+			    // Check if the email address matches the regular expression.
+			    if (!emailAddress.matches(emailRegex)) {
+			        return false;
+			    }
+
+			    // Check if the email address is on a blacklist.
+			    // TODO: Implement this check.
+
+			    // Check if the email address is on a whitelist.
+			    // TODO: Implement this check.
+
+			    // If all checks pass, the email address is valid.
+			    return true;
+			}
+		}
 	
 	
 }
