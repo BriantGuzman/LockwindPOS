@@ -135,6 +135,9 @@ public class ElectronicDocument extends ServiceData {
 	 
 	 private String label_bill_to_customer_phone_number;
 	 private String label_bill_to_customer_phone_number_data;
+	 private String label_bill_to_customer_fax_number;
+	 private String label_bill_to_customer_fax_number_data;
+	 
 	 private String label_bill_to_customer_email_address;
 	 private String label_bill_to_customer_email_address_data;
 
@@ -232,6 +235,7 @@ public class ElectronicDocument extends ServiceData {
 		return temp.toString();
 	 }
 
+	 
 	 public void 		setTransactionUUID(String uuid) { this.transaction_uuid = uuid; }
 	 public String		getTransactionUUID() { return this.transaction_uuid; }
 	 
@@ -242,7 +246,7 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setOriginSystem(String origin_system) { this.origin_system = origin_system; }
 	 public String		getOriginSystem() { return this.origin_system; }
 
-	 public void 		setDestinationSystem(String origin_system) { this.destination_system = destination_system; }
+	 public void 		setDestinationSystem(String destination_system) { this.destination_system = destination_system; }
 	 public String		getDestinationSystem() { return this.destination_system; }
 
 	 
@@ -448,10 +452,6 @@ public class ElectronicDocument extends ServiceData {
 	    }
 
 
-	    // Rest of your class code...
-
-
-
 	    public boolean setLabelIssuerNameEmailAddressData(String label_issuer_name_email_address) {
 
 	    	if(validation_platform.validateEmailAddress(label_issuer_name_email_address) == true)
@@ -468,6 +468,12 @@ public class ElectronicDocument extends ServiceData {
 	 
 	 // ************************************************************************************************************************
 
+	 public void 		setLabelBillToCustomerID(String label_customer_id) { this.label_bill_to_customer_id = label_bill_to_customer_id; }
+	 public String		getLabelBillToCustomerID() { return this.label_bill_to_customer_id ; }
+		 
+	 public void 		setLabelBillToCustomerIDData(String uuid) { this.transaction_uuid = uuid; }
+	 public String		getLabelBillToCustomerIDData() { return this.transaction_uuid; }
+	   
 	 public void setBillToCustomerCodeLabel(String value) { label_bill_to_customer_code = "Bill To Customer: "; }
 	 public String getBillToCustomerCodeLabel(){ return label_bill_to_customer_code; }
 	 public void setBillToCustomerCodeData(String value){ label_bill_to_customer_code = value; }
@@ -511,8 +517,17 @@ public class ElectronicDocument extends ServiceData {
 
 	 public void setBillToCustomerPhoneNumberLabel(String value) { label_bill_to_customer_phone_number = "Phone Number: "; }
 	 public String getBillToCustomerPhoneNumberLabel(){ return label_bill_to_customer_phone_number; }
+	 
 	 public void setBillToCustomerPhoneNumberData(String value){ label_bill_to_customer_phone_number_data = value; }
 	 public String getBillToCustomerPhoneNumberData(){ return label_bill_to_customer_phone_number_data; }
+	 
+	 
+	 public void setBillToCustomerFaxNumberLabel(String value) { label_bill_to_customer_fax_number = "Fax Number: "; }
+	 public String getBillToCustomerFaxNumberLabel(){ return label_bill_to_customer_fax_number; }
+	 
+	 public void setBillToCustomerFaxNumberData(String value){ label_bill_to_customer_fax_number_data = value; }
+	 public String getBillToCustomerFaxNumberData(){ return label_bill_to_customer_fax_number_data; }
+	 
 	 
 	 
 	 public void setBillToCustomerEmailAddressLabel(String value) { label_bill_to_customer_email_address = "Email: "; }
@@ -562,39 +577,39 @@ public class ElectronicDocument extends ServiceData {
 	 public String getShipToCustomerCityData(){ return label_ship_to_customer_city_data; }
 
 	 
-	 public void setShipToCustomerStateLabel(String value) { label_ship_to_customer_state = "State: "; }
-	 public String getShipToCustomerStateLabel(){ return label_ship_to_customer_state; }
-	 public void setShipToCustomerStateData(String value){ label_ship_to_customer_state_data = value; }
-	 public String getShipToCustomerStateData(){ return label_ship_to_customer_state_data; }
+	 public void 		setShipToCustomerStateLabel(String value) { label_ship_to_customer_state = "State: "; }
+	 public String 		getShipToCustomerStateLabel(){ return label_ship_to_customer_state; }
+	 public void 		setShipToCustomerStateData(String value){ label_ship_to_customer_state_data = value; }
+	 public String 		getShipToCustomerStateData(){ return label_ship_to_customer_state_data; }
 
 	 
-	 public void setShipToCustomerZipcodeLabel(String value) { label_ship_to_customer_zipcode = "Zipcode: "; }
-	 public String getShipToCustomerZipcodeLabel(){ return label_ship_to_customer_zipcode; }
-	 public void setShipToCustomerZipcodeData(String value){ label_ship_to_customer_zipcode_data = value; }
-	 public String getShipToCustomerZipcodeData(){ return label_ship_to_customer_zipcode_data; }
+	 public void 		setShipToCustomerZipcodeLabel(String value) { label_ship_to_customer_zipcode = "Zipcode: "; }
+	 public String 		getShipToCustomerZipcodeLabel(){ return label_ship_to_customer_zipcode; }
+	 public void 		setShipToCustomerZipcodeData(String value){ label_ship_to_customer_zipcode_data = value; }
+	 public String 		getShipToCustomerZipcodeData(){ return label_ship_to_customer_zipcode_data; }
 
 	 
-	 public void setShipToCustomerCountryLabel(String value) { label_ship_to_customer_country = "Country: "; }
-	 public String getShipToCustomerCountryLabel(){ return label_ship_to_customer_country; }
-	 public void setShipToCustomerCountryData(String value){ label_ship_to_customer_country_data = value; }
-	 public String getShipToCustomerCountryData(){ return label_ship_to_customer_country_data; }
+	 public void 		setShipToCustomerCountryLabel(String value) { label_ship_to_customer_country = "Country: "; }
+	 public String 		getShipToCustomerCountryLabel(){ return label_ship_to_customer_country; }
+	 public void	 	setShipToCustomerCountryData(String value){ label_ship_to_customer_country_data = value; }
+	 public String 		getShipToCustomerCountryData(){ return label_ship_to_customer_country_data; }
 
-	 public void setShipToCustomerPhoneNumberLabel(String value) { label_ship_to_customer_phone_number = "Phone Number: "; }
-	 public String getShipToCustomerPhoneNumberLabel(){ return label_ship_to_customer_phone_number; }
-	 public void setShipToCustomerPhoneNumberData(String value){ label_ship_to_customer_phone_number_data = value; }
-	 public String getShipToCustomerPhoneNumberData(){ return label_ship_to_customer_phone_number_data; }
+	 public void 		setShipToCustomerPhoneNumberLabel(String value) { label_ship_to_customer_phone_number = "Phone Number: "; }
+	 public String 		getShipToCustomerPhoneNumberLabel(){ return label_ship_to_customer_phone_number; }
+	 public void 		setShipToCustomerPhoneNumberData(String value){ label_ship_to_customer_phone_number_data = value; }
+	 public String 		getShipToCustomerPhoneNumberData(){ return label_ship_to_customer_phone_number_data; }
 	 
 	 
-	 public void setShipToCustomerEmailAddressLabel(String value) { label_ship_to_customer_email_address = "Email: "; }
-	 public String getShipToCustomerEmailAddressLabel(){ return label_ship_to_customer_email_address; }
-	 public void setShipToCustomerEmailAddressData(String value){ label_ship_to_customer_email_address_data = value; }
-	 public String getShipToCustomerEmailAddressData(){ return label_ship_to_customer_email_address_data; }
+	 public void 		setShipToCustomerEmailAddressLabel(String value) { label_ship_to_customer_email_address = "Email: "; }
+	 public String 		getShipToCustomerEmailAddressLabel(){ return label_ship_to_customer_email_address; }
+	 public void 		setShipToCustomerEmailAddressData(String value){ label_ship_to_customer_email_address_data = value; }
+	 public String 		getShipToCustomerEmailAddressData(){ return label_ship_to_customer_email_address_data; }
 	 
 	 // ************************************************************************************************************************
 	 
 	 
-	 public void 		setIssuerUUID(String r_uuid) { issuer_uuid = r_uuid; }
-	 public String 		getIssuerUUID() { return issuer_uuid; }
+	 public void 		setIssuerUUID(String r_uuid) { label_issuer_uuid_data = r_uuid; }
+	 public String 		getIssuerUUID() { return label_issuer_uuid_data; }
 	 
 	 public void 		setConsumerUUID(String r_uuid) { consumer_uuid = r_uuid; }
 	 public String 		getConsumerUUID() { return consumer_uuid; }
@@ -645,14 +660,6 @@ public class ElectronicDocument extends ServiceData {
 	 
 
      
-     public static void main(String[] args){
-    	 
-    	 ElectronicDocument test = new ElectronicDocument();
-  
-		 test.setBillToCustomerNameData("Briant Guzman");
-		 
-//    	 System.out.println(test.toXML() );
-     }
      
      
      public String printDocument() { 

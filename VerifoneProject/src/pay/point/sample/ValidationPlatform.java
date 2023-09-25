@@ -96,27 +96,9 @@ public class ValidationPlatform {
 			}
 
 			// return error_description;
+			System.out.println(error_description);
+			
 			return String.valueOf(invalid_reference_code);
 		}
 		
-		
-			public boolean validateEmailAddress(String emailAddress) { // added on 9/20/2023
-
-			    // Check if the email address matches the regular expression.
-			    if (!emailAddress.matches(emailRegex)) {
-			        return false;
-			    }
-
-			    // Check if the email address is on a blacklist.
-			    // TODO: Implement this check.
-
-			    // Check if the email address is on a whitelist.
-			    // TODO: Implement this check.
-
-			    // If all checks pass, the email address is valid.
-			    return true;
-			}
-		}
-	
-	
 }

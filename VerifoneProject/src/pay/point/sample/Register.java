@@ -689,6 +689,8 @@ public class Register  implements ActionListener,FocusListener {
 //	    	erp								.setStoreName("         "+ invoice_management_system.getEntityName(invoice_management_system.getRetailerUUID()) +"    ");
 	        }catch(Exception e) {}
 
+			
+			
 			invoice							.setStoreAddress("1099 St. Nicholas Avenue,");
 			invoice							.setStoreSecondAddress("NY, NY, 10032");
 			invoice							.setStorePhoneNumber("TEL: +1 212 740 4652");
@@ -3281,8 +3283,8 @@ public void refreshTotal()
           */
           
           outputFile.println        (invoice.getStoreName() );
-          outputFile.println(erp.getStoreAddress() + " " + erp.getStoreSecondAddress());
-          outputFile.println(""+erp.getStorePhoneNumber()+ "      " +erp.getStoreFaxNumber());
+          outputFile.println(invoice.getBillToCustomerAddressData() + " " + invoice.getBillToCustomerAddressData());
+          outputFile.println(""+ invoice.getBillToCustomerPhoneNumberData() + "      " + invoice.getBillToCustomerFaxNumberData());
           outputFile.println();
 
           
@@ -3357,7 +3359,7 @@ public void refreshTotal()
           outputFile.println("                         SALES TAX $"+formatter.format(totaltaxes));
           
           if(discount != 0.00)
-          {outputFile.println("                         DISCOUNT  $"+formatter.format(discount));}
+          {outputFile.println("                        DISCOUNT  $"+formatter.format(discount));}
           else{}
           
           
@@ -3386,7 +3388,7 @@ public void refreshTotal()
           
           
           outputFile.println("----------------------------------------");
-          outputFile.println("Thank you for shopping with " + erp.getStoreName() + "");
+          outputFile.println("Thank you for shopping with " + invoice.getStoreName() + "");
           outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
           outputFile.println("");
           outputFile.println("----------------------------------------");
@@ -6249,34 +6251,7 @@ public void confirmationAPMKlarna() throws Exception {
 	}
 
   
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
+
   
 public static void main(String[] args){Register test = new Register();
 
