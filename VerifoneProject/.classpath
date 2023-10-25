@@ -7,9 +7,9 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/Jakarta XML 4.0"/>
-	<classpathentry kind="lib" path="C:/Users/root/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jaxb-api-2.3.1.jar"/>
-	<classpathentry kind="lib" path="C:/Users/root/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jaxb-api-2.3.0.jar"/>
-	<classpathentry kind="lib" path="C:/Users/root/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/javax.activation-api-1.2.0.jar"/>
+	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jaxb-api-2.3.1.jar"/>
+	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jaxb-api-2.3.0.jar"/>
+	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/javax.activation-api-1.2.0.jar"/>
 	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jakarta.xml.bind.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

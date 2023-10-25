@@ -3,7 +3,31 @@ package pay.point.sample;
 
 public class ValidationPlatform {
 
-	private String emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+	//private String emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+	
+
+	private String error_message;
+	
+	public ValidationPlatform()
+	{
+		error_message = "";
+	}
+	
+	public String validateEmailAddress(String email_address)
+	{
+		if(email_address != null)
+		{
+			error_message = "Validation:Success";
+
+		}
+		else {
+			error_message = "Validation:Failed";
+			
+		}
+				
+		return error_message;
+	}
+
 	
 	public String validateReferenceCode(String gtin) {
 		
@@ -13,28 +37,14 @@ public class ValidationPlatform {
 	try
 	{
 	
-	if(gtin.equalsIgnoreCase("") == true)
-	{
-		invalid_reference_code = 1;
-	}
-	if(gtin.equalsIgnoreCase(" ") == true) {
-		invalid_reference_code = 2;
-	}
+	if(gtin.equalsIgnoreCase("") == true) { invalid_reference_code = 1; }
+	if(gtin.equalsIgnoreCase(" ") == true) { invalid_reference_code = 2; }
 	
-	if(invalid_reference_code == 1)
-	{
-		error_description = "GTIN is empty";
-	}
-	if(invalid_reference_code == 2) {
-		error_description = "GTIN is invalid";
-	}
-	}
-	catch(NullPointerException e){
-		error_description = "GTIN is Null";
-	}
+	if(invalid_reference_code == 1) { error_description = "GTIN is empty"; }
+	if(invalid_reference_code == 2) { error_description = "GTIN is invalid"; } 
+	} catch(NullPointerException e){ error_description = "GTIN is Null"; } 
 	return error_description;
 	}
-	
 	
 	public String validateQuantity(String x) {
 		
@@ -100,5 +110,8 @@ public class ValidationPlatform {
 			
 			return String.valueOf(invalid_reference_code);
 		}
+
+
+		
 		
 }

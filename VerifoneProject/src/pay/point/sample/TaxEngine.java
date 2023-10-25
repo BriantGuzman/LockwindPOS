@@ -6,6 +6,16 @@ public class TaxEngine {
 	// The return is then passed into the JTable for document generation.
 	
 	
+	private double NYCSalesTaxRate = .08875;
+	private double FortLeeSalesTaxRate = .0663;
 	
+	
+	public TaxEngine() {
+		
+	}
+	public double getNYCSalesTax() {
+		
+		return NYCSalesTaxRate;
+	}
 	
 }

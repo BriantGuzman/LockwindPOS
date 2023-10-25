@@ -432,5 +432,6 @@ class QTY {
 
     
     public static void main(String[] args){
+    	System.out.println("System Log: Started Class: QTY")
 }//------------------------------------------------------------------CLASS QTY END
 }

@@ -44,6 +44,7 @@ public class APIFileManager {
 	
 	private void setFileName(String filename) { this.filename = filename; }
 	public String getFileName() {  return this.filename; }
+	
 	private void setFile() { file = new File( this.getFileName() ); }
 	private File getFile() {  return file; }
 	
