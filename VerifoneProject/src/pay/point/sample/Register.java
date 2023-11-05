@@ -773,7 +773,7 @@ public class Register  implements ActionListener,FocusListener {
 			tablePanel									.setLayout(new BorderLayout());
 			bottomPanel									.setLayout(panelLayout);
 
-  		    frame							.setTitle("TRANSACTIONS PANEL");
+  		    frame										.setTitle("TRANSACTIONS PANEL");
 		    
 		    
   		    bx001							.setName("customers");
@@ -975,8 +975,6 @@ public class Register  implements ActionListener,FocusListener {
 		    
 			button_tender					.setForeground(Color.BLACK);
 			pim_button						.setForeground(Color.BLACK);
-			
-
 			
 			storeName                 		.setText(invoice.getStoreName());
 			storePhoneNumber          		.setText(invoice.getStorePhoneNumber());
@@ -2294,7 +2292,10 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 		}
 		
 		if(j == 2) // Column: Category 
-		{}
+		{
+			JOptionPane.showMessageDialog(null, "Category cannot be edited");
+			
+		}
 		
 	    
 		if( j == 3){ // Column: Description
