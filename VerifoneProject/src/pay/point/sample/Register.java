@@ -381,11 +381,6 @@ public class Register  implements ActionListener,FocusListener {
 		
 	  private String temp;
 
-	  
-	  
-	  
-	  
-	  
 
 	  public void setConstructorValues() {
 			// action: organize elements, Initialize components,
@@ -647,14 +642,16 @@ public class Register  implements ActionListener,FocusListener {
 			System.out.println("************************************************");
 
 				
-			product_management_system	  	. setRetailerUUID( invoice.getIssuerUUID() );
-		    invoice_management_system	  	. setRetailerUUID( invoice.getIssuerUUID() );
-	        invoice_management_system		.setConsumerUUID( invoice.getConsumerUUID() );
+			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
+		    invoice_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
+	        invoice_management_system					.setConsumerUUID( invoice.getConsumerUUID() );
+	        invoice										.setStoreName( invoice_management_system.getEntityName(invoice.getIssuerUUID()) );
 
-	        invoice							.setStoreName( invoice_management_system.getEntityName(invoice.getIssuerUUID()) );
-	        
-//	    	erp								.setStoreName("         "+ invoice_management_system.getEntityName(invoice_management_system.getRetailerUUID()) +"    ");
-	        }catch(Exception e) {}
+			}catch(Exception e) {
+				
+				System.out.println("Error: " + e.toString() );
+				
+			}
 
 			
 			
@@ -777,26 +774,16 @@ public class Register  implements ActionListener,FocusListener {
 			bottomPanel									.setLayout(panelLayout);
 
   		    frame							.setTitle("TRANSACTIONS PANEL");
-		    bx001							.setName("customers");
+		    
+		    
+  		    bx001							.setName("customers");
 		    bx002							.setName("suppliers");
 		    bx003							.setName("update");
 		    bx004							.setName("price_change");
 		    bx005							.setName("new_stock");
 		    bx006							.setName("inventory");
 		    bx007							.setName("verifone_manager");
-		    bx008							.setName("tender_cash");
-		    
-		    
-		    button_tender					.setName("tender");
-			pim_button						.setName("pim_button");
-			salesReport						.setName("sales_report_button");
-			payment_method					.setName("payment_method");
-			tender_amount					.setName("tender_amount");
-			addenda							.setName("addenda ");
-			label_addenda					.setName("Label Addenda ");
-
-			
-			
+		    bx008							.setName("extra_button");
 			
 			bx001							.setText("Customers"); // 1st Column of buttons, 1st from the top
 			bx002							.setText("Suppliers"); // 1st Column of buttons, 2nd from the top
@@ -805,7 +792,15 @@ public class Register  implements ActionListener,FocusListener {
 			bx005							.setText("New Stock"); //  2nd Column of buttons, 2nd from the top
 			bx006							.setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
 			bx007							.setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
-			bx007							.setText("Tender Cash"); // 2nd Column of buttons, 3rd from the top
+			bx008							.setText("extra button"); // 2nd Column of buttons, 3rd from the top
+  		    
+		    button_tender					.setName("tender");
+			pim_button						.setName("pim_button");
+			salesReport						.setName("sales_report_button");
+			payment_method					.setName("payment_method");
+			tender_amount					.setName("tender_amount");
+			addenda							.setName("addenda ");
+			label_addenda					.setName("Label Addenda ");
 
 			salesReport						.setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
 			button_tender					.setText("Tender"); // 3rd Column of buttons, 1st from the top
@@ -1221,29 +1216,29 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_phone_number_data,850,layout.WEST, panel);
 
 		  // BILL TO COMPONENTS
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_address,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_address_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_address,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_address_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_city,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_city_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_city,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_city_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_state,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_state_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_state,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_state_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_zipcode,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_zipcode_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_zipcode,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_zipcode_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_country,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_country_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_country,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_country_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_email_address,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_email_address_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_email_address,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_email_address_data,1300,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number,1200,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number_data,1200,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number,1000,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number_data,1300,layout.WEST, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.WEST, default_printer_receipt,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, default_printer_invoice,550,layout.WEST, panel);
@@ -1317,6 +1312,7 @@ public class Register  implements ActionListener,FocusListener {
 		  panel.add(label_bill_to_customer_email_address_data);
 		  panel.add(label_bill_to_customer_phone_number_data);
 
+		  
 //		  panel.add(label_bill_to_customer_address);
 //		  panel.add(label_bill_to_customer_city);
 //		  panel.add(label_bill_to_customer_state);
@@ -1330,25 +1326,25 @@ public class Register  implements ActionListener,FocusListener {
 		  panel.add(label_ship_to_customer_name);
 		  panel.add(label_ship_to_customer_name_data);
 
-//		  panel.add(label_ship_to_customer_address);
+		  panel.add(label_ship_to_customer_address);
 		  panel.add(label_ship_to_customer_address_data);
 
-//		  panel.add(label_ship_to_customer_city);
+		  panel.add(label_ship_to_customer_city);
 		  panel.add(label_ship_to_customer_city_data);
 
-//		  panel.add(label_ship_to_customer_state);
+		  panel.add(label_ship_to_customer_state);
 		  panel.add(label_ship_to_customer_state_data);
 
-//		  panel.add(label_ship_to_customer_zipcode);
+		  panel.add(label_ship_to_customer_zipcode);
 		  panel.add(label_ship_to_customer_zipcode_data);
 
-//		  panel.add(label_ship_to_customer_country);
+		  panel.add(label_ship_to_customer_country);
 		  panel.add(label_ship_to_customer_country_data);
 
-//		  panel.add(label_ship_to_customer_email_address);
+		  panel.add(label_ship_to_customer_email_address);
 		  panel.add(label_ship_to_customer_email_address_data);
 
-//		  panel.add(label_ship_to_customer_phone_number);
+		  panel.add(label_ship_to_customer_phone_number);
 		  panel.add(label_ship_to_customer_phone_number_data);
 
 
@@ -1385,30 +1381,35 @@ public class Register  implements ActionListener,FocusListener {
 		        catch(Exception e) {			System.out.println(e.toString( )); }  
 		        
 
-		        timeLabel.setFont(new Font("Times New Roman", Font.BOLD, 30));
-		        timeLabel.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,fmt.format(today),0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), timeLabel.getBorder()));
+		        timeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 30));
+		        timeLabel						.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,fmt.format(today),0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), timeLabel.getBorder()));
 		      
-		        
+
+		          
 		        ActionListener taskPerformer = new ActionListener() {
-		          public void actionPerformed(ActionEvent evt)
-		          {
+
+		        	public void actionPerformed(ActionEvent evt) {
 		              simpDate          = new SimpleDateFormat("hh:mm:ss a");
 		              today 			= new Date();
 		              timeLabel.setText(simpDate.format(today) );
 		              internetLabel.setText( internet.checkConnection() );
-		              
 		          }};
 		          Timer t = new Timer(1000, taskPerformer);
 		          t.start();
 
 
+		          
+
 		          try {
 		              invoiceNumberLabel.setText(  "Invoice #:" );
+		              
 		              if (http.getCurrentInvoiceNumber(retailerUUID).toString().equalsIgnoreCase(""))
 		              {
 		            	  try { 
+		            		  
 		            		  error_message = "Invoice Number Error: Check Internet Connection";
 		            		  System.out.println("Invoiec Number Format Error:" + error_message);
+		            		  
 		            	  }catch(NumberFormatException e)
 		            	  {
 		            		  System.out.println("Invoice Number Format Exception: " + e.toString() );
