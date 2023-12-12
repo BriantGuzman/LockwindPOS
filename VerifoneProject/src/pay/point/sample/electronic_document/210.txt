@@ -1,0 +1,7 @@
+origin_system:Lockwind POS
+destination_system:null
+document_type:Invoice
+transactionUUID:UUID
+invoice_number:210
+issuer_uuid:5d4de950d4f69
+consumer_uuid:5d4de950d4f69

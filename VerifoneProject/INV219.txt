@@ -1,0 +1,32 @@
+----------------------------------------
+Hello World from Briant Guzman
+
+165 ST. HARDWARE INC.
+Address Address
+CASH      null
+
+12/7/23    08:34:29 AM   Invoice No: 219
+CUSTOMER CODE: CASH
+CUSTOMER Name: CASH
+CUSTOMER Phone Number: CASH
+CUSTOMER Email: CASH
+NAME: 
+REG:   REGISTER 1
+----------------------------------------
+ QTY UPC                 PRICE  SUBTOTAL
+ DESCRIPTION                            
+ 1   20                  GENERAL_PRODUCT_CODES PRODUCT A0.99
+ GENERAL PRODUCT CODES                     
+
+                         SUB TOTAL $1.08
+                         SALES TAX $0.09
+                         TOTAL     $1.17
+
+                         TENDERED  $20.00
+                         CHANGE    $18.83
+Item Count: 1
+----------------------------------------
+Thank you for shopping with 165 ST. HARDWARE INC.
+For the best Point of Sale System call Lockwind at +1 347 808 5425
+
+----------------------------------------

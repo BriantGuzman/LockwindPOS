@@ -27,7 +27,7 @@ public class Invoice extends ElectronicDocument {
 	private double change_value;
 	
 	// private InvoiceLineItem line_item;
-	private InvoiceLineItem head;
+	private ElectronicDocumentLineItem head;
 		
 	public Invoice() {
 		payment_method 	= "";
@@ -73,32 +73,7 @@ public class Invoice extends ElectronicDocument {
 	return this.tender_value;
 	}
 
-	public void addInvoiceLineItem(InvoiceLineItem line_item) {
-		
-		InvoiceLineItem temp = null;
-		
-		boolean insert_completed = false;
-		
-		temp = head;
-		
-		if(temp == null)
-		{
-			temp = line_item;
-		}
-		else
-		{
-			
-			while(temp.getNext() != null && insert_completed == false)
-			{
-				if(temp.getNext() == null)
-				{
-					temp.setNext(line_item);
-					insert_completed = true;
-				}
-				temp = temp.getNext();
-			}
-		}
-		
+	
 	}
 	
 
@@ -109,6 +84,6 @@ public class Invoice extends ElectronicDocument {
 	*/
 	
 	
+
 	
-	
-}
+

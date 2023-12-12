@@ -337,7 +337,7 @@ public class Register  implements ActionListener,FocusListener {
 	  private Ali ali;	  
 
 	  private ElectronicDocument record = null;
-	  private InvoiceLineItem invoice_line_item;  
+	  private ElectronicDocumentLineItem invoice_line_item;  
 	  private double total;
 	  
 	  // ADVANCED COMMUNICATIONS & SIGNALS
@@ -366,6 +366,8 @@ public class Register  implements ActionListener,FocusListener {
 	  private static final String PRIVATE_KEY = 
 				"MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQC6B+UJgd00tfU8r7Yml50ugvgl3ClqmSnChIhg6EEX0UWuL6uhFOo/LKiwsUYwyc7mXrnP1hjVxBhIQ1Z+Eu89E4PY6u7KXWTbBJhZP7bfBMHSMmMDiS2TtDZwSs3Mw2Iss/S0Hes5gkfELUeOyQoGaRuUXlkN4I3NXJ4R0XfvN8IMPlsEiM9KmYuAfWzANAi+lQuHCGbJ/UBolf6hpoJCC7rDGts/Xtq4wnMCOF13BSAhuQKIARxi7x/DJNdBYVxC18Dee58IhMBwjuOa3GtcqopaBnbegiC+YgzXL2XoGn1BPwy8OfrfB+Pnh/I5bklvrobX3H/FUYXmUfryo8SvAgMBAAECggEAMmmxR8JJj98/dhKn6g1sKw6S8K+ZCao4Bt6jlp9aBHpRx8JjYGOqlzQjAr8HpnEKAKPq9seuMz/Q1MRqy/+VlZeUQ1RnIa/thOzZ3FXH2OgRHkVJT8v87eoIVqXu326TTEn4Jld1R0Bm8mLS4X7ZmKMjNjHbMEeKJfzTWUDKn6imPU5/mkJIoCVNi1CM+A8QTxoCFhWzdxHj5GCExAzQJdTFDHLEDygZOjX5iGSRenYYc5dxLutroWc8a9XPuftPIBooPCYAsRbUYUE16bXosQ38aO8lU3E1tyCD0nj0sq1Oiiuw/UJmFizj9pJUzCJpWDgk4wqzOffOf2gI+5rhAQKBgQDfkOUUp0Qzo1h/MJ49BGqSLZZ1pl/UEsGhVeV2RKx7TukOq0Lj9tChAnhouA6GsjR9AG8AWiZCN4ZkMlRVHAAppkk/6WFE4FHkmvWlUmNsNdwY5z4Ww5tggywg4j9WPif5FjWfvq7V/UYvl24mJ1XChAh3HGOX674DPfyLBgvfWwKBgQDVBPeIMs4FtVo4WoIfdx3A2xvbwd9TVsCJiLV5iXcy9ksbPVLif7tO5ZR63GkevVNc4PHWupaqA3f8VCBe3M12e6xdlH59zXPRVubczK8pBqcKt84qj7yk5Y6OgiFQEp/u16G2M7FhagQ14J2N0pGHdYtZmn+A694c2HD98LBkPQKBgQC7Wgiv0zCzeXrrM8oX5kCM+ckyFNgPuBwuYPZns0s8Frf2RA1NTwQtOg2/7Ca4OFUGQDvFdsbDDRcBlq/XlxyHysNt3N1XxAi85CNhhPaus0AcWoVMvGXUbninohJj6rjC5BrSIRERYSvVLDjxnlsfJFiXwOGxaayVuPePZeTDKwKBgQCtX+mHtLHx+3R+wUt/CJfyy2KVLenyDn2OcvIhBT07ATKH7RV0u7lbsYdzp8j29+jNg1fSCPNvVHtnp6DhFJ01fdsAH0gEZB+Llks4Em/N2FhEZO0rvuku3Jd2bXtnjIEXB/HaNaB9RKhAoZwaPfOsaIMOXqy/5TlWCOOOC0PFkQKBgGB7PkgYnGg0R610g0JaXJJ3kaeGnZYJapXgUF6ZDKz6IQI1ufhyQ29tqSxSW2GydLQRFFr4pXEEoYCGGO5KVkP5bGe/3Hyj4O82JiOkwFyVtNp3yjhPFbwlOzgQnAHEbmpidLTBP3THDtqNWGb1U586pNuxDpIMQrGR9Gva0OzK";
 
+	  private ElectronicDocument electronic_document;
+	  
 	  private Document request;
 	  private Element docElement;
 		
@@ -381,11 +383,17 @@ public class Register  implements ActionListener,FocusListener {
 		
 	  private String temp;
 
+	  private Font font1;
+	  private Font font2;
+      private Timer timer;
 
+      
 	  public void setConstructorValues() {
 			// action: organize elements, Initialize components,
 
-		  	invoice = null;
+		  	invoice                						= null;
+		  	font1                						= null;
+		  	font2                						= null;
 		  	
 		  	width                						= 0.00;
 		    height               						= 0.00;
@@ -527,155 +535,45 @@ public class Register  implements ActionListener,FocusListener {
 			
 			temp 										= "";
 			formatter 									= null;
+			
+			electronic_document							= null;
+			
 	  }
 	  
 	  public void setComponentDefaultValues() {
 		  
 		  	// REGISTER SET COMPONENT DEFAULT VALUES
 
-		    http                        	= new API();
-//		    verifone						= new APIVerifone();
-			validator 						= new ValidationPlatform();
-		    product_management_system   	= new ProductManagementSystem();
-		    invoice_management_system   	= new InvoiceManagementSystem();
-		    customer_management_system 		= new CustomerManagementSystem();
-		    printer_management_system 		= new PrinterManagementSystem();
-		    
-		    inventory_manager 		  		= new QTY();
-		    table_manager				    = new TableManager(column_header,column_width);
-		    format_manager					= new FormatManager();
-		    ali								= new Ali();
-		    internet                    	= new Internet();
-			erp                       		= new ERP();
-			
-		    model                       	= new DefaultTableModel(table_row_count,table_col_count);
-		    table                       	= new JTable(model);
-		    table							.setRowHeight(25);
-		    table							.setCellSelectionEnabled(true);
-		    table							.setColumnSelectionInterval(0,0);
-		    table							.setRowSelectionInterval(0,0);
+		    retailerUUID                   				= "5d4de950d4f69";
+			client_id                   				= "5d4de950d4f69";
 
-		    customer_management_system		.loadCustomerDatabase();
-		    printer_management_system		.loadPrinterDatabase();
-
-			formatter 						= new DecimalFormat("#0.00");
-
-		    // Separator
-		    retailerUUID					= "5d4de950d4f69";
-			client_id                   	= "5d4de950d4f69";
-			record 							= new ElectronicDocument();
-		  	invoice							= new Invoice();
-		  	
-			try { 
-
-				System.out.println("Register.setComponenentDefaultValues() ");
-
-				String temp = http.getCurrentInvoiceNumber(retailerUUID);
-				System.out.println( "Invoice Number from Cloud: " +  temp );
-				
-
-				if(retailerUUID == null )
-				{
-					invoice.setInvoiceNumber(String.valueOf(-1)) ;
-				}
-				else{
-					System.out.println("Result Code: ->>>" + temp);
-
-					if(temp.equalsIgnoreCase("java.net.UnknownHostException: lockwind.com"))
-					{
-						invoice.setInvoiceNumber("-401");
-					}
-					else {
-						invoice.setInvoiceNumber(temp);
-					}
-				}
-
-
-
-					
-
-				
-
-			} catch(Exception e){
-
-
-			}
-
-		  	/**
-		  	try {
-
-		  		try { 
-			  		if( == "" || http.getCurrentInvoiceNumber(retailerUUID) == null)
-					{
-				  		invoice.setInvoiceNumber(String.valueOf(-1));
-					}
-				  	else { 
-					  	invoice.setInvoiceNumber(String.valueOf( Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID)) )); 		  		
-				  	}
-		  			
-		  		}catch (java.net.UnknownHostException ef) {
-		  			System.out.println("Error: UnkownHostException cannot get Invoice Number.");
-		  			JOptionPane.showMessageDialog(null,"Internet not connected");
-		  		}	
-
-
-		  	}catch(Exception e) { 
-		  		System.out.println( "Exception at: SetComponentDefaultValues Method: **" );
-		  	e.printStackTrace();
-		  	}
-		  	
-		  	*/
-
-			
-			
-			
-			try {
-		    
-				// invoice.setDirectory("./target/classes/lockwind/com/outbound_invoice/");
-			invoice.setDirectory("./outbound_invoice/");
-			invoice.setFileExtension(".txt");
-			invoice.setIssuerUUID(retailerUUID);
-			invoice.setConsumerUUID(client_id);
-			  	
-			System.out.println("************************************************");
-			System.out.println(invoice.toString());
-			System.out.println("************************************************");
-
-				
-			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
-		    invoice_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
-	        invoice_management_system					.setConsumerUUID( invoice.getConsumerUUID() );
-	        invoice										.setStoreName( invoice_management_system.getEntityName(invoice.getIssuerUUID()) );
-
-			}catch(Exception e) {
-				
-				System.out.println("Error: " + e.toString() );
-				
-			}
-
-			
-			
-			invoice										.setStoreAddress("1099 St. Nicholas Avenue,");
-			invoice										.setStoreSecondAddress("NY, NY, 10032");
-			invoice										.setStorePhoneNumber("TEL: +1 212 740 4652");
-			invoice										.setStoreFaxNumber("FAX:             ");
-		  	
-			screenSize                  				= Toolkit.getDefaultToolkit().getScreenSize();
-		    width                       				= screenSize.getWidth();
-		    height                      				= screenSize.getHeight();
-		    w                           				= (int)(width);
-		    h                           				= (int)(height);
-
+		    http                        				= new API();
+//		    verifone									= new APIVerifone();
+			validator 									= new ValidationPlatform();
+		    product_management_system   				= new ProductManagementSystem();
+		    invoice_management_system   				= new InvoiceManagementSystem();
+		    customer_management_system 					= new CustomerManagementSystem();
+		    printer_management_system 					= new PrinterManagementSystem();
+		    inventory_manager 		  					= new QTY();
+		    ali											= new Ali();
+		    internet                    				= new Internet();
+			erp                       					= new ERP();
+			record 										= new ElectronicDocument();
+		  	invoice										= new Invoice();
+		    model                       				= new DefaultTableModel(table_row_count,table_col_count);
+		    table_manager				    			= new TableManager(column_header,column_width);
+		    format_manager								= new FormatManager();
+		    table                       				= new JTable(model);
+		    formatter 									= new DecimalFormat("#0.00");
 		    today                       				= new Date();
-		    fmt                         				= DateFormat.getDateInstance(styles[3], locale[0]);
 		    simpDate                    				= new SimpleDateFormat("hh:mm:ss a");
 		    formatter 									= new DecimalFormat("#0.00");
 
 		  	frame                       				= new JFrame();
-		    panel                       				= new JPanel();
-		    tablePanel                 		 			= new JPanel();
-		    bottomPanel									= new JPanel();
-		    
+		  	panel                       				= new JPanel();
+		  	tablePanel                 		 			= new JPanel();			
+		  	bottomPanel									= new JPanel();
+		  	
 		    timeLabel                   				= new JLabel("");
 		  	internetLabel              					= new JLabel("");
 		    subtotalLabel            		  		 	= new JLabel("");
@@ -754,213 +652,273 @@ public class Register  implements ActionListener,FocusListener {
 		    panelLayout    								= new SpringLayout();
 		    layout                      				= new SpringLayout();
 		    
-			payment_method 								= new JComboBox(paymentMethods);
 		    tender_amount								= new JTextField(10);
 		    addenda										= new JTextArea(4,3);
-
-			
+		    
+		  	
+		    font1										= new Font("Times New Roman", Font.BOLD, 15);
+			font2										= new Font("Tahoma",Font.BOLD,12);
+		    
+			customer_management_system					. loadCustomerDatabase();
+		    printer_management_system					. loadPrinterDatabase();
 		    account_name_input  						= new JComboBox<String>( customer_management_system.printComboBoxList() );
 		    default_printer_receipt						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_invoice						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_display						= new JComboBox<String>( printer_management_system.printComboBoxList() );
+			payment_method 								= new JComboBox(paymentMethods);
+
+		    table										. setRowHeight(25);
+		    table										. setCellSelectionEnabled(true);
+		    table										. setColumnSelectionInterval(0,0);
+		    table										. setRowSelectionInterval(0,0);
+
+			invoice										. setIssuerUUID(retailerUUID);
+			invoice										. setConsumerUUID(client_id);
+
+			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
+		    invoice_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
+	        invoice_management_system					. setConsumerUUID( invoice.getConsumerUUID() );
+
+
+	        this.setInvoiceDefaultValues();
+	        this.setInitialInvoiceNumber();
+  		    this.setUIDefaultValues();
+			//this.setInvoiceDefaultValues();
+		    this.setComponentTextValues();
+			this.setComponentFontValues();
+			this.setColorScheme();
+			this.setComponentDimensionValues();
+		    this.setActionListener();
+		    this.setVerifoneDefaultValues();
+  		 
+  		
+	  }
+	  public void setInitialInvoiceNumber() {
+		  try { 
+
+
+				String temp = http.getCurrentInvoiceNumber(retailerUUID);
+				
+
+				if(retailerUUID == null ) { invoice.setInvoiceNumber(String.valueOf(-1)) ; }
+				else{
+					System.out.println("Result Code: ->>>" + temp);
+
+					if(temp.equalsIgnoreCase("java.net.UnknownHostException: lockwind.com")) { invoice.setInvoiceNumber("-401"); }
+					else { invoice.setInvoiceNumber(temp); } }
+
+			} catch(Exception e){ }
+
+			System.out.println("Register.setComponenentDefaultValues() " +  "Invoice Number from Cloud: " +  temp );
+	  }
+	  
+	  public void setUIDefaultValues() {
+			fmt                         				= DateFormat.getDateInstance(styles[3], locale[0]);
+			screenSize                  				= Toolkit.getDefaultToolkit().getScreenSize();
+		    width                       				= screenSize.getWidth();
+		    height                      				= screenSize.getHeight();
+		    w                           				= (int)(width);
+		    h                           				= (int)(height);
 		    
-		    account_name_input							.addActionListener(this);
-		    account_name_input							.setName("account_name_input");
-		    
-		    
-		    frame										.setLayout(springLayout);
-		    panel										.setLayout(panelLayout);
-			tablePanel									.setLayout(new BorderLayout());
-			bottomPanel									.setLayout(panelLayout);
-
-  		    frame										.setTitle("TRANSACTIONS PANEL");
-		    
-		    
-  		    bx001							.setName("customers");
-		    bx002							.setName("suppliers");
-		    bx003							.setName("update");
-		    bx004							.setName("price_change");
-		    bx005							.setName("new_stock");
-		    bx006							.setName("inventory");
-		    bx007							.setName("verifone_manager");
-		    bx008							.setName("extra_button");
+		  	frame										. setTitle("TRANSACTIONS PANEL");
+		  	account_name_input							. setName("account_name_input");
+		  	
+		  	account_name_input							. addActionListener(this);
+		    fmt                         				= DateFormat.getDateInstance(styles[3], locale[0]);
 			
-			bx001							.setText("Customers"); // 1st Column of buttons, 1st from the top
-			bx002							.setText("Suppliers"); // 1st Column of buttons, 2nd from the top
-			bx003							.setText("Update"); // 1st Column of buttons, 3rd from the top
-			bx004							.setText("Price Change"); // 2nd Column of buttons, 1nd from the top
-			bx005							.setText("New Stock"); //  2nd Column of buttons, 2nd from the top
-			bx006							.setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
-			bx007							.setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
-			bx008							.setText("extra button"); // 2nd Column of buttons, 3rd from the top
-  		    
-		    button_tender					.setName("tender");
-			pim_button						.setName("pim_button");
-			salesReport						.setName("sales_report_button");
-			payment_method					.setName("payment_method");
-			tender_amount					.setName("tender_amount");
-			addenda							.setName("addenda ");
-			label_addenda					.setName("Label Addenda ");
+		  	frame										. setLayout(springLayout);
+		  	panel										. setLayout(panelLayout);
+		  	tablePanel									. setLayout(new BorderLayout());
+		    bottomPanel									. setLayout(panelLayout);
 
-			salesReport						.setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
-			button_tender					.setText("Tender"); // 3rd Column of buttons, 1st from the top
-			pim_button						.setText("PIM"); // 3rd Column of buttons, 3rd from the top
+	  }
+	  public void setVerifoneDefaultValues() {
+		   	address 						= "192.168.50.197"; // Update this to be set depending on the POS network and verifone IP address per client.
+ 		    port 							= 5015;
+ 		    secondary_port 					= 5016;
+ 		
+ 		    generator 						= new Random();
+ 			entryCode 						= String.valueOf(generator.nextInt(9999));
+ 		
+ 		
+ 		try { 
+ 			
+ 			kf 								= KeyFactory.getInstance("RSA");
+ 			privateKey						= kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
+ 			publicKey 						= kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
+ 			keypair 						= new KeyPair(publicKey, privateKey);
+
+ 		}catch(Exception e) {
+ 			
+ 		}
+ 
+	  }
+	  
+	  public void setInvoiceDefaultValues()
+	  {
+	        invoice										. setStoreName("165 St. Hardware Inc.");
+	        invoice										. setStoreAddress("1099 St. Nicholas Avenue, ");
+			invoice										. setStoreSecondAddress("NY, NY, 10032");
+			invoice										. setStoreFaxNumber("FAX:             ");
+			invoice										. setDirectory("./");
+			invoice										. setFileExtension(".txt");
+			invoice										. setOriginSystemID("POS0001");
+			invoice										. setDestinationSystemID("ERP0001");
+			invoice										. setOriginSystem("Lockwind POS");
+			invoice										. setDestinationSystem("Lockwind ERP");
+		  	invoice										. setBillToCustomerNameLabel("Bill to Customer: ");
+			invoice										. setBillToCustomerNameData("Customer Name");
+			invoice										. setBillToCustomerAddressLabel("Bill To Address: ");
+			invoice										. setBillToCustomerAddressData("Address");
+			invoice										. setBillToCustomerCityLabel("City: ");
+			invoice										. setBillToCustomerCityData("city");
+			invoice										. setBillToCustomerStateLabel("State: ");
+			invoice										. setBillToCustomerStateData("state");
+			invoice										. setBillToCustomerZipcodeLabel("Zipcode: ");
+			invoice										. setBillToCustomerZipcodeData("zipcode");
+			invoice										. setBillToCustomerCountryLabel("Country: ");
+			invoice										. setBillToCustomerCountryData("Country");
+			invoice										. setBillToCustomerPhoneNumberLabel("Phone Number:");
+			invoice										. setBillToCustomerPhoneNumberData("+xx xxx xxx xxxx");
+			invoice										. setBillToCustomerEmailAddressLabel("Email: ");
+			invoice										. setBillToCustomerEmailAddressData("xx@xxxx.com");
+			invoice										. setShipToCustomerNameLabel("Ship To Customer: ");
+			invoice										. setShipToCustomerNameData("customer name");
+			invoice										. setShipToCustomerAddressLabel("Ship To Address: ");
+			invoice										. setShipToCustomerAddressData("address");			
+			invoice										. setShipToCustomerCityLabel("City: ");
+			invoice										. setShipToCustomerCityData("city");
+			invoice										. setShipToCustomerStateLabel("State: ");
+			invoice										. setShipToCustomerStateData("state");
+			invoice										. setShipToCustomerZipcodeLabel("Zipcode: ");
+			invoice										. setShipToCustomerZipcodeData("zipcode");
+			invoice										. setShipToCustomerCountryLabel("Country: ");
+			invoice										. setShipToCustomerCountryData("country");
+			invoice										. setShipToCustomerPhoneNumberLabel("Phone Number:");
+			invoice										. setShipToCustomerPhoneNumberData("+xx xxx xxx xxxx");
+			invoice										. setShipToCustomerEmailAddressLabel("Email: ");
+			invoice										. setShipToCustomerEmailAddressData("xx@xxxx.com");  
+	  }
+	  
+	  public void setComponentTextValues(){
+		    bx001										. setName("customers");
+		    bx002										. setName("suppliers");
+		    bx003										. setName("update");
+		    bx004										. setName("price_change");
+		    bx005										. setName("new_stock");
+		    bx006										. setName("inventory");
+		    bx007										. setName("verifone_manager");
+		    bx008										. setName("extra_button");
+		    button_tender								. setName("tender");
+			pim_button									. setName("pim_button");
+			salesReport									. setName("sales_report_button");
+			payment_method								. setName("payment_method");
+			tender_amount								. setName("tender_amount");
+			addenda										. setName("addenda ");
+			label_addenda								. setName("Label Addenda ");
+		  	bx001										. setText("Customers"); // 1st Column of buttons, 1st from the top
+			bx002										. setText("Suppliers"); // 1st Column of buttons, 2nd from the top
+			bx003										. setText("Update"); // 1st Column of buttons, 3rd from the top
+			bx004										. setText("Price Change"); // 2nd Column of buttons, 1nd from the top
+			bx005										. setText("New Stock"); //  2nd Column of buttons, 2nd from the top
+			bx006										. setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
+			bx007										. setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
+			bx008										. setText("Extra button"); // 2nd Column of buttons, 3rd from the top
+			salesReport									. setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
+			button_tender								. setText("Tender"); // 3rd Column of buttons, 1st from the top
+			pim_button									. setText("PIM"); // 3rd Column of buttons, 3rd from the top
+		    account_name_label							. setText("Customer");		    
+		    subtotalLabelDescription					. setText("Sub-Total:");
+			taxesLabelDescription						. setText("Tax:");
+			totalLabelDescription						. setText("Total:");
+			tenderLabelDescription						. setText("Tender:");
+			changeLabelDescription						. setText("Change:");
+			discountLabelDescription					. setText("Discount:");
+			subtotalLabel								. setText("$ 0.00");
+			taxesLabel									. setText("$ 0.00");
+			totalLabel									. setText("$ 0.00");
+			tenderLabel									. setText("$ 0.00");
+			changeLabel									. setText("$ 0.00");
+			discountLabel								. setText("$ 0.00");
+			label_addenda								. setText("Addenda");
+			default_printer_receipt_label				. setText("Receipt Printer: ");
+			default_printer_invoice_label				. setText("Invoice Printer: ");
+			default_printer_display_label				. setText("Display Printer: ");
 			
-		    account_name_label				.setText("Customer");		    
-  		    subtotalLabelDescription		.setText("Sub-Total:");
-			taxesLabelDescription			.setText("Tax:");
-			totalLabelDescription			.setText("Total:");
-			tenderLabelDescription			.setText("Tender:");
-			changeLabelDescription			.setText("Change:");
-			discountLabelDescription		.setText("Discount:");
+			label_bill_to_customer_name					. setText( invoice.getBillToCustomerNameLabel() );
+			label_bill_to_customer_name_data			. setText( invoice.getBillToCustomerNameData() );
+			label_bill_to_customer_address				. setText( invoice.getBillToCustomerAddressLabel() );
+			label_bill_to_customer_address_data			. setText( invoice.getBillToCustomerAddressData() );
+			label_bill_to_customer_city					. setText( invoice.getBillToCustomerCityLabel() );
+			label_bill_to_customer_city_data			. setText( invoice.getBillToCustomerCityData() );
+			label_bill_to_customer_state				. setText( invoice.getBillToCustomerStateLabel() );
+			label_bill_to_customer_state_data			. setText( invoice.getBillToCustomerStateData() );
+			label_bill_to_customer_zipcode				. setText( invoice.getBillToCustomerZipcodeLabel() );
+			label_bill_to_customer_zipcode_data			. setText( invoice.getBillToCustomerZipcodeData() );
+			label_bill_to_customer_country				. setText( invoice.getBillToCustomerCountryLabel() );
+			label_bill_to_customer_country_data			. setText( invoice.getBillToCustomerCountryData() );
+			label_bill_to_customer_phone_number			. setText( invoice.getBillToCustomerPhoneNumberLabel() );
+			label_bill_to_customer_phone_number_data	. setText( invoice.getBillToCustomerPhoneNumberData() );
+			label_bill_to_customer_email_address		. setText( invoice.getBillToCustomerEmailAddressLabel() );
+			label_bill_to_customer_email_address_data	. setText( invoice.getBillToCustomerEmailAddressData() );
+			label_ship_to_customer_name					. setText( invoice.getShipToCustomerNameLabel() );
+			label_ship_to_customer_name_data			. setText( invoice.getShipToCustomerNameData() );
+			label_ship_to_customer_address				. setText( invoice.getShipToCustomerAddressLabel());
+			label_ship_to_customer_address_data			. setText( invoice.getShipToCustomerAddressData() );
+			label_ship_to_customer_city					. setText( invoice.getShipToCustomerCityLabel() );
+			label_ship_to_customer_city_data			. setText( invoice.getShipToCustomerCityData() );
+			label_ship_to_customer_state				. setText( invoice.getShipToCustomerStateLabel() );
+			label_ship_to_customer_state_data			. setText( invoice.getShipToCustomerStateData()  );
+			label_ship_to_customer_zipcode				. setText( invoice.getShipToCustomerZipcodeLabel() );
+			label_ship_to_customer_zipcode_data			. setText( invoice.getShipToCustomerZipcodeData() );
+			label_ship_to_customer_country				. setText( invoice.getShipToCustomerCountryLabel() );
+			label_ship_to_customer_country_data			. setText( invoice.getShipToCustomerCountryData() );
+			label_ship_to_customer_phone_number			. setText( invoice.getShipToCustomerPhoneNumberLabel() );
+			label_ship_to_customer_phone_number_data	. setText( invoice.getShipToCustomerPhoneNumberData() );
+			label_ship_to_customer_email_address		. setText( invoice.getShipToCustomerEmailAddressLabel()  );
+			label_ship_to_customer_email_address_data	. setText( invoice.getShipToCustomerEmailAddressData() );
+			storeName                 					. setText( invoice.getStoreName());
+			storePhoneNumber          					. setText( invoice.getStorePhoneNumber());
+			storeFaxNumber            					. setText( invoice.getStoreFaxNumber());  
+	  }
+	  
+	  public void setComponentFontValues()
+	  {
+		  storeName							.setFont(font1);
+			storePhoneNumber				.setFont(font1);
+			storeFaxNumber					.setFont(font1);
+			subtotalLabel					.setFont(font1);
+			taxesLabel						.setFont(font1);
+			totalLabel						.setFont(font1);
+			tenderLabel						.setFont(font1);
+			changeLabel						.setFont(font1);
+			discountLabel					.setFont(font1);
+			salesReport						.setFont(font1);
 
-			subtotalLabel					.setText("$ 0.00");
-			taxesLabel						.setText("$ 0.00");
-			totalLabel						.setText("$ 0.00");
-			tenderLabel						.setText("$ 0.00");
-			changeLabel						.setText("$ 0.00");
-			discountLabel					.setText("$ 0.00");
-			label_addenda					.setText("Addenda");
-			
-			default_printer_receipt_label	.setText("Receipt Printer: ");
-			default_printer_invoice_label	.setText("Invoice Printer: ");
-			default_printer_display_label	.setText("Display Printer: ");
-			
-			invoice							.setBillToCustomerNameLabel("Bill to Customer: ");
-			invoice							.setBillToCustomerNameData("Customer Name");
-			invoice							.setBillToCustomerAddressLabel("Bill To Address: ");
-			invoice							.setBillToCustomerAddressData("Address");
-			invoice							.setBillToCustomerCityLabel("City: ");
-			invoice							.setBillToCustomerCityData("city");
-
-			invoice							.setBillToCustomerStateLabel("State: ");
-			invoice							.setBillToCustomerStateData("state");
-			
-			invoice							.setBillToCustomerZipcodeLabel("Zipcode: ");
-			invoice							.setBillToCustomerZipcodeData("zipcode");
-
-			invoice							.setBillToCustomerCountryLabel("Country: ");
-			invoice							.setBillToCustomerCountryData("country");
-			
-			invoice							.setBillToCustomerPhoneNumberLabel("Phone Number:");
-			invoice							.setBillToCustomerPhoneNumberData("+xx xxx xxx xxxx");
-
-			invoice							.setBillToCustomerEmailAddressLabel("Email: ");
-			invoice							.setBillToCustomerEmailAddressData("xx@xxxx.com");
-
-			
-			label_bill_to_customer_name		.setText( invoice.getBillToCustomerNameLabel() );
-			label_bill_to_customer_name_data.setText( invoice.getBillToCustomerNameData() );
-			
-			label_bill_to_customer_address	.setText( invoice.getBillToCustomerAddressLabel() );
-			label_bill_to_customer_address_data.setText( invoice.getBillToCustomerAddressData() );
-
-			label_bill_to_customer_city		.setText( invoice.getBillToCustomerCityLabel() );
-			label_bill_to_customer_city_data.setText( invoice.getBillToCustomerCityData() );
-
-			label_bill_to_customer_state	.setText( invoice.getBillToCustomerStateLabel() );
-			label_bill_to_customer_state_data.setText( invoice.getBillToCustomerStateData() );
-
-			label_bill_to_customer_zipcode	.setText( invoice.getBillToCustomerZipcodeLabel() );
-			label_bill_to_customer_zipcode_data.setText( invoice.getBillToCustomerZipcodeData() );
-			
-			label_bill_to_customer_country	.setText( invoice.getBillToCustomerCountryLabel() );
-			label_bill_to_customer_country_data.setText( "country" );
-
-			label_bill_to_customer_phone_number.setText( invoice.getBillToCustomerPhoneNumberLabel() );
-			label_bill_to_customer_phone_number_data.setText( invoice.getBillToCustomerPhoneNumberData() );
-
-			label_bill_to_customer_email_address.setText( invoice.getBillToCustomerEmailAddressLabel() );
-			label_bill_to_customer_email_address_data.setText( invoice.getBillToCustomerEmailAddressData() );
-
-			
-			invoice.setShipToCustomerNameLabel("Ship To Customer: ");
-			invoice.setShipToCustomerNameData("customer name");
-			
-			invoice.setShipToCustomerAddressLabel("Ship To Address: ");
-			invoice.setShipToCustomerAddressData("address");
-			
-			invoice.setShipToCustomerCityLabel("City: ");
-			invoice.setShipToCustomerCityData("city");
-
-			invoice.setShipToCustomerStateLabel("State: ");
-			invoice.setShipToCustomerStateData("state");
-			
-			invoice.setShipToCustomerZipcodeLabel("Zipcode: ");
-			invoice.setShipToCustomerZipcodeData("zipcode");
-
-			invoice.setShipToCustomerCountryLabel("Country: ");
-			invoice.setShipToCustomerCountryData("country");
-			
-			invoice.setShipToCustomerPhoneNumberLabel("Phone Number:");
-			invoice.setShipToCustomerPhoneNumberData("+xx xxx xxx xxxx");
-
-			invoice.setShipToCustomerEmailAddressLabel("Email: ");
-			invoice.setShipToCustomerEmailAddressData("xx@xxxx.com");
-
-			
-			label_ship_to_customer_name.setText( invoice.getShipToCustomerNameLabel() );
-			label_ship_to_customer_name_data.setText( invoice.getShipToCustomerNameData() );
-
-			label_ship_to_customer_address.setText( invoice.getShipToCustomerAddressLabel());
-			label_ship_to_customer_address_data.setText( invoice.getShipToCustomerAddressData() );
-
-			label_ship_to_customer_city.setText( invoice.getShipToCustomerCityLabel() );
-			label_ship_to_customer_city_data.setText( invoice.getShipToCustomerCityData() );
-				  
-			label_ship_to_customer_state.setText( invoice.getShipToCustomerStateLabel() );
-			label_ship_to_customer_state_data.setText( invoice.getShipToCustomerStateData()  );
-
-			label_ship_to_customer_zipcode.setText( invoice.getShipToCustomerZipcodeLabel() );
-			label_ship_to_customer_zipcode_data.setText( invoice.getShipToCustomerZipcodeData() );
-				  
-			label_ship_to_customer_country.setText( invoice.getShipToCustomerCountryLabel() );
-			label_ship_to_customer_country_data.setText( invoice.getShipToCustomerCountryData() );
-			
-				  
-			label_ship_to_customer_phone_number.setText( invoice.getShipToCustomerPhoneNumberLabel() );
-			label_ship_to_customer_phone_number_data.setText( invoice.getShipToCustomerPhoneNumberData() );
-				  
-			label_ship_to_customer_email_address.setText( invoice.getShipToCustomerEmailAddressLabel()  );
-			label_ship_to_customer_email_address_data.setText( invoice.getShipToCustomerEmailAddressData() );
-			
-			 
-			storeName						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			storePhoneNumber				.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			storeFaxNumber					.setFont(new Font("Times New Roman", Font.BOLD, 15));
-
-			subtotalLabel					.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			taxesLabel						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			totalLabel						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			tenderLabel						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			changeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			discountLabel					.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			salesReport						.setFont(new Font("Times New Roman", Font.BOLD, 15));
-			  
-			bx001							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx002							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx003							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx004							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx005							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx006							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx007							.setFont(new Font("Tahoma",Font.BOLD,12));
-			bx008							.setFont(new Font("Tahoma",Font.BOLD,12));
-			
-			button_tender					.setFont(new Font("Tahoma",Font.BOLD,12));
-			pim_button						.setFont(new Font("Tahoma",Font.BOLD,12));
-			
-			panel							.setBackground(Color.decode("#F0F0F0"));
+			bx001							.setFont(font2);
+			bx002							.setFont(font2);
+			bx003							.setFont(font2);
+			bx004							.setFont(font2);
+			bx005							.setFont(font2);
+			bx006							.setFont(font2);
+			bx007							.setFont(font2);
+			bx008							.setFont(font2);
+			button_tender					.setFont(font2);
+			pim_button						.setFont(font2);
+	  }
+	  
+	  public void setColorScheme()
+	  {
+		  panel								.setBackground(Color.decode("#F0F0F0"));
 		    bottomPanel						.setBackground(Color.decode("#F0F0F0"));
-  		    tablePanel						.setBackground(Color.decode("#000000"));
-			
-  		    
-  		    bx001							.setBackground(Color.WHITE);
-  		    bx002							.setBackground(Color.WHITE);
+		    tablePanel						.setBackground(Color.decode("#000000"));
+			bx001							.setBackground(Color.WHITE);
+		    bx002							.setBackground(Color.WHITE);
 			bx003							.setBackground(Color.WHITE);
 			bx003							.setBackground(new Color(59,89,112));
 			  
 			panel							.setForeground(Color.decode("#FFFFFF"));
-  		    storeName						.setForeground(Color.decode("#000000"));
+		    storeName						.setForeground(Color.decode("#000000"));
 		    storePhoneNumber				.setForeground(Color.decode("#000000"));
 		    storeFaxNumber					.setForeground(Color.decode("#000000"));
 		    bx001							.setForeground(Color.BLACK);
@@ -972,16 +930,15 @@ public class Register  implements ActionListener,FocusListener {
 		    bx006							.setForeground(Color.BLUE);
 		    bx007							.setForeground(Color.BLUE);
 		    bx008							.setForeground(Color.BLUE);
-		    
 			button_tender					.setForeground(Color.BLACK);
 			pim_button						.setForeground(Color.BLACK);
 			
-			storeName                 		.setText(invoice.getStoreName());
-			storePhoneNumber          		.setText(invoice.getStorePhoneNumber());
-			storeFaxNumber            		.setText(invoice.getStoreFaxNumber());
-
-  		    frame							.setPreferredSize(new Dimension(w,h-30));
-  		    panel							.setPreferredSize(new Dimension(w,250));
+	  }
+	  
+	  public void setComponentDimensionValues()
+	  {
+		    frame							.setPreferredSize(new Dimension(w,h-30));
+		    panel							.setPreferredSize(new Dimension(w,250));
 			bottomPanel						.setPreferredSize(new Dimension(w,100));
 
 			tablePanel						.setPreferredSize(new Dimension(w,700));
@@ -992,7 +949,6 @@ public class Register  implements ActionListener,FocusListener {
 			bx005							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
-			
 
 			button_tender					.setPreferredSize(new Dimension(130,30)); 
 			pim_button						.setPreferredSize(new Dimension(130,30));
@@ -1001,45 +957,26 @@ public class Register  implements ActionListener,FocusListener {
 		    salesReport						.setPreferredSize(new Dimension(130,30));
 		    addenda							.setPreferredSize(new Dimension(150,30));
 		    label_addenda					.setPreferredSize(new Dimension(150,30));
-
-  		    bx001							.addActionListener(this);
-  		    bx002							.addActionListener(this);
-  		    bx003							.addActionListener(this);
-  		    bx004							.addActionListener(this);
-  		    bx005							.addActionListener(this);
-  		    bx006							.addActionListener(this);
-  		    bx007							.addActionListener(this);
-  		    bx008							.addActionListener(this);
-
-
-  		    button_tender					.addActionListener(this);
-  		    salesReport						.addActionListener(this);
-  		    pim_button						.addActionListener(this);
-  		    payment_method					.addActionListener(this);
-  		    tender_amount					.addActionListener(this);
-  		    addenda							.addFocusListener(this);
-
-	
-  		    address 						= "192.168.50.197";
-  		    port 							= 5015;
-  		    secondary_port 					= 5016;
-  		
-  		    generator 						= new Random();
-  			entryCode 						= String.valueOf(generator.nextInt(9999));
-  		
-  		
-  		try { 
-  			
-  			kf 								= KeyFactory.getInstance("RSA");
-  			privateKey						= kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
-  			publicKey 						= kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
-  			keypair 						= new KeyPair(publicKey, privateKey);
-
-  		}catch(Exception e) {
-  			
-  		}
-  		
 	  }
+	  public void setActionListener()
+	  {
+		    bx001							.addActionListener(this);
+		    bx002							.addActionListener(this);
+		    bx003							.addActionListener(this);
+		    bx004							.addActionListener(this);
+		    bx005							.addActionListener(this);
+		    bx006							.addActionListener(this);
+		    bx007							.addActionListener(this);
+		    bx008							.addActionListener(this);
+		    button_tender					.addActionListener(this);
+		    salesReport						.addActionListener(this);
+		    pim_button						.addActionListener(this);
+		    payment_method					.addActionListener(this);
+		    tender_amount					.addActionListener(this);
+		    addenda							.addFocusListener(this);
+
+	  }
+	  
 	  public void setUILayout() {
 		  
 		  springLayout.putConstraint(SpringLayout.NORTH, panel,0,SpringLayout.NORTH, frame);
@@ -1311,41 +1248,34 @@ public class Register  implements ActionListener,FocusListener {
 		  panel.add(label_bill_to_customer_phone_number_data);
 
 		  
-//		  panel.add(label_bill_to_customer_address);
-//		  panel.add(label_bill_to_customer_city);
-//		  panel.add(label_bill_to_customer_state);
-//		  panel.add(label_bill_to_customer_zipcode);
-//		  panel.add(label_bill_to_customer_country);
-//		  panel.add(label_bill_to_customer_email_address);
-//		  panel.add(label_bill_to_customer_phone_number);
-
+/*		  
+ * 		  panel.add(label_bill_to_customer_address);
+		  panel.add(label_bill_to_customer_city);
+		  panel.add(label_bill_to_customer_state);
+		  panel.add(label_bill_to_customer_zipcode);
+		  panel.add(label_bill_to_customer_country);
+		  panel.add(label_bill_to_customer_email_address);
+		  panel.add(label_bill_to_customer_phone_number);
+*/
 		  
 		  
 		  panel.add(label_ship_to_customer_name);
-		  panel.add(label_ship_to_customer_name_data);
-
 		  panel.add(label_ship_to_customer_address);
-		  panel.add(label_ship_to_customer_address_data);
-
 		  panel.add(label_ship_to_customer_city);
-		  panel.add(label_ship_to_customer_city_data);
-
 		  panel.add(label_ship_to_customer_state);
-		  panel.add(label_ship_to_customer_state_data);
-
 		  panel.add(label_ship_to_customer_zipcode);
-		  panel.add(label_ship_to_customer_zipcode_data);
-
 		  panel.add(label_ship_to_customer_country);
-		  panel.add(label_ship_to_customer_country_data);
-
 		  panel.add(label_ship_to_customer_email_address);
-		  panel.add(label_ship_to_customer_email_address_data);
-
 		  panel.add(label_ship_to_customer_phone_number);
+		  
+		  panel.add(label_ship_to_customer_name_data);
+		  panel.add(label_ship_to_customer_address_data);
+		  panel.add(label_ship_to_customer_city_data);
+		  panel.add(label_ship_to_customer_state_data);
+		  panel.add(label_ship_to_customer_zipcode_data);
+		  panel.add(label_ship_to_customer_country_data);
+		  panel.add(label_ship_to_customer_email_address_data);
 		  panel.add(label_ship_to_customer_phone_number_data);
-
-
 		  
 		  bottomPanel.add(default_printer_receipt);
 		  bottomPanel.add(default_printer_invoice);
@@ -1376,7 +1306,7 @@ public class Register  implements ActionListener,FocusListener {
 		        retailerUUIDDescription			. setText( invoice.getIssuerUUID() );
 
 		        }
-		        catch(Exception e) {			System.out.println(e.toString( )); }  
+		        catch(Exception e) {			System.out.println(  e.toString( )); }  
 		        
 
 		        timeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 30));
@@ -1387,13 +1317,16 @@ public class Register  implements ActionListener,FocusListener {
 		        ActionListener taskPerformer = new ActionListener() {
 
 		        	public void actionPerformed(ActionEvent evt) {
+		        		
 		              simpDate          = new SimpleDateFormat("hh:mm:ss a");
 		              today 			= new Date();
 		              timeLabel.setText(simpDate.format(today) );
 		              internetLabel.setText( internet.checkConnection() );
-		          }};
-		          Timer t = new Timer(1000, taskPerformer);
-		          t.start();
+		          
+		        }};
+		        
+		        timer = new Timer(1000, taskPerformer);
+		        timer .start();
 
 
 		          
@@ -1453,7 +1386,8 @@ public class Register  implements ActionListener,FocusListener {
 
 
 	  public JMenuBar createMenuBar() {
-	        JMenuBar menuBar;
+
+		  	JMenuBar menuBar;
 	        JMenu menu, submenu;
 	        JMenuItem menuItem;
 	        JRadioButtonMenuItem rbMenuItem;
@@ -1463,7 +1397,8 @@ public class Register  implements ActionListener,FocusListener {
 	        menuBar = new JMenuBar();
 	 
 	        // Menu Name
-	        menu = new JMenu("Lockwind POS");
+	        menu = new JMenu(" Lockwind POS ");
+	        
 	        menu.setMnemonic(KeyEvent.VK_A);
 	        menu.getAccessibleContext().setAccessibleDescription(
 	                "Lockwind POS");
@@ -1474,14 +1409,12 @@ public class Register  implements ActionListener,FocusListener {
 			
 	        menuItem.setName("TenderTransaction");
 	        menuItem.setAccelerator(KeyStroke.getKeyStroke( KeyEvent.VK_7, ActionEvent.ALT_MASK));
-	        menuItem.getAccessibleContext().setAccessibleDescription("Tender Transaction");
+	        menuItem.getAccessibleContext().setAccessibleDescription(" Tender Transaction ");
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 				  tenderAction(0);
 				}
 			  });
-
-
 		  
 			menu.add(menuItem);
 
@@ -1492,10 +1425,13 @@ public class Register  implements ActionListener,FocusListener {
 	        menuItem.setName("ParkTransaction");
 	        menuItem.addActionListener(this);
 			menuItem.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent ev) {
-				  JOptionPane.showMessageDialog(null,"Parking Transaction");
-				  System.out.println("User Action: Parking Transaction");
-				
+			public void actionPerformed(ActionEvent ev) {
+
+			JOptionPane.showMessageDialog(null,"Parking Transaction");
+			System.out.println("User Action: Parking Transaction");
+			
+			// this.parkTransaction();
+			
 				  // Add a call to the function to save the transaction details into a structured file.
 				  // This action should create a parked transaction in an XML file that can then be recovered later.
 				  // Each parked transaction should have an document number and machine ID in order to be processed.
@@ -1503,15 +1439,17 @@ public class Register  implements ActionListener,FocusListener {
 			  });
    		   menuItem.setBackground(Color.decode("#FFFF00"));
 		   menuItem.setForeground(Color.decode("#000000"));  
-	        menu.add(menuItem);
-			// No ParkTransaction Module built yet
+	       menu.add(menuItem);
+			
+	       // No ParkTransaction Module built yet
 
 	        
-	        menuItem = new JMenuItem("Copy Last Transaction",KeyEvent.VK_C);
-	        menuItem.setName("CopyLastTransaction");
-			System.out.println("User Action: Copy Last Transaction");
-	        menuItem.addActionListener(this);
-	        menu.add(menuItem);
+	        menuItem 			= new JMenuItem("Copy Last Transaction",KeyEvent.VK_C);
+	        menuItem			. setName("CopyLastTransaction");
+			System.out.println	 ("User Action: Copy Last Transaction");
+	        menuItem			. addActionListener(this);
+	        menu				. add(menuItem);
+	        
 			// No Copy Last Transaction Module built yet
 
 	        
@@ -1530,13 +1468,16 @@ public class Register  implements ActionListener,FocusListener {
 	        menuItem.setName("RefreshProgram");
 	        menuItem.addActionListener(this);
 			menuItem.addActionListener(new ActionListener() {
+				
 				public void actionPerformed(ActionEvent ev) {
 				
 					System.out.println("User Action: Clear Register");
 
 				  	clearRegister();
 				}
+				
 			  });
+			
    		   menuItem.setBackground(Color.decode("#00FF0F"));
 		   menuItem.setForeground(Color.decode("#000000"));  
 		   menu.add(menuItem);
@@ -1544,14 +1485,15 @@ public class Register  implements ActionListener,FocusListener {
 	        menuItem = new JMenuItem("Exit Program",KeyEvent.VK_C);
 	        menuItem.setName("ExitProgram");
 	        menuItem.addActionListener(this);
+	        
 			menuItem.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent ev) {
 					System.out.println("User Action: Shut down Pont Of Sale System");
 					System.exit(0);
 				}
 			  });
-			  menuItem.setBackground(Color.decode("#00FF0F"));
-			  menuItem.setForeground(Color.decode("#000000"));  
+			menuItem.setBackground(Color.decode("#00FF0F"));
+			menuItem.setForeground(Color.decode("#000000"));  
 			menu.add(menuItem);
 	        menuBar.add(menu);
 
@@ -1897,35 +1839,6 @@ public class Register  implements ActionListener,FocusListener {
 	  
 	  
 	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-
-
-	  
-	
-	  
-	  
-	  
-	  
-	  
-	  
-	  
-	  
 //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(".\\upc.png"))); 
 //DOES NOT WORK FOR JAR FILE? BUT IT WORKS IN THE CLASS FILE
 //-----------------------------------------------------------------------------------------------
@@ -1972,33 +1885,13 @@ public Register() {
 	table.requestFocus();
 	table.changeSelection(0,0, false,false);
 
-	System.out.print("Column:count");
-	System.out.println(table.getModel().getColumnCount());
+	System.out.print("Column:count - > "  + table.getModel().getColumnCount());
 
 	// Print names of columns assigned to table model
 	for(int i = 0; i < table.getModel().getColumnCount(); i++){
 		System.out.println(table.getColumnName(i));
 	}
 	
-	
-	
-	System.out.println("Register-> Session with Verifone Device");
-      
-		if(registerStatus == false)
-	try {
-//	  registerPOS();
-//	  Thread.sleep(1000);
-//	  registerStatus = true;
-//		System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
-
-	}catch(Exception e) {
-			System.out.println("Error at Register set default values " + e.toString());
-		}
-		else {
-			System.out.println( "Failed to register POS, please register manually: " + e.toString() );
-		} 
-		
-
 	
 	
 /*// Temporarily disabled in order to complete it correctly. on 9/18/2023. */
@@ -2055,6 +1948,30 @@ System.out.println( "Failed to register POS, please register manually: " + e.toS
 }
 
 
+public void RegisterVerifone() { 
+
+	
+	System.out.println("Register-> Session with Verifone Device");
+    
+	if(registerStatus == false)
+try {
+
+	
+	//	  registerPOS();
+	//	  Thread.sleep(1000);
+	//	  registerStatus = true;
+	//		System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
+
+}catch(Exception e) {
+		System.out.println("Error at Register set default values " + e.toString());
+	}
+	else {
+		System.out.println( "Failed to register POS, please register manually: " + e.toString() );
+	} 
+	
+}
+
+
 public void updateRow(JTable table, int i){
 	table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
 	table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
@@ -2071,13 +1988,10 @@ public void clearRegister() {
 	tender_amount	.setText("");
 	addenda			.setText("");
 
-     account_name_input.setSelectedIndex(0);
+    account_name_input.setSelectedIndex(0);
 
-     account_name_input.setSelectedIndex(0);	
-	 table_manager.clearTable(table);
-
+	table_manager	.clearTable(table);
 	table			.changeSelection(0,0,false,false);
-
 	table			.requestFocus();
   
   }
@@ -2208,16 +2122,16 @@ public void buildActionListener() {
 		refreshTotal(table,0.00,0.00);
 
 
-	if(registerStatus == true){
+		if(registerStatus == true){
 			
 			  try { 
 	  			  removeLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 
-}catch (Exception e1) {
-System.out.println("Register - delete key action error: " + "cannot connect to register" + e1.toString() );
-}
-}else {}
+			  }catch (Exception e1) {
+				  	System.out.println("Register - delete key action error: " + "cannot connect to register" + e1.toString() );
+			  }
+		}else {}
 
 
 		table.changeSelection(i,0, false,false);
@@ -2225,30 +2139,34 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 	//---------------------------------------------------------DELETE KEY ACTION END 
 
 	//---------------------------------------------------------ENTER KEY ACTION PROC
-		InputMap im = table.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
-		ActionMap am = table.getActionMap();
-		KeyStroke enterKey = KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
-		im.put(enterKey, "Action.enter");
-		am.put("Action.enter", new AbstractAction() {
+		
+		InputMap im 			= table.getInputMap(JTable.WHEN_ANCESTOR_OF_FOCUSED_COMPONENT);
+		ActionMap am 			= table.getActionMap();
+		KeyStroke enterKey 		= KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
+		im						. put(enterKey, "Action.enter");
+		am						. put("Action.enter", new AbstractAction() {
 
 		public void actionPerformed(ActionEvent evt) {
-		table.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		
+			table				. putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+		
 		if (table.isEditing()){table.getCellEditor().stopCellEditing();}
 		
 
-		int i = 0; 
-		int j = 0;
+		int i 					= 0; 
+		int j 					= 0;
 
-		i = table.getSelectedRow();
-		j = table.getSelectedColumn();
+		i 						= table.getSelectedRow();
+		j 						= table.getSelectedColumn();
 		
 
-		double discount = 0.00;
-		double discountPrice = 0.00;
-		double st = 0.00;
-		String productInfo = "";
-		String inputGTIN = "";
-
+		double discount 		= 0.00;
+		double discountPrice	= 0.00;
+		double st 				= 0.00;
+		String productInfo 		= "";
+		String inputGTIN 		= "";
+		invoice_line_item 		= new ElectronicDocumentLineItem();
+		
 	    
 		if(j== 0) // Column: UPC
 		{
@@ -2256,9 +2174,9 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 //		JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating GTIN");
 //		JOptionPane.showMessageDialog(null,table_manager.getData(table,i,j).toString());
 		
-		 inputGTIN = table_manager.getData(table,i,0).toString(); // COL 0: GTIN
+		 inputGTIN 				= table_manager.getData(table,i,0).toString(); // COL 0: GTIN
 			
-		 table_manager.setData(table,i,1,"1"); // COL 1: QTTY
+		 table_manager			. setData(table,i,1,"1"); // COL 1: QTTY
  
 		 try { productInfo = product_management_system.getProductInfoAPICategory(inputGTIN); } // COL 2: CATEGORY
 		 catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
@@ -2272,8 +2190,18 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
 		  table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
 
+		  invoice_line_item.setUPC			(table_manager.getData(table,i,0).toString() );
+		  invoice_line_item.setQTY			(Double.parseDouble( table_manager.getData(table,i,1).toString() ) );
+		  invoice_line_item.setCategory		(table_manager.getData(table,i,2).toString() );
+		  invoice_line_item.setDescription	(table_manager.getData(table,i,3).toString() );
+		  invoice_line_item.setRetailPrice	(Double.parseDouble( table_manager.getData(table,i,4).toString() ) );
+		  invoice_line_item.getSubtotal		();
+		  invoice_line_item.getTaxes		();
+		  
+		  invoice.addInvoiceLineItem(invoice_line_item);
 
-		
+		  
+		  
 //		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 5: SUBTOTAL
 //		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
 //		 table_manager.setData(table,i,5,table_manager.getSubTotal(table,i)); 
@@ -2327,14 +2255,13 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 	 		refreshTotal(table,0.00,0.00);
 
 			System.out.println( "Electronic Document: " + invoice.toString() + "");
+			subtotalLabel.setText( 	"$ " + invoice.getTransactionSubTotal() ); // Set value to UI Label
+ 			taxesLabel.setText( 	"$ " + invoice.getTransactionTaxesTotal() ); // Set value to UI Label
+ 			totalLabel.setText(		"$ " + formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) ); // Set value to UI Label
+ 			discountLabel.setText(	"$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Label
 
- 		subtotalLabel.setText( "$ "+ invoice.getTransactionSubTotal() ); // Set value to UI Label
- 		taxesLabel.setText( "$ "+ invoice.getTransactionTaxesTotal() ); // Set value to UI Label
- 		totalLabel.setText("$ "+ formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) ); // Set value to UI Label
- 		discountLabel.setText("$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Label
-
- 		table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
- 		table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
+ 			table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
+ 			table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
 
 
 		  // refreshTotal(table,0.00,0.00);
@@ -2344,16 +2271,9 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 			
 			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionSubTotal() ) ) );
 			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal() ) ) );
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) );
-			System.out.println(i);
-			System.out.println("SKU");
-			System.out.println(table_manager.getData(table, i, 0).toString());
-			System.out.println(table_manager.getData(table, i, 1).toString());
-			System.out.println(table_manager.getData(table, i, 2).toString());
-			System.out.println(table_manager.getData(table, i, 3).toString());
-			System.out.println(table_manager.getData(table, i, 4).toString());
-			System.out.println(table_manager.getData(table, i, 5).toString());
+			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) );			
 
+			System.out.println(invoice_line_item.toString() );
 
 // Register Enter Key action Proc 
 
@@ -2362,6 +2282,9 @@ System.out.println("Register - delete key action error: " + "cannot connect to r
 	try { 
 			//registerPOS();
 			//registerStatus = true;
+		
+			
+		
 	} catch(Exception a1) {  }
 	}
 
@@ -3276,8 +3199,8 @@ public void refreshTotal()
           outputFile.println();
 
           */
-          
-          outputFile.println        (invoice.getStoreName() );
+          outputFile.println("Hello World from Briant Guzman\n");
+          outputFile.println(invoice.getStoreName() );
           outputFile.println(invoice.getBillToCustomerAddressData() + " " + invoice.getBillToCustomerAddressData());
           outputFile.println(""+ invoice.getBillToCustomerPhoneNumberData() + "      " + invoice.getBillToCustomerFaxNumberData());
           outputFile.println();
@@ -3285,16 +3208,15 @@ public void refreshTotal()
           
           today                 =     new Date();
           fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);
+          simpDate             	=     new SimpleDateFormat("hh:mm:ss a");
           
-          simpDate             =     new SimpleDateFormat("hh:mm:ss a");
           
-          
-          outputFile.println        (fmt.format(today) +  "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
+          outputFile.println(fmt.format(today) +  "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
           outputFile.println("CUSTOMER CODE: " + account_name_input.getSelectedItem() );
           outputFile.println("CUSTOMER Name: " + account_name_input.getSelectedItem() );
           outputFile.println("CUSTOMER Phone Number: " + account_name_input.getSelectedItem() );
           outputFile.println("CUSTOMER Email: " + account_name_input.getSelectedItem() );
-          outputFile.println("NAME:  CASH ");
+          outputFile.println("NAME: ");
           //outputFile.println("CODE:  CASH");
           outputFile.println("REG:   REGISTER 1");
           outputFile.println("----------------------------------------");
@@ -3314,11 +3236,13 @@ public void refreshTotal()
               if(table_manager.getData(table,in,0)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,0).toString(),19);}
               
               if(table_manager.getData(table,in,2)!= null){
+            	  
                   productName = table_manager.getData(table,in,2).toString();
                   productName = format_manager.increaseLength(productName,43);
                   productName = " "+ productName.substring(0,42);}
               
               if(table_manager.getData(table,in,4)!= null){
+            	  
                   da = da + format_manager.increaseLength(table_manager.getData(table,in,3).toString(),10);
                   da = da + format_manager.increaseLength(table_manager.getData(table,in,4).toString(),4);}
               
@@ -3338,11 +3262,9 @@ public void refreshTotal()
           discount = Double.parseDouble( invoice.getTransactionDiscountTotal() );
 
           
-//          discount = table_manager.getColumnTotal(table,6);
-          
-          
-  //        totaltaxes = table_manager.getColumnTotal(table,5);
-    //      discount = table_manager.getColumnTotal(table,6);
+          // discount = table_manager.getColumnTotal(table,6);
+          // totaltaxes = table_manager.getColumnTotal(table,5);
+          // discount = table_manager.getColumnTotal(table,6);
           
           total = subtotal + totaltaxes;
           total = total - discount;
@@ -3390,6 +3312,63 @@ public void refreshTotal()
           
           outputFile.close();
           
+          
+          
+          
+          
+  		try {
+		    
+			// invoice.setDirectory("./target/classes/lockwind/com/outbound_invoice/");
+  		System.out.println("************************************************");
+  		System.out.println(invoice.toString());
+  		System.out.println("************************************************");
+  	
+		
+		invoice										.setTransactionType("Invoice");
+		invoice										.setTransactionUUID(invoice.getInvoiceNumber());
+		invoice										.setIssuerUUID( invoice.getIssuerUUID() );
+		invoice										.setConsumerUUID(invoice.getConsumerUUID() );		
+		invoice										.setLabelIssuerAddressData( invoice.getStoreAddress()  +  " " + invoice.getStoreSecondAddress() );
+		invoice										.setLabelIssuerPhoneNumberData( invoice.getStorePhoneNumber() );
+		invoice										.setLabelIssuerFaxNumberData( invoice.getStoreFaxNumber() );
+		
+		invoice										.setLabelIssuerAddress("Address: ");
+		invoice										.setLabelIssuerPhoneNumber("TEL: ");
+		invoice										.setLabelIssuerFaxNumberData("Fax: ");
+		invoice										.setLabelIssuerCity("City: ");
+		invoice										.setLabelIssuerCountry("Country: ");
+		
+		invoice										.setTransactionDate(fmt.format(today));
+		invoice										.setTransactionTime(simpDate.format(today));
+		invoice										.setBillToCustomerCodeData( account_name_input.getSelectedItem().toString() );
+		invoice										.setStoreName( invoice_management_system.getEntityName(invoice.getIssuerUUID()) );
+		invoice										.setLabelIssuerPhoneNumberData("+1 212 740 4652");
+		invoice										.setBillToCustomerCodeData( account_name_input.getSelectedItem().toString() );
+		invoice										.setStorePhoneNumber( invoice.getLabelIssuerPhoneNumberData() );
+		invoice										.setLabelIssuerFaxNumberData("+1 347 808 5425");
+		
+		invoice										.setBillToCustomerNameData( account_name_input.getSelectedItem().toString() );
+		invoice										.setBillToCustomerEmailAddressData( account_name_input.getSelectedItem().toString() );
+		invoice										.setBillToCustomerPhoneNumberData( account_name_input.getSelectedItem().toString() );
+		
+        outputFile.println("REG:   REGISTER 1");
+        outputFile.println("----------------------------------------");
+        
+        outputFile.println(" QTY UPC                 PRICE  SUBTOTAL");
+        outputFile.println(" DESCRIPTION                            ");
+
+		
+		
+		}catch(Exception e) {
+			
+			System.out.println("Error: " + e.toString() );
+			
+		}
+
+          
+          
+          
+          invoice.buildInvoice();
 
           
 //          JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
@@ -3425,6 +3404,7 @@ public void refreshTotal()
 
   public void updateQTY(){
 
+	  System.out.println("Register->UpdateQTY");
   int i = 0; int j = 0;
   if(table.isEditing()){table.getCellEditor().stopCellEditing();}
   
@@ -3444,9 +3424,12 @@ public void refreshTotal()
 	  table_manager.setData(table,i,1,"1");
   }
   
-// table_manager.setData( table,i,4,table_manager.getSubTotal(table,i)); -> this is updating the retail price column with the value of the subtotal for this row (error).
-//  refreshTotal(table,0.00,0.00);
-  table.changeSelection(++i,0,false,false);
+ // table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); //-> this is updating the retail price column with the value of the subtotal for this row (error).
+
+  	updateTax();
+ 
+ 	refreshTotal(table,0.00,0.00);
+ 	table.changeSelection(++i,0,false,false);
   
   
 }
@@ -3498,8 +3481,8 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 	// table_manager.setData(table,i,4,".99");
   }
  
-  // table_manager.setData(table,i,5,table_manager.getSubTotal(table,i));
-  // table_manager.setData(table,i,6,table_manager.getTax(table,i));
+   table_manager.setData(table,i,5,table_manager.getSubTotal(table,i));
+   table_manager.setData(table,i,6,table_manager.getTax(table,i));
   // refreshTotal(table,0.00,0.00);
   
   table.changeSelection(++i,0,false,false);
@@ -3551,39 +3534,39 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
   }
   // refreshTotal(table,0.00,0.00);
   
-  table.changeSelection(i,0, false,false);
+  table.changeSelection(++i,0, false,false);
 
 }
 
 
   public void updateSubTotal(){
-  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
-  
-  int i = 0;
-  int j = 0;
 
-  i = table.getSelectedRow();
-  j = table.getSelectedColumn();
+	  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
   
-  if(table_manager.getData(table,i,1).toString().equalsIgnoreCase("0") == false || table_manager.getData(table,i,1) == null)
-  {
-  double qty = 0;
-  double price = 0;
+	  int i = 0;
+	  int j = 0;
+
+	  i = table.getSelectedRow();
+	  j = table.getSelectedColumn();
+  
+	  if(table_manager.getData(table,i,1).toString().equalsIgnoreCase("0") == false || table_manager.getData(table,i,1) == null) {
+	  
+	  double qty = 0;
+  	  double price = 0;
   
      qty =  Double.parseDouble( table_manager.getData(table, i, 1).toString() ); 
      price =  Double.parseDouble( table_manager.getData(table, i, 4).toString() ); 
-     
-      
       
       table_manager.setData(table,i,5, String.valueOf( qty*price)   );
 
-      table.changeSelection(++i,0,false,false);
   }
   else
   {
 //      table_manager.setData(table,i,5,"0");
-      table.changeSelection(++i,0,false,false);
   }
+
+  table.changeSelection(++i,0,false,false);
+
   // refreshTotal(table,0.00,0.00);
   
 //  table.changeSelection(i,0, false,false);
@@ -3776,7 +3759,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           
           outputFile.println("----------------------------------------");
           outputFile.println( invoice.getStoreName())        ;
-          outputFile.println(" " +  invoice.getStoreAddress() + " " + invoice.getStoreSecondAddress());
+          outputFile.println(" " +  invoice.getStoreAddress()+ " " + invoice.getStoreSecondAddress());
           outputFile.print(" " + invoice.getStorePhoneNumber()+ "      ");
           outputFile.println( invoice.getStoreFaxNumber()+"\n");
                             
@@ -6142,14 +6125,7 @@ public void confirmationAPMKlarna() throws Exception {
 	}
 	
 	
-	
-	
-	
-	
-	
-
-	
-	
+		
 	/**
 	 * Unregisters the POS with the Device
 	 * 

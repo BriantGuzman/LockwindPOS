@@ -2,6 +2,7 @@ package pay.point.sample;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.Scanner;
 
 import javax.xml.parsers.DocumentBuilder;
@@ -25,14 +26,19 @@ public class ElectronicDocument extends ServiceData {
 
 	
 	private ValidationPlatform validation_platform;
-	private final String xmlFilePath = "outbound/Invoice.xml";
+	private final String xmlFilePath = "./src/electronic_document/ElectronicDocument.xml";
 	
 	 
 	private DocumentBuilderFactory documentFactory;
 	private DocumentBuilder documentBuilder;
+
 	private Document document;
+	
+	// Elements of the ElectronicDocument
 	private Element root;
 	private Element element;
+    private ElectronicDocumentLineItemManager line_item_manager;
+
 
     private Document XMLFormat; // This is going to represent the keys and values of the document in XML format.
 	private Element XMLFormatElement; // This is used to add document elements to the XML Format Instance.
@@ -46,9 +52,12 @@ public class ElectronicDocument extends ServiceData {
     private DOMSource domSource;
     private StreamResult streamResult;
     private File file;
+    
     private Scanner inputFile;
+    private PrintWriter outputFile;
+    
     private String line;
-	
+    
 	
 	 // What?
 	 private String transaction_uuid;
@@ -62,6 +71,9 @@ public class ElectronicDocument extends ServiceData {
 	 // Where?
 	 private String origin_system;
 	 private String destination_system;
+
+	 private String origin_system_id;
+	 private String destination_system_id;
 
 	 // Why?
 	 private String po_number;
@@ -94,6 +106,7 @@ public class ElectronicDocument extends ServiceData {
 	 private String label_issuer_zipcode;
 	 private String label_issuer_country;
 	 private String label_issuer_phone_number;
+	 private String label_issuer_fax_number;
 	 private String label_issuer_email_address;
 
 	 private String label_issuer_uuid_data;
@@ -104,6 +117,7 @@ public class ElectronicDocument extends ServiceData {
 	 private String label_issuer_zipcode_data;
 	 private String label_issuer_country_data;
 	 private String label_issuer_phone_number_data;
+	 private String label_issuer_fax_number_data;
 	 private String label_issuer_email_address_data;
 	 
 
@@ -168,6 +182,7 @@ public class ElectronicDocument extends ServiceData {
 	 private ElectronicDocument next;
 	 private ElectronicDocument prev;
 	 
+
 	 
 	 // NO ARG CONSTRUCTOR
 	 public ElectronicDocument() { 
@@ -195,14 +210,17 @@ public class ElectronicDocument extends ServiceData {
 		 label_issuer_name		 = null;
 		 label_issuer_name_data	 = null;
 	     
-	     store_name 			= null;
-	     store_address 			= null;
-	     store_second_address 	= null;
-	     store_phone_number 	= null;
-	     store_fax_number		= null;
+	     store_name 			 = null;
+	     store_address 			 = null;
+	     store_second_address 	 = null;
+	     store_phone_number 	 = null;
+	     store_fax_number		 = null;
 
 	     next					 = null;
 	     prev				 	 = null;
+	     
+	     line_item_manager		= null;
+	     
 	 }
 
 	 // ************************************************************************************************************************
@@ -219,9 +237,18 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setOriginSystem(String origin_system) { this.origin_system = origin_system; }
 	 public String		getOriginSystem() { return this.origin_system; }
 
+	 // SYSTEM OF ORIGIN ID
+	 public void 		setOriginSystemID(String origin_system) { this.origin_system_id = origin_system; }
+	 public String		getOriginSystemID() { return this.origin_system_id; }
+
 	 // SYSTEM OF DESTINATION
 	 public void 		setDestinationSystem(String destination_system) { this.destination_system = destination_system; }
 	 public String		getDestinationSystem() { return this.destination_system; }
+
+	 
+	 public void 		setDestinationSystemID(String destination_system) { this.destination_system_id = destination_system; }
+	 public String		getDestinationSystemID() { return this.destination_system_id; }
+
 	 
 	 // TRANSACTION TYPE
 	 public void 		setTransactionType(String transaction_type) { this.transaction_type = transaction_type; }
@@ -324,6 +351,10 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setLabelIssuerPhoneNumberData(String label_issuer_phone_number_data) { this.label_issuer_phone_number_data = label_issuer_phone_number_data; }
 	 public String 		getLabelIssuerPhoneNumberData() { return label_issuer_phone_number_data; }
 
+	 public void 		setLabelIssuerFaxNumberData(String label_issuer_fax_number_data) { this.label_issuer_fax_number_data = label_issuer_fax_number_data; }
+	 public String 		getLabelIssuerFaxNumberData() { return label_issuer_fax_number_data; }
+
+	 
 	 public boolean 	setLabelIssuerNameEmailAddressData(String label_issuer_name_email_address) {
 	 
 		 String error_message = validation_platform.validateEmailAddress(label_issuer_name_email_address);
@@ -538,6 +569,127 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setCommunicationMethod(String method) { this.method_of_communication = method; }
 	 public				String getCommunicationMethod() { return this.method_of_communication; }
 	 
+	 public String buildInvoice() {
+		 StringBuilder temp = new StringBuilder();
+
+		  String[] electronic_document_key = {
+		  "origin_system_id",
+		  "destination_system_id",
+		  "origin_system",
+		  "destination_system",
+		  "document_type",
+		  "transactionUUID",
+		  "invoice_number",
+		  "issuer_uuid",
+		  "consumer_uuid",
+		  "store_name",
+		  "issuer_address_data",
+		  "issuer_phone_number",
+		  "issuer_fax_number",
+		  "transaction_date",
+		  "transaction_time",
+		  "customer_code_data",
+		  "store_phone_number",
+		  "customer_email_address",
+		  "customer_phone_number"		  
+		  
+		  };
+	      String[] electronic_document_value = new String[electronic_document_key.length];
+
+
+	      electronic_document_value[0] 	= this.getOriginSystemID();
+	      electronic_document_value[1] 	= this.getDestinationSystemID();
+	      electronic_document_value[2] 	= this.getOriginSystem();
+	      electronic_document_value[3] 	= this.getDestinationSystem();
+	      electronic_document_value[4] 	= this.getTransactionType();
+	      electronic_document_value[5] 	= this.getTransactionUUID();
+	      electronic_document_value[6] 	= this.getInvoiceNumber();
+	      electronic_document_value[7] 	= this.getIssuerUUID();
+	      electronic_document_value[8] 	= this.getConsumerUUID();
+	      electronic_document_value[9] 	= this.getStoreName();
+	      electronic_document_value[10] = this.getLabelIssuerAddressData();
+	      electronic_document_value[11] = this.getLabelIssuerPhoneNumberData();
+	      electronic_document_value[12] = this.getLabelIssuerFaxNumberData();
+	      electronic_document_value[13] = this.getTransactionDate();
+	      electronic_document_value[14] = this.getTransactionTime();
+	      
+	      electronic_document_value[15] = this.getBillToCustomerCodeData();
+	      electronic_document_value[16] = this.getBillToCustomerPhoneNumberData();
+	      electronic_document_value[17] = this.getBillToCustomerEmailAddressData();
+	      electronic_document_value[18] = this.getBillToCustomerCodeData();
+	      
+//	      electronic_document_value[15] = this.getBillToCustomerCodeData();
+//	      electronic_document_value[15] = this.getBillToCustomerCodeData();
+
+	      
+	      
+	      this.toTXT(electronic_document_key, electronic_document_value);
+	      
+	      /*
+	         
+	         outputFile.println( electronic_document_key[0] + ":" + this.getOriginSystem() +';');
+	         outputFile.println( electronic_document_key[1] + ":" + this.getDestinationSystem() +';');
+	         outputFile.println( electronic_document_key[2] + ":" + this.getTransactionType() +';');
+	         outputFile.println( electronic_document_key[3]  +":" + this.getTransactionUUID() +';');
+	         outputFile.println( electronic_document_key[4]  + ":"  + this.getInvoiceNumber() + ";");
+	         outputFile.println( electronic_document_key[5]  + ":"  + this.getIssuerUUID() + ";");
+	         outputFile.println( electronic_document_key[6]  + ":"  + this.getConsumerUUID() + ";");
+	         outputFile.println( electronic_document_key[7]  + ":"  + this.getInvoiceNumber() + ";");
+	        		 
+	        		 
+	        outputFile.println("transactionUUID:" + this.getTransactionUUID() +';');
+	         outputFile.println("invoice_number:" + this.getInvoiceNumber() +';');
+	         outputFile.println("issuer_uuid:" + this.getIssuerUUID() +';');
+	         outputFile.println("consumer_uuid:" + this.getConsumerUUID() +';');
+	         
+	         // template
+	         // outputFile.println(electronic_document_key[]  + ":"  + this.getInvoiceNumber() + ";");
+		     */   
+	      
+		 return temp.toString();
+	 }
+	 public String buildCreditNote() {
+		 StringBuilder temp = new StringBuilder();
+		 return temp.toString();
+		 
+	 }
+	 public String buildDebitNote() {
+		 StringBuilder temp = new StringBuilder();
+		 return temp.toString();
+		 
+	 }
+	 public String buildASN() {
+		 StringBuilder temp = new StringBuilder();
+		 return temp.toString();
+		 
+	 }
+	 
+	 public String toTXT(String[] key, String[] value) { 
+		 
+		 String temp = "";
+		 
+		 try { 
+			 
+         File tempFile            = new File(".//src//pay//point//sample//electronic_document//" + this.getInvoiceNumber()  + ".txt");
+         outputFile      = new PrintWriter(tempFile);
+
+         for(int i = 0; i < key.length; i++)
+         {
+        	 System.out.println(key[i] + ":" + value[i] + ";");
+        	 outputFile.println(key[i] + ":" + value[i] + ";");
+         }
+         
+                  
+         
+         outputFile.close();
+         
+		 }catch(IOException e)
+		 {
+			 System.out.println( "System error at: ElectronicDocument->toTXT" );
+		 }
+		 
+		 return temp;
+	 }
 	 
 	 public String toX12() {
 		 
@@ -725,6 +877,25 @@ public class ElectronicDocument extends ServiceData {
     	 System.out.println( this.getTransactionChangeValue() );
     	 
     	 return temp;
+     }
+     
+     
+     public static void main(String[] args) {
+    	 
+    	 /*
+    	 ElectronicDocument test = new ElectronicDocument();
+
+    	 test.setOriginSystem("Lockwind POS");
+    	 test.setDestinationSystem("Lockwind ERP");
+    	 test.setTransactionType("Invoice");
+    	 test.setStoreName("165 St. Hardware Inc.");
+    	 
+    	 test.setInvoiceNumber("20");
+    	 test.toTXT();
+    	 
+    	 System.out.println("Electronic Document->main() " );
+    */
+    	 
      }
 
 	 

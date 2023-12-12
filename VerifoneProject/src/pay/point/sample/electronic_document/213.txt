@@ -1,0 +1,11 @@
+origin_system_id:POS0001;
+destination_system_id:ERP0001;
+origin_system:Lockwind POS;
+destination_system:Lockwind ERP;
+document_type:Invoice;
+transactionUUID:213;
+invoice_number:213;
+issuer_uuid:5d4de950d4f69;
+consumer_uuid:5d4de950d4f69;
+store_name:null;
+customer_bill_to_address_data:null;

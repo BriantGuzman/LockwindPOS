@@ -1,0 +1,7 @@
+origin_system:Lockwind POS;
+destination_system:Lockwind ERP;
+document_type:Invoice;
+transactionUUID:null;
+invoice_number:20;
+issuer_uuid:;
+consumer_uuid:;

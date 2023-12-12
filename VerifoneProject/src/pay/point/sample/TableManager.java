@@ -182,14 +182,12 @@ public class TableManager {
 	
 	public void clearRow(JTable table, int r)
 	{
-	setData(table,r,0,"");
-	setData(table,r,1,"");
-	setData(table,r,2,"");
-	setData(table,r,3,"");
-	setData(table,r,4,"");
-	setData(table,r,5,"");
-	setData(table,r,6,"");
-	setData(table,r,7,"");
+
+	System.out.println("TableManager->clearRow() : ColumnCount = " + table.getColumnCount() );
+	for(int i = 0; i < table.getColumnCount(); i++)
+	{
+		setData(table,r,i,"");
+	}
 
     try{
   	  
@@ -225,7 +223,7 @@ public class TableManager {
 		i++;}
 
 		return sum;
-		}
+	}
 	
 	public void updateTotal(JTable table, int r){
 		
@@ -245,14 +243,19 @@ public class TableManager {
 	String q = "";
 	double return_value = 0.00;
 
-
+	double qty = 0.00;
+	double price = 0.00;
+	
+	
 	if(getData(table,r,1).toString().equalsIgnoreCase("") || getData(table,r,4).toString().equalsIgnoreCase(""))
 	{return_value = 0.00;
 	JOptionPane.showMessageDialog(null,"QTY or Price is not a valid ");
 	}
 	else{
-	q = getData(table,r,1).toString();
-	p = getData(table,r,4).toString();
+		qty 	= Double.parseDouble( getData(table,r,1).toString() );
+		price 	= Double.parseDouble( getData(table,r,4).toString() );
+		q = getData(table,r,1).toString();
+		p = getData(table,r,4).toString();
 	return_value = (Double.parseDouble(p) * Double.parseDouble(q) );
 	}
 
