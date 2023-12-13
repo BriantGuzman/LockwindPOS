@@ -35,6 +35,10 @@ public class API {
 		 
 	 }
 	
+	 public double getSubtotal() { 
+		 
+	 }
+	 
 	 public static double getDaysBetween(LocalDate start, LocalDate end) {
 	        return ChronoUnit.DAYS.between(start, end);
 	    }

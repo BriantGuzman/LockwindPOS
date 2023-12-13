@@ -1,52 +1,6 @@
 package pay.point.sample;
 
-class ElectronicDocumentLineItemManager { 
-	private ElectronicDocumentLineItem head;
-	private int index;
 	
-	public ElectronicDocumentLineItemManager() {
-		head  = null;
-		index = 0;
-	}
-	
-	public void addLineItem(ElectronicDocumentLineItem item) {
-        if (this.searchByID( (int)((item.getLineItemCount()) )) != null) {
-            System.out.println("Item with ID " + item.getLineItemCount() + " already exists. Cannot add duplicate items.");
-            return;
-        }
-
-        if (head == null) {
-            head = item;
-            index++;
-        } else {
-            ElectronicDocumentLineItem current = head;
-            while (current.getNext() != null) {
-                current = current.getNext();
-            }
-            current.setNext(item);
-            index++;
-        }
-    }
-	public void printLineItems() {
-        ElectronicDocumentLineItem current = head;
-        while (current != null) {
-            System.out.println( current.toString() );
-            current = current.getNext();
-        }
-    }
-	public ElectronicDocumentLineItem searchByID(int searchID) {
-        ElectronicDocumentLineItem current = head;
-        while (current != null) {
-            if (current.getLineItemCount() == searchID) {
-                return current;
-            }
-            current = current.getNext();
-        }
-        return null; // Item not found
-    }
-	
-}
-
 public class ElectronicDocumentLineItem {
 
     //	private String GTIN;
@@ -146,6 +100,8 @@ public class ElectronicDocumentLineItem {
         public void setSubtotal() { subtotal_value = qty * price_retail; }
         public double getSubtotal() { setSubtotal(); return subtotal_value; }
         
+        public void setTaxExempt() { tax_rate = 0.00; tax_value = 0.00;}
+        public void removeTaxExempt() { }
         public void setTaxes() { tax_value = this.getSubtotal() * this.getTaxRate(); }
         public double getTaxes() { setTaxes(); return tax_value; }
         

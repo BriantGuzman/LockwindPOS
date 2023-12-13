@@ -256,7 +256,8 @@ public class TableManager {
 		price 	= Double.parseDouble( getData(table,r,4).toString() );
 		q = getData(table,r,1).toString();
 		p = getData(table,r,4).toString();
-	return_value = (Double.parseDouble(p) * Double.parseDouble(q) );
+		
+		return_value = (Double.parseDouble(p) * Double.parseDouble(q) );
 	}
 
 	return format_manager.formatDoubleUS(return_value);

@@ -221,7 +221,10 @@ public class ElectronicDocument extends ServiceData {
 	     
 	     line_item_manager		= null;
 	     
+	     line_item_manager 		= new ElectronicDocumentLineItemManager();
 	 }
+	 
+	 
 
 	 // ************************************************************************************************************************
 
@@ -569,6 +572,16 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setCommunicationMethod(String method) { this.method_of_communication = method; }
 	 public				String getCommunicationMethod() { return this.method_of_communication; }
 	 
+
+	 public void setElectronicDocumentLineItemManager() { 
+		 line_item_manager = new ElectronicDocumentLineItemManager();
+	 }
+	 public ElectronicDocumentLineItemManager getElectronicDocumentLineItemManager() {
+		 return line_item_manager;
+	 }
+	 public void addLineItem(ElectronicDocumentLineItem line_item) { 
+		 line_item_manager.addLineItem( line_item );
+	 }
 	 public String buildInvoice() {
 		 StringBuilder temp = new StringBuilder();
 
