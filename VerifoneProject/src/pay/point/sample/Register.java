@@ -2143,6 +2143,7 @@ public void buildActionListener() {
 		ActionMap am 			= table.getActionMap();
 		KeyStroke enterKey 		= KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		im						. put(enterKey, "Action.enter");
+		
 		am						. put("Action.enter", new AbstractAction() {
 
 		public void actionPerformed(ActionEvent evt) {
@@ -2152,27 +2153,23 @@ public void buildActionListener() {
 		if (table.isEditing()){table.getCellEditor().stopCellEditing();}
 		
 
-		int i,j 				= 0; 
-		double discount 		= 0.00;
-		double discountPrice	= 0.00;
-		double st 				= 0.00;
-		String productInfo 		= "";
-		String inputGTIN 		= "";
-
-		i 						= table.getSelectedRow();
-		j 						= table.getSelectedColumn();
-		line_item 				= new ElectronicDocumentLineItem();
+		int i,j 								= 0; 
+		double discount, discountPrice, st 		= 0.00;
+		String productInfo 						= "";
+		String inputGTIN  						= "";
+		
+		i 										= table.getSelectedRow();
+		j 										= table.getSelectedColumn();
+		line_item 								= new ElectronicDocumentLineItem();
 		
 	    
-		if(j== 0) // Column: UPC
-		{
+		if(j== 0)  { // Column: UPC
 		
-//		JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating GTIN");
-//		JOptionPane.showMessageDialog(null,table_manager.getData(table,i,j).toString());
+			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating GTIN");
+			// JOptionPane.showMessageDialog(null,table_manager.getData(table,i,j).toString());
 		
-		 inputGTIN 				= table_manager.getData(table,i,0).toString(); // COL 0: GTIN
-			
-		 table_manager			. setData(table,i,1,"1"); // COL 1: QTTY
+		 inputGTIN				 				= table_manager.getData(table,i,0).toString(); // COL 0: GTIN
+		 table_manager							. setData(table,i,1,"1"); // COL 1: QTTY
  
 		 try { productInfo = product_management_system.getProductInfoAPICategory(inputGTIN); } // COL 2: CATEGORY
 		 catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
@@ -2200,7 +2197,7 @@ public void buildActionListener() {
 		  record.addLineItem(line_item);
 		  System.out.println("Printing Line Items: "); 
 		  record.getElectronicDocumentLineItemManager().printLineItems();
-		  
+		}
 //		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 5: SUBTOTAL
 //		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
 //		 table_manager.setData(table,i,5,table_manager.getSubTotal(table,i)); 
@@ -2213,10 +2210,10 @@ public void buildActionListener() {
  		 */
 		if(j == 1) // Column: QTY
 		{
-			JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
+			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
 			updateQTY();
-//            updateSubTotal();
-            table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
+            updateSubTotal();
+             // table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 		}
 		
 		if(j == 2) // Column: Category 
@@ -2237,20 +2234,17 @@ public void buildActionListener() {
 //			  updateSubTotal();
 			  table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 	      }
-		  if( j == 6) // Column: Tax
-		  {
+		  if( j == 6)  { // Column: Tax
 				updateTax();
 				table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 				}
 	      
-	      if ( j == 7 ) // Column: Discount
-	      {
+	      if ( j == 7 )  { // Column: Discount
 	          	updateDiscount();
 	          	table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 	      }
 
-	      if ( j == 8 ) // Column: OnHand
-	      {
+	      if ( j == 8 )  { // Column: OnHand
 	          updateDiscount();
 	          table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 	      }
@@ -2269,17 +2263,85 @@ public void buildActionListener() {
  			// table_manager.setData( table,i,5,updateSubTotal() ); // Update Subtotal for this row
  			// table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
 
-
-		  // refreshTotal(table,0.00,0.00);
-
-
 			System.out.println("**********------------->>>>>> line item row: " + i + ";");
 			
 			System.out.println(formatter.format(Double.parseDouble(record.getTransactionSubTotal() ) ) );
 			System.out.println(formatter.format(Double.parseDouble(record.getTransactionTaxesTotal() ) ) );
 			System.out.println(formatter.format(Double.parseDouble(record.getTransactionTotal() ) ) );			
 			System.out.println(line_item.toString() );
+			
+			try { 
+            API http = new API();
+        	//JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
+            System.out.println("UPLOADING PRODUCT:");
 
+            String[] temp = new String[10];
+            j = 0;
+            
+            for(int k = 0; k < table_manager.getColumnCount(); k++)
+            {
+            	if(table_manager.getData(table,i,j).toString() == null) { }
+            	else {
+            	temp[k] = table_manager.getData(table,i,j).toString();
+            	}
+            	j++;
+            	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+            }
+            
+            http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9]);
+            
+            
+            
+            
+          
+            
+            /*
+
+  http.sendProductPostAPILineItem( 
+            		
+            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
+            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
+            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
+            		table_manager.getData(table,i,9).toString()
+            		);
+
+
+                        http.sendProductPostAPILineItem( 
+            		
+            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
+            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
+            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
+            		table_manager.getData(table,i,9).toString()
+            		);
+
+            
+            http.sendProductPostAPI(
+            		"consumer_uuid","issuer_uuid",client_id,client_name,
+            		"customer code",String.valueOf(invoiceNumber),"invoice_date","invoice_time",
+            		"USD",String.valueOf(invoice.getInvoiceTotal() ),"Tender Value",invoice.getTransactionChangeValue(),"ELECTRONIC DOCUMENT","INVOICE",
+            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
+            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
+            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
+            		table_manager.getData(table,i,9).toString()
+            		);
+            		*/
+			}catch(Exception e)
+			{
+				
+				System.out.println("Error: Code Blue: uploading line item to Lockwind cloud ");
+				System.out.println( e.toString() );
+			}
+
+	/*		API -> SendProductPostAPI
+	 * 		 String consumer_uuid, String issuer_uuid,String client_id,String client_name,
+	 		 String customer_code,String invoice_number,String invoice_date,String invoice_time,
+			 String invoice_currency,String total_value,String tender_value,String change_value,
+			 String transaction_type,String transaction_type_value
+			 String reference_code, String quantity, String category,
+			 String description,String price, String subtotal, 
+			 String tax, String discount, String onhand, String line_item_id
+*/
+	
 
 			
 // Register Enter Key action Proc 
@@ -2353,10 +2415,13 @@ public void buildActionListener() {
 
 }
 }
-}else { 
+} else { 
 System.out.println("Register Enter Key Action Error: Credit card payment terminal cannot be reached");
 
-}}
+}
+	
+		
+		
 
 
 		}
@@ -3375,18 +3440,20 @@ public void refreshTotal()
           invoice.buildInvoice();
 
           
-//          JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
           /*
           try {
               ClientInvoiceReport http = new ClientInvoiceReport();
               http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",formatter.format(total),formatter.format(tendered),formatter.format(change));
               http.sendPost();
               in = 0;
+          	
+              ClientInvoiceReport http = new ClientInvoiceReport();
+          	  
+          	  JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
               System.out.println("UPLOADING PRODUCT:");
               http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table.getData(table,in,1).toString(),getData(table,in,2).toString(),getData(table,in,3).toString(),getData(table,in,4).toString(),getData(table,in,5).toString(),getData(table,in,6).toString(),getData(table,in,7).toString() );
-              
 
-              // Thread.sleep(1000);
+				Thread.sleep(1000);
 
           
           
@@ -3409,35 +3476,35 @@ public void refreshTotal()
   public void updateQTY(){
 
 	  System.out.println("Register->UpdateQTY");
-  int i = 0; int j = 0;
-  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
+	  int i,j = 0;
   
-  i = table.getSelectedRow();
-  j = table.getSelectedColumn();
-  String inputQty = "";
-  inputQty = JOptionPane.showInputDialog(null,"Enter the Quantity:",table_manager.getData(table,i,j).toString());
+	  if(table.isEditing()){ table.getCellEditor().stopCellEditing(); }
+  
+	  i = table.getSelectedRow();
+	  j = table.getSelectedColumn();
+	  
+	  String inputQty = "";
+	  inputQty = JOptionPane.showInputDialog(null,"Enter the Quantity: ",table_manager.getData(table,i,j).toString());
 
-  error_message = validator.validateQuantity(inputQty);
+	  error_message = validator.validateQuantity(inputQty);
   
-  if(error_message.equalsIgnoreCase("") == true)
-  {
-      table_manager.setData(table,i,1,inputQty);
-  }
-  else {
-	  JOptionPane.showMessageDialog(null, error_message);
-	  table_manager.setData(table,i,1,"1");
-  }
+	  if(error_message.equalsIgnoreCase("") == true) { 
+		  table_manager.setData(table,i,1,inputQty); 
+		  }
+	  else {
+		  JOptionPane.showMessageDialog(null, error_message);
+//		  table_manager.setData(table,i,1,"1");
+	  }
   
-  table_manager.setData(table,i,5,table_manager.getSubTotal(table,i));
-  table_manager.setData(table,i,6,table_manager.getTax(table,i));
-
-//  	updateTax();
+	  table_manager.setData(table,i,5,table_manager.getSubTotal(table,i));
+	  table_manager.setData(table,i,6,table_manager.getTax(table,i));
+	  
+	  updateTax();
  
  //	refreshTotal(table,0.00,0.00);
- 	table.changeSelection(++i,0,false,false);
+ 	// table.changeSelection(++i,0,false,false);
+  }
   
-  
-}
   public void updateDescription(){
   int i = 0; int j = 0;
   if(table.isEditing()){table.getCellEditor().stopCellEditing();}
@@ -3490,6 +3557,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
    table_manager.setData(table,i,6,table_manager.getTax(table,i));
   // refreshTotal(table,0.00,0.00);
   
+   table.requestFocus();
   table.changeSelection(++i,0,false,false);
   
 
@@ -3718,7 +3786,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           //response = http.sendPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
           // System.out.println("WS Response:" + response);
           
-//          Thread.sleep(1000);
+/*          Thread.sleep(1000);
 
           response = http.sendProductPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change),
         		  table_manager.getData(table,in,0).toString(),
@@ -3734,7 +3802,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
         		  
         		  );
 
-          
+          */
           //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
 
       }catch(Exception ex){}

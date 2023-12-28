@@ -35,9 +35,6 @@ public class API {
 		 
 	 }
 	
-	 public double getSubtotal() { 
-		 
-	 }
 	 
 	 public static double getDaysBetween(LocalDate start, LocalDate end) {
 	        return ChronoUnit.DAYS.between(start, end);
@@ -65,6 +62,9 @@ public class API {
 	 
 	 public String addCustomerAPI(Customer c,String cient_id)
 	 {
+		 String temp = "";
+		 return temp;
+		 /*			
 		 	url = "https://lockwind.com/test/TM/AddCustomerAPI.php";
 		 	urlParameters = "";
 			response_buffer = new StringBuffer();
@@ -77,7 +77,6 @@ public class API {
 			 con.setRequestMethod("POST");
 			 con.setRequestProperty("User-Agent", USER_AGENT);
 			 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
-			
 			 urlParameters =  "customer_code="+ c.getCustomerBillToCode() +"&" ; 
 			 urlParameters += "customer_name="+ c.getCustomerBillToName() +"&" ;
 		     urlParameters += "customer_phone_number="+ c.getCustomerBillToPhoneNumber() +"&" ;
@@ -99,6 +98,7 @@ public class API {
 		 	} catch(Exception e) {}
 		 	
 		 	return response_buffer.toString();
+		 	*/
 	}
 	 
 	 
@@ -248,11 +248,77 @@ public class API {
 	
 	 
 	 
+	 
+ public String sendProductPostAPILineItem( // Send the line item information to the Lockwind Cloud
+			 
+			 String reference_code, String quantity, String category,String description, 
+			 String price, String subtotal, String tax, String discount, String onhand, String line_item_id
+
+			 ) throws Exception {
+		 	
+		 	 url 			= "";
+		 	 urlParameters 	= "";
+
+		 	 url 			= "https://lockwind.com/test/TM/AddTransactionLineItemAPIv2.php";
+			 obj 			= new URL(url);
+			 con 			= (HttpURLConnection) obj.openConnection();
+
+			 con.setRequestMethod("POST");
+			 con.setRequestProperty("User-Agent", USER_AGENT);
+			 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			
+			 urlParameters += "transaction_type="+ "ELECTRONIC_DOCUMENT" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+			 urlParameters += "transaction_type_value="+ "LINE_ITEM" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+		     
+		     
+		     urlParameters += "reference_code="+ reference_code +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "quantity="+ quantity +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "category="+ category +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "description="+ description +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "price="+ price +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "subtotal="+ subtotal +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "tax="+ tax +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "discount="+ discount +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "onhand="+ onhand +"&";  // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "line_item="+ line_item_id +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+
+		     
+		     
+		     con.setDoOutput(true);
+			 wr = new DataOutputStream(con.getOutputStream());
+			 wr.writeBytes(urlParameters);
+			 wr.flush();
+			 wr.close();
+
+			 responseCode = con.getResponseCode();
+			 System.out.println("\nSending 'POST' request to URL : " + url);
+			 System.out.println("Post parameters : " + urlParameters);
+			 System.out.println("Response Code : " + responseCode);
+
+			 in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+			 response_buffer= new StringBuffer();
+
+			 while ((inputLine = in.readLine()) != null) {
+				response_buffer.append(inputLine);
+			 }
+			 in.close();
+
+			 return response_buffer.toString();
+
+		}
+	 
+	 
 
 	 
-	 public String sendProductPost(String consumer_uuid, String issuer_uuid,String client_id,String client_name,String customer_code,String invoice_number,String invoice_date,String invoice_time,String invoice_currency,String total_value,String tender_value,String change_value,
+	 public String sendProductPostAPI( // Send the line item information to the Lockwind Cloud
 			 
-			 String reference_code, String quantity, String description, String category, String price, String subtotal, String tax, String discount, String onhand, String line_item_id
+			 String consumer_uuid, String issuer_uuid,String client_id,String client_name,
+			 String customer_code,String invoice_number,String invoice_date,String invoice_time,
+			 String invoice_currency,String total_value,String tender_value,String change_value,
+			 String transaction_type,String transaction_type_value,
+			 String reference_code, String quantity, String category,String description, 
+			 String price, String subtotal, String tax, String discount, String onhand, String line_item_id
+
 			 ) throws Exception {
 		 	
 		 	 url 			= "";
@@ -266,34 +332,33 @@ public class API {
 			 con.setRequestProperty("User-Agent", USER_AGENT);
 			 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 			
-			 urlParameters =  "consumer_uuid="+ consumer_uuid +"&" ;
-			 urlParameters += "issuer_uuid="+ issuer_uuid +"&" ;			 
-			 urlParameters += "client_id="+ client_id +"&" ;
-		     urlParameters += "client_name="+ client_name.trim() +"&" ;
-		     urlParameters += "customer_code="+ customer_code +"&" ;
-		     urlParameters += "invoice_number="+ invoice_number +"&";
-		     urlParameters += "invoice_date="+ invoice_date +"&";
-		     urlParameters += "invoice_time="+ invoice_time +"&" ;
-		     urlParameters += "invoice_currency="+ invoice_currency +"&";
-		     urlParameters += "total_value="+ total_value +"&" ;
-		     urlParameters += "tender_value="+ tender_value +"&";
-		     urlParameters += "change_value="+ change_value +"";
+			 urlParameters =  "consumer_uuid="+ consumer_uuid +"&" ; // in MySQL Table JAVAPOS_TRANSACTION
+			 urlParameters += "issuer_uuid="+ issuer_uuid +"&" ;	// in MySQL Table JAVAPOS_TRANSACTION		 
+			 urlParameters += "client_id="+ client_id +"&" ;// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "client_name="+ client_name.trim() +"&" ;// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "customer_code="+ customer_code +"&" ;// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "invoice_number="+ invoice_number +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "invoice_date="+ invoice_date +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "invoice_time="+ invoice_time +"&" ;// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "invoice_currency="+ invoice_currency +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "total_value="+ total_value +"&" ;// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "tender_value="+ tender_value +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "change_value="+ change_value +"";// in MySQL Table JAVAPOS_TRANSACTION
 
-			 urlParameters += "issuer_uuid="+ issuer_uuid +"&" ;			 
-			 urlParameters += "transaction_type="+ "INVOICE" +"&" ;			 
-			 urlParameters += "transaction_type_value="+ "PAID" +"&" ;			 
+			 urlParameters += "transaction_type="+ "INVOICE" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+			 urlParameters += "transaction_type_value="+ "PAID" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
 		     
 		     
-		     urlParameters += "reference_code="+ reference_code +"";
-		     urlParameters += "quantity="+ quantity +"";
-		     urlParameters += "description="+ description +"";
-		     urlParameters += "category="+ category +"";
-		     urlParameters += "price="+ price +"";
-		     urlParameters += "subtotal="+ subtotal +"";
-		     urlParameters += "tax="+ tax +"";
-		     urlParameters += "discount="+ discount +"";
-		     urlParameters += "onhand="+ onhand +"";
-		     urlParameters += "line_item="+ line_item_id +"";
+		     urlParameters += "reference_code="+ reference_code +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "quantity="+ quantity +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "category="+ category +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "description="+ description +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "price="+ price +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "subtotal="+ subtotal +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "tax="+ tax +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "discount="+ discount +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "onhand="+ onhand +"&";  // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "line_item="+ line_item_id +"&"; // in MySQL Table JAVAPOS_TRANSACTION
 
 		     
 		     

@@ -28,6 +28,11 @@ class ColumnMapper {
         columnMap.put(columnName, columnCount);
         columnCount++;
     }
+    public int getColumnCount() {
+    	int temp = 0;
+    	temp = columnCount;
+    	return temp;
+    }
 
     public int getColumnNumber(String columnName) {
         if (columnMap.containsKey(columnName)) {
@@ -73,6 +78,10 @@ public class TableManager {
   }
 
 
+	public int getColumnCount()
+	{
+		return columnMapper.getColumnCount();
+	}
 
 
 	public void setRetailerUUID(String uuid) {
