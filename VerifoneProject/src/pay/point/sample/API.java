@@ -253,7 +253,7 @@ public class API {
 			 
 			 String reference_code, String quantity, String category,String description, 
 			 String price, String subtotal, String tax, String discount, String onhand, String line_item_id
-
+//			 ,String document_number
 			 ) throws Exception {
 		 	
 		 	 url 			= "";
@@ -280,7 +280,7 @@ public class API {
 		     urlParameters += "tax="+ tax +"&";// in MySQL Table JAVAPOS_TRANSACTION
 		     urlParameters += "discount="+ discount +"&"; // in MySQL Table JAVAPOS_TRANSACTION
 		     urlParameters += "onhand="+ onhand +"&";  // in MySQL Table JAVAPOS_TRANSACTION
-		     urlParameters += "line_item="+ line_item_id +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "line_item_id="+ line_item_id +"&"; // in MySQL Table JAVAPOS_TRANSACTION
 
 		     
 		     

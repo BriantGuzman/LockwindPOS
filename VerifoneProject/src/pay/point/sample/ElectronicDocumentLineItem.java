@@ -28,17 +28,17 @@ public class ElectronicDocumentLineItem {
         // V2 of this concept is the class InvoiceLineItemTax which will create a node for each type of tax associated with an object.
 
         private double price_wholesale; 
-        private String tax_code;
-        private double tax_rate;
-        private String vat_code;
-        private double vat_rate;
+        private String tax_code; // can be used per line item. also the same as vat_code
+        private double tax_rate; // can be used per line item. also the same as vat_rate
+        private String vat_code_transferred;
+        private double vat_rate_transferred;
+        private String vat_code_retained;
+        private double vat_rate_retained;
         
     
         // System calculated values, Cannot be set by user
         private double on_hand_inventory;
         
-        // Must be included by the user
-        private double discount;
         
         private ElectronicDocumentLineItem next;
         private ElectronicDocumentLineItem prev;
@@ -96,16 +96,19 @@ public class ElectronicDocumentLineItem {
         // Tax Related Codes and Rates
         public void setTaxRate(double tax_rate) { this.tax_rate = tax_rate; }
         public double getTaxRate() { return this.tax_rate; }
+        
         public void setTaxCode(String tax_code) { this.tax_code = tax_code; }
         public String getTaxCode() { return this.tax_code; }
+        
+        public void setTaxExempt() { tax_rate = 0.00; tax_value = 0.00;}
+        public void removeTaxExempt() { }
+        
+        public void setTaxes() { tax_value = this.getSubtotal() * this.getTaxRate(); }
+        public double getTaxes() { setTaxes(); return tax_value; }
         
         public void setSubtotal() { subtotal_value = qty * price_retail; }
         public double getSubtotal() { setSubtotal(); return subtotal_value; }
         
-        public void setTaxExempt() { tax_rate = 0.00; tax_value = 0.00;}
-        public void removeTaxExempt() { }
-        public void setTaxes() { tax_value = this.getSubtotal() * this.getTaxRate(); }
-        public double getTaxes() { setTaxes(); return tax_value; }
         
         public void setNext(ElectronicDocumentLineItem next) { this.next = next; }
         public ElectronicDocumentLineItem getNext() { return this.next; }

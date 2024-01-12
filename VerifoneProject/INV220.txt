@@ -1,0 +1,30 @@
+----------------------------------------
+Hello World from Briant Guzman
+
+null      null
+
+1/8/24    04:18:53 PM   Invoice No: 220
+CUSTOMER CODE: CASH
+CUSTOMER Name: CASH
+CUSTOMER Phone Number: CASH
+CUSTOMER Email: CASH
+NAME: 
+REG:   REGISTER 1
+----------------------------------------
+ QTY UPC                 PRICE  SUBTOTAL
+ DESCRIPTION                            
+ 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
+ GENERAL PRODUCT CODES                     
+
+                         SUB TOTAL $ 2.99
+                         SALES TAX $ 0.27
+                         TOTAL     $ 3.26
+
+                         TENDERED  $ 0.00
+                         CHANGE    $ -3.26
+Item Count: 1
+----------------------------------------
+Thank you for shopping with null
+For the best Point of Sale System call Lockwind at +1 347 808 5425
+
+----------------------------------------

@@ -389,6 +389,15 @@ public class Register  implements ActionListener,FocusListener {
 	  private Font font2;
       private Timer timer;
 
+      private String account_selected;
+      private JOptionPane t;
+      private String response;
+      private int in;
+      private String productName;
+      private String store_print_name;
+      private int item_count;
+      
+      
       
 	  public void setConstructorValues() {
 			// action: organize elements, Initialize components,
@@ -539,7 +548,16 @@ public class Register  implements ActionListener,FocusListener {
 			formatter 									= null;
 			
 			electronic_document							= null;
-			
+		    
+			account_selected 							= null;
+		    t 											= null;
+		     
+		    response 									= "";
+		    in 											= 0;
+		    productName 		 						= "";
+		    store_print_name 	 						= "";
+		    item_count 			 						= 0;
+
 	  }
 	  
 	  public void setComponentDefaultValues() {
@@ -570,7 +588,7 @@ public class Register  implements ActionListener,FocusListener {
 		    today                       				= new Date();
 		    simpDate                    				= new SimpleDateFormat("hh:mm:ss a");
 		    formatter 									= new DecimalFormat("#0.00");
-
+		    
 		  	frame                       				= new JFrame();
 		  	panel                       				= new JPanel();
 		  	tablePanel                 		 			= new JPanel();			
@@ -667,7 +685,8 @@ public class Register  implements ActionListener,FocusListener {
 		    default_printer_receipt						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_invoice						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_display						= new JComboBox<String>( printer_management_system.printComboBoxList() );
-			payment_method 								= new JComboBox(paymentMethods);
+
+		    payment_method 								= new JComboBox(paymentMethods);
 
 		    table										. setRowHeight(25);
 		    table										. setCellSelectionEnabled(true);
@@ -1893,9 +1912,8 @@ public Register() {
 	
 	
 	
-/*// Temporarily disabled in order to complete it correctly. on 9/18/2023. */
+/*// Temporarily disabled in order to complete it correctly. on 9/18/2023.
 
-	/*
 			System.out.println("Register-> Session with Verifone Device");
 			try { 
 			  registerPOS();
@@ -1955,12 +1973,13 @@ public void RegisterVerifone() {
 	if(registerStatus == false)
 try {
 
-	
+	/*
 	//	  registerPOS();
 	//	  Thread.sleep(1000);
 	//	  registerStatus = true;
 	//		System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
-
+*/
+	
 }catch(Exception e) {
 		System.out.println("Error at Register set default values " + e.toString());
 	}
@@ -2163,8 +2182,9 @@ public void buildActionListener() {
 		line_item 								= new ElectronicDocumentLineItem();
 		
 	    
-		if(j== 0)  { // Column: UPC
-		
+		if(j== 0)  { 
+			
+			// Column: UPC
 			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating GTIN");
 			// JOptionPane.showMessageDialog(null,table_manager.getData(table,i,j).toString());
 		
@@ -2183,12 +2203,11 @@ public void buildActionListener() {
 		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
 		  table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
 
-		  line_item.setUPC			(table_manager.getData(table,i,0).toString() );
-		  line_item.setQTY			(Double.parseDouble( table_manager.getData(table,i,1).toString() ) );
-		  line_item.setDescription	(table_manager.getData(table,i,3).toString() );
-		  line_item.setCategory		(table_manager.getData(table,i,2).toString() );
-		  line_item.setRetailPrice	(Double.parseDouble( table_manager.getData(table,i,4).toString() ) );
-
+		  line_item.setUPC			(table_manager.getData	( table,i,0).toString() );
+		  line_item.setQTY			(Double.parseDouble		( table_manager.getData(table,i,1).toString() ) );
+		  line_item.setCategory		(table_manager.getData	( table,i,2).toString() );
+		  line_item.setDescription	(table_manager.getData	( table,i,3).toString() );
+		  line_item.setRetailPrice	(Double.parseDouble		( table_manager.getData(table,i,4).toString() ) );
 		  
 		  line_item.getSubtotal		();
 		  line_item.getTaxes		();
@@ -2251,9 +2270,7 @@ public void buildActionListener() {
 
  			updateRow(table,i);
 	 		refreshTotal(table,0.00,0.00);
-			table.changeSelection(i++,0, false,false);
-			table.requestFocus();
-
+			
 			System.out.println( "Electronic Document: " + record.toString() + "");
 			subtotalLabel.setText( 	"$ " + record.getTransactionSubTotal() ); // Set value to UI Label
  			taxesLabel.setText( 	"$ " + record.getTransactionTaxesTotal() ); // Set value to UI Label
@@ -2275,12 +2292,14 @@ public void buildActionListener() {
         	//JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
             System.out.println("UPLOADING PRODUCT:");
 
-            String[] temp = new String[10];
+            String[] temp = new String[table.getColumnCount()*2];
             j = 0;
             
-            for(int k = 0; k < table_manager.getColumnCount(); k++)
+            for(int k = 0; k < table.getColumnCount(); k++) // Per column 
             {
-            	if(table_manager.getData(table,i,j).toString() == null) { }
+            	if(table_manager.getData(table,i,j) == null) { // Column value is null 
+            	System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+            	}
             	else {
             	temp[k] = table_manager.getData(table,i,j).toString();
             	}
@@ -2288,10 +2307,12 @@ public void buildActionListener() {
             	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
             }
             
-            http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9]);
+            table_manager.setData(table, i, 9,http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9]) );
             
             
-            
+            table.changeSelection(i+1,0, false,false);
+			table.requestFocus();
+
             
           
             
@@ -2352,8 +2373,6 @@ public void buildActionListener() {
 			//registerPOS();
 			//registerStatus = true;
 		
-			
-		
 	} catch(Exception a1) {  }
 	}
 
@@ -2384,13 +2403,15 @@ public void buildActionListener() {
 				  temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
 	            System.out.println(temp);
 
-} catch(Exception e){
-		System.out.println("Error starting session: " + e.toString() );
-//				  startSession();
+			  } catch(Exception e){
+				  
+				  System.out.println("Error starting session: " + e.toString() );
+
+				  // startSession();
 
 				try { 
-//	  			  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-	//				String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+				//	  			  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+				//				String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				
 				if( table_manager.getData(table, i, 0).toString().equalsIgnoreCase("") ) 
 				{
@@ -2416,15 +2437,11 @@ public void buildActionListener() {
 }
 }
 } else { 
-System.out.println("Register Enter Key Action Error: Credit card payment terminal cannot be reached");
+
+	System.out.println("Register Enter Key Action Error: Credit card payment terminal cannot be reached");
 
 }
-	
-		
-		
-
-
-		}
+}
 
 		});
 
@@ -2528,8 +2545,7 @@ System.out.println("Register Enter Key Action Error: Credit card payment termina
 	}
 	else
 	{
-	  if(col == 0) { /*  actionGTIN();  */
-	  }
+	  if(col == 0) { /*  actionGTIN();  */ }
 	  if( col == 1) { updateQTY(); }
 	  if( col == 2) {} // updateCategory(); -- implement this function to retrieve the category according to the UPC/GTIN provided.
 	  if( col == 3) { updateDescription(); }
@@ -2560,9 +2576,9 @@ System.out.println("Register Enter Key Action Error: Credit card payment termina
 			try { 
 				  unregisterPOSAll();
 				  Thread.sleep(1000);
-}catch(Exception e){
-System.out.println("error could not unregister POS");
-}
+			}catch(Exception e){
+				System.out.println("error could not unregister POS");
+			}
 			System.exit(0);
 	  }
 	  else{
@@ -2575,6 +2591,10 @@ System.out.println("error could not unregister POS");
 
 public void focusGained(FocusEvent e)
 {
+
+	if( e.getSource() instanceof JTable)
+	{
+	}
 	if( e.getSource() instanceof JTextArea)
 	{
 		JTextArea temp = null;
@@ -3163,6 +3183,15 @@ public void refreshTotal()
 
 
 
+public void buildElectronicDocument() { 
+	
+	
+	  System.out.println(" Register->@buildElectronicDocument() ");
+	
+	  
+	
+}
+
  
 
   public void refreshTotal(JTable table, double tender_value, double change_value)
@@ -3232,166 +3261,55 @@ public void refreshTotal()
 	  
   
 	  System.out.println("Register->@saveTableToReceipt()");
+	  // CreateReceipt test      = new CreateReceipt(); -> Does this class exist? if not then delete line
+      FileWriter file         		= null;
+      PrintWriter outputFile  		= null;
       
-      String da               = "";
-      FileWriter file         = null;
-      PrintWriter outputFile  = null;
+      String da               		= "";
+      String productName 			= "";
+      
+      int invoiceNumber       	  	= 0;
+      int in 						= 0;
+      
 
-      int invoiceNumber       = 0;
+      SimpleDateFormat simpDate   	= null;
 
-//      CreateReceipt test      = new CreateReceipt();
+      Date 		 today				= null;
+      DateFormat fmt              	= null;
 
-      Date today;
-      SimpleDateFormat simpDate;
+      double tendered             	= 0.00;
+      double subtotal             	= 0.00;
+      double totaltaxes           	= 0.00;
+      double total                	= 0.00; 
+      double change               	= 0.00;
+      double discount             	= 0.00;
+      double TAX_RATE             	= 0.08975;
 
-      DateFormat fmt              = null;
-      Locale[]     locale         =     {US,UK,GERMANY,FRANCE}        ;
-      int[]         styles        =     {FULL,LONG,MEDIUM,SHORT}    ;
-      String[]     styleNames     =     {"FULL","LONG","MEDIUM","SHORT"};
-      fmt                         =     null;
+      Locale[]   locale         	= {US,UK,GERMANY,FRANCE};
+      int[]      styles        		= {FULL,LONG,MEDIUM,SHORT};
+      String[]   styleNames     	= {"FULL","LONG","MEDIUM","SHORT"};
+      fmt                         	= null;
 
-      double tendered             = 0.00;
-      double subtotal             = 0.00;
-      double totaltaxes           = 0.00;
-      double total                = 0.00;
-      double change               = 0.00;
-      double discount             = 0.00;
-      double TAX_RATE             = 0.08975;
+      today                 		= new Date();
+      fmt                   		= DateFormat.getDateInstance(styles[3], locale[0]);
+      simpDate             			= new SimpleDateFormat("hh:mm:ss a");
+
+      subtotal 						= table_manager.getColumnTotal(table,5);
+      totaltaxes 					= table_manager.getColumnTotal(table,6);
+      discount 						= table_manager.getColumnTotal(table,7);
+      
+      total 						= subtotal 	+ totaltaxes;
+      total 						= total 	- discount;
+      change 						= tendered 	- total;
 
       
-      try{
-          try { invoiceNumber = Integer.parseInt(invoice.getInvoiceNumber() ); }catch(Exception e){}
-          
-          file            = new FileWriter("INV"+ String.valueOf(invoiceNumber) +".txt");
-          outputFile      = new PrintWriter(file);
-
-          
-          outputFile.println    ("----------------------------------------");
-          /*
-          outputFile.println        (erp.getStoreName())        ;
-          outputFile.println(erp.getStoreAddress() + " " + erp.getStoreSecondAddress());
-          outputFile.println(""+erp.getStorePhoneNumber()+ "      " +erp.getStoreFaxNumber());
-          outputFile.println();
-
-          */
-          outputFile.println("Hello World from Briant Guzman\n");
-          outputFile.println(record.getStoreName() );
-          outputFile.println(record.getBillToCustomerAddressData() + " " + record.getBillToCustomerAddressData());
-          outputFile.println(""+ record.getBillToCustomerPhoneNumberData() + "      " + record.getBillToCustomerFaxNumberData());
-          outputFile.println();
-
-          
-          today                 =     new Date();
-          fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);
-          simpDate             	=     new SimpleDateFormat("hh:mm:ss a");
-          
-          
-          outputFile.println(fmt.format(today) + "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
-          outputFile.println("CUSTOMER CODE: " 			+ account_name_input.getSelectedItem() );
-          outputFile.println("CUSTOMER Name: " 			+ account_name_input.getSelectedItem() );
-          outputFile.println("CUSTOMER Phone Number: " 	+ account_name_input.getSelectedItem() );
-          outputFile.println("CUSTOMER Email: " 		+ account_name_input.getSelectedItem() );
-          outputFile.println("NAME: ");
-          //outputFile.println("CODE:  CASH");
-          outputFile.println("REG:   REGISTER 1");
-          outputFile.println("----------------------------------------");
-          
-          outputFile.println(" QTY UPC                 PRICE  SUBTOTAL");
-          outputFile.println(" DESCRIPTION                            ");
-          
-          int in = 0;
-          String productName = "";
-          
-          while(table_manager.getData(table,in,0) != null && (!table_manager.getData(table,in,0).toString().equals("")) ){
-              
-              
-              
-              da = " ";
-              if(table_manager.getData(table,in,1)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,1).toString(),3);}
-              if(table_manager.getData(table,in,0)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,0).toString(),19);}
-              
-              if(table_manager.getData(table,in,2)!= null){
-            	  
-                  productName = table_manager.getData(table,in,2).toString();
-                  productName = format_manager.increaseLength(productName,43);
-                  productName = " "+ productName.substring(0,42);}
-              
-              if(table_manager.getData(table,in,4)!= null){
-            	  
-                  da = da + format_manager.increaseLength(table_manager.getData(table,in,3).toString(),10);
-                  da = da + format_manager.increaseLength(table_manager.getData(table,in,4).toString(),4);}
-              
-              outputFile.println(da);
-              outputFile.println(productName+"\n");
-              
-              System.out.println("saving account " + in);
-              da = "";in++;
-              
-          }
-          
-          // String amount = JOptionPane.showInputDialog("Please Enter Amount Given");
-          
-          tendered = Double.parseDouble(	record.getTransactionTenderValue() );
-          subtotal = Double.parseDouble( 	record.getTransactionTotal() );
-          totaltaxes = Double.parseDouble( 	record.getTransactionTaxesTotal() );
-          discount = Double.parseDouble(	record.getTransactionDiscountTotal() );
-
-          
-          // discount = table_manager.getColumnTotal(table,6);
-          // totaltaxes = table_manager.getColumnTotal(table,5);
-          // discount = table_manager.getColumnTotal(table,6);
-          
-          total = subtotal + totaltaxes;
-          total = total - discount;
-          
-          change = tendered - total;
-          
-          // NumberFormat formatter = new DecimalFormat("#0.00");
-          outputFile.println("                         SUB TOTAL $ "+ formatter.format(subtotal));
-          outputFile.println("                         SALES TAX $ "+ formatter.format(totaltaxes));
-          
-          if(discount != 0.00) {
-          outputFile.println("                         DISCOUNT  $ "+ formatter.format(discount));}
-          else{}
-          
-          
-          outputFile.println("                         TOTAL     $ "+ formatter.format(total));
-          outputFile.println("");
-          outputFile.println("                         TENDERED  $ " + formatter.format(tendered));
-          outputFile.println("                         CHANGE    $ " + formatter.format(change));
-          
-          JOptionPane.showMessageDialog(null,"Change: " + "$"+formatter.format(change));
-
-          refreshTotal(table,tendered,change);
-          
-          int item_count = 0;
-          
-          for( int i = 0; i < table.getRowCount();i++) {
-              
-        	  if(table.getValueAt(i,0) == null || table.getValueAt(i,0).toString().equalsIgnoreCase("")  ) { } 
-        	  else{ item_count++; }
-          }
-          outputFile.println("Item Count: " + item_count);
-          
-          outputFile.println("----------------------------------------");
-          outputFile.println("Thank you for shopping with " + record.getStoreName() + "");
-          outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
-          outputFile.println("");
-          outputFile.println("----------------------------------------");
-          
-          outputFile.close();
-          
-          
-          
-          
-          
-  		try {
+      try { invoiceNumber = Integer.parseInt(invoice.getInvoiceNumber() ); }catch(Exception e){}
+      
+      
+	  try {
 		    
 			// invoice.setDirectory("./target/classes/lockwind/com/outbound_invoice/");
-  		System.out.println("************************************************");
-  		System.out.println(invoice.toString());
-  		System.out.println("************************************************");
-  	
+	
 		
 		invoice										.setTransactionType("Invoice");
 		invoice										.setTransactionUUID(invoice.getInvoiceNumber());
@@ -3420,13 +3338,8 @@ public void refreshTotal()
 		invoice										.setBillToCustomerEmailAddressData( account_name_input.getSelectedItem().toString() );
 		invoice										.setBillToCustomerPhoneNumberData( account_name_input.getSelectedItem().toString() );
 		
-        outputFile.println("REG:   REGISTER 1");
-        outputFile.println("----------------------------------------");
-        
-        outputFile.println(" QTY UPC                 PRICE  SUBTOTAL");
-        outputFile.println(" DESCRIPTION                            ");
-
-		
+		System.out.println("************************************************");
+	//	System.out.println(invoice.toString());
 		
 		}catch(Exception e) {
 			
@@ -3434,13 +3347,76 @@ public void refreshTotal()
 			
 		}
 
+      
+      try{
+          
+          file            		= 	  new FileWriter("INV"+ String.valueOf(invoiceNumber) +".txt");
+          outputFile      		= 	  new PrintWriter(file);
+
+
+
+          outputFile.println    ("----------------------------------------");
+          /*
+          outputFile.println        (erp.getStoreName())        ;
+          outputFile.println(erp.getStoreAddress() + " " + erp.getStoreSecondAddress());
+          outputFile.println(""+erp.getStorePhoneNumber()+ "      " +erp.getStoreFaxNumber());
+          outputFile.println();
+          outputFile.println("Hello World from Briant Guzman\n");
+          //outputFile.println("CODE:  CASH");
+          */
+          
+          outputFile.println(invoice.getStoreName() );
+          outputFile.println(invoice.getBillToCustomerAddressData() 		+ " " 		+ invoice.getBillToCustomerAddressData());
+          outputFile.println(""+ invoice.getBillToCustomerPhoneNumberData() + "      "  + invoice.getBillToCustomerFaxNumberData());
+          outputFile.println();
           
           
-          
-          invoice.buildInvoice();
+          outputFile.println(fmt.format(today) + "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
+          outputFile.println("CUSTOMER CODE: " 			+ account_name_input.getSelectedItem() );
+          outputFile.println("CUSTOMER Name: " 			+ account_name_input.getSelectedItem() );
+          outputFile.println("CUSTOMER Phone Number: " 	+ account_name_input.getSelectedItem() );
+          outputFile.println("CUSTOMER Email: " 		+ account_name_input.getSelectedItem() );
+          outputFile.println("NAME: ");
+          outputFile.println("REG:   REGISTER 1");
+          outputFile.println("----------------------------------------");
+          outputFile.println(" QTY UPC                 PRICE  SUBTOTAL");
+          outputFile.println(" DESCRIPTION                            ");
 
           
+          while(table_manager.getData(table,in,0) != null && (!table_manager.getData(table,in,0).toString().equals("")) ){
+              
+              da = " ";
+              if(table_manager.getData(table,in,1)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,1).toString(),3);}
+              if(table_manager.getData(table,in,0)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,0).toString(),19);}
+              
+              if(table_manager.getData(table,in,2)!= null){
+            	  
+                  productName = table_manager.getData(table,in,2).toString();
+                  productName = format_manager.increaseLength(productName,43);
+                  productName = " "+ productName.substring(0,42);}
+              
+              if(table_manager.getData(table,in,4)!= null){
+            	  
+                  da = da + format_manager.increaseLength(table_manager.getData(table,in,3).toString(),10);
+                  da = da + format_manager.increaseLength(table_manager.getData(table,in,4).toString(),4);}
+              
+              outputFile.println(da);
+              outputFile.println(productName+"\n");
+                            
+              da = "";
+              in++;
+          }
+          
+          
           /*
+          String amount = JOptionPane.showInputDialog("Please Enter Amount Given");
+          tendered = Double.parseDouble(	record.getTransactionTenderValue() );
+          subtotal = Double.parseDouble( 	record.getTransactionTotal() );
+          totaltaxes = Double.parseDouble( 	record.getTransactionTaxesTotal() );
+          discount = Double.parseDouble(	record.getTransactionDiscountTotal() );
+          // NumberFormat formatter = new DecimalFormat("#0.00");
+
+          //
           try {
               ClientInvoiceReport http = new ClientInvoiceReport();
               http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",formatter.format(total),formatter.format(tendered),formatter.format(change));
@@ -3458,7 +3434,43 @@ public void refreshTotal()
           
           
           }catch(Exception e){}
-          */
+          
+           */
+          
+
+          
+          outputFile.println("                         SUB TOTAL $ "+ formatter.format(subtotal));
+          outputFile.println("                         SALES TAX $ "+ formatter.format(totaltaxes));
+          if(discount != 0.00) { 
+          outputFile.println("                         DISCOUNT  $ "+ formatter.format(discount));} else{}
+          outputFile.println("                         TOTAL     $ "+ formatter.format(total) + "\n");
+          outputFile.println("                         TENDERED  $ " + formatter.format(tendered));
+          outputFile.println("                         CHANGE    $ " + formatter.format(change));
+          
+          JOptionPane.showMessageDialog(null,"Change: " + "$"+formatter.format(change));
+          
+          refreshTotal(table,tendered,change);
+          
+          int item_count = 0;
+          
+          for( int i = 0; i < table.getRowCount();i++) {
+              
+        	  if(table.getValueAt(i,0) == null || table.getValueAt(i,0).toString().equalsIgnoreCase("")  ) { } 
+        	  else{ item_count++; }
+          }
+          outputFile.println("Item Count: " + item_count);
+          outputFile.println("----------------------------------------");
+          outputFile.println("Thank you for shopping with " + invoice.getStoreName() + "");
+          outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
+          outputFile.println("----------------------------------------");
+          
+          outputFile.close();
+          
+          buildElectronicDocument();
+          
+          invoice.buildInvoice();
+          
+
           
       }catch(IOException e){}
 
@@ -3468,11 +3480,18 @@ public void refreshTotal()
   
   
       table.requestFocus();
-      table.changeSelection(0,0, false,false);
-      
+      table.changeSelection(0,0, false,false);      
   
-  /* build out this method. */ }
+  } // End Function/Method here.
 
+  
+  
+  
+  
+  
+  
+  
+  
   public void updateQTY(){
 
 	  System.out.println("Register->UpdateQTY");
@@ -3693,11 +3712,11 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
   
   public void tenderAction(double transaction_tender_value)
   {
+	  // Currently working on this function to make sure it works correctly. 1/7/24 (BG)
       System.out.println("Register->@tenderAction()");
       
-      row = 0; 
-      col = 0;
-
+      row 					= 0; 
+      col 					= 0;
 	  da          			= "";
       fmt					= null;
       file        			= null;
@@ -3708,87 +3727,67 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       total                	= 0.00;
       change               	= 0.00;
       discount             	= 0.00;
+
+	  formatter 			= new DecimalFormat("#0.00");
+      today                 = new Date();
+      fmt                   = DateFormat.getDateInstance      (styles[3], locale[0]);
+      simpDate             	= new SimpleDateFormat("hh:mm:ss a");
+
       
-      String account_selected 	= null;
-      JOptionPane t 			= null;
-      String response 			= "";
-      int in 					= 0;
-      String productName 		= "";
-      String store_print_name 	= "";
-      int item_count 			= 0;
-     
-      if(tender_amount.getText().equalsIgnoreCase(""))
-      {
-    	  tendered				= ali.chargeCustomer();
-      }
-      else {
-          tendered 				= Double.parseDouble(tender_amount.getText() );
-      }
+      if(tender_amount.getText().equalsIgnoreCase("")) { tendered				= ali.chargeCustomer(); }
+      else { tendered 				= Double.parseDouble(tender_amount.getText() ); }
+      
+      invoice				. setTransactionTenderValue(String.valueOf( tendered ));
       
       subtotal 				= table_manager.getColumnTotal(table,5);
       totaltaxes 			= table_manager.getColumnTotal(table,6);
       discount 				= table_manager.getColumnTotal(table,7);
-
-      
       
       total 				= subtotal + totaltaxes;
       total 				= total - discount;
       change 				= tendered - total;
       
-      invoice.setTransactionCurrency("USD");
-      invoice.setTransactionSubTotal(String.valueOf(subtotal));
-      invoice.setTransactionTaxesTotal(String.valueOf(totaltaxes));
-      invoice.setTransactionTotal(String.valueOf(total));
-      invoice.setTransactionDiscountTotal(String.valueOf(discount));
-      invoice.setTransactionTenderValue(String.valueOf(tendered));
-      invoice.setTransactionChangeValue(String.valueOf(change));
-      invoice.setBalanceDue(String.valueOf(total-tendered));
+      invoice				. setTransactionCurrency("USD");
+      invoice				. setTransactionSubTotal(String.valueOf(subtotal));
+      invoice				. setTransactionTaxesTotal(String.valueOf(totaltaxes));
+      invoice				. setTransactionTotal(String.valueOf(total));
+      invoice				. setTransactionDiscountTotal(String.valueOf(discount));
+      invoice				. setTransactionTenderValue(String.valueOf(tendered));
+      invoice				. setTransactionChangeValue(String.valueOf(change));
+      invoice				. setBalanceDue(String.valueOf(total-tendered));
       
       System.out.println( invoice.toString() );
-      
-      if(change > 0.01)
-      {
-      JOptionPane.showMessageDialog(null,"Change: " + "$ "+ format_manager.formatDoubleUS(change));
-      }
-      else {
-      JOptionPane.showMessageDialog(null,"Balance not paid in full: " + "$ "+ format_manager.formatDoubleUS(change));
-    	  
-      }
-      
+
+      if(change > 0.01) { JOptionPane.showMessageDialog(null,"Change: " + "$ "+ format_manager.formatDoubleUS(change)); }
+      else { JOptionPane.showMessageDialog(null,"Balance not paid in full: " + "$ "+ format_manager.formatDoubleUS(change)); }
       
       row = table.getSelectedRow();
       col = table.getSelectedColumn();
       
       
-      
       try {
-    	  formatter = new DecimalFormat("#0.00");
-          
     	  
-//          invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID));
-          
-    	  
-          
-          today                 =     new Date();
-          fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);
-          
-          simpDate             =     new SimpleDateFormat("hh:mm:ss a");
           
           account_selected = account_name_input.getSelectedItem().toString();
-          
           invoice.setBillToCustomerCodeData(account_name_input.getSelectedItem().toString() );
           
-          //http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD", format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
           
           System.out.println("Process Activation: Uploading to Lockwind Cloud:");
           
-          t = new JOptionPane();
-          //response = http.sendPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-          // System.out.println("WS Response:" + response);
+          response = http.sendPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
+          System.out.println("WS Response:" + response);
           
-/*          Thread.sleep(1000);
+/* 
 
-          response = http.sendProductPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change),
+
+    	 // invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID));
+    	 //http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD", format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
+         // t = new JOptionPane();
+
+
+ 		 Thread.sleep(1000);
+
+         response = http.sendProductPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change),
         		  table_manager.getData(table,in,0).toString(),
         		  table_manager.getData(table,in,1).toString(),
         		  table_manager.getData(table,in,2).toString(),
@@ -3801,9 +3800,9 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
         		  table_manager.getData(table,in,9).toString()
         		  
         		  );
+          //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
 
           */
-          //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
 
       }catch(Exception ex){}
       
@@ -3851,7 +3850,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           today                 =     new Date();
           fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);
           
-          simpDate             =     new SimpleDateFormat("hh:mm:ss a");
+          simpDate             	=     new SimpleDateFormat("hh:mm:ss a");
           
           
           outputFile.println(" " + fmt.format(today) +  "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
@@ -6326,7 +6325,7 @@ public void confirmationAPMKlarna() throws Exception {
   
 public static void main(String[] args){Register test = new Register();
 
-System.out.println("This is Lockwind POS Version 3.6 with a modification date of 8/1/23");
+System.out.println("This is Lockwind POS Version 3.7 with a modification date of 1/7/24");
 }
 
   

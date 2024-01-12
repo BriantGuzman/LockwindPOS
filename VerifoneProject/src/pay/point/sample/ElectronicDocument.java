@@ -26,7 +26,10 @@ import java.io.BufferedWriter;
 
 public class ElectronicDocument extends ServiceData {
 
-	
+	// Set by System
+	private String document_directory; // This is the file path for the electronic document.
+	private String file_extension; // This is the file extension for the electronic document.
+
 	private ValidationPlatform validation_platform;
 	private final String xmlFilePath = "./src/electronic_document/ElectronicDocument.xml";
 	
@@ -160,7 +163,9 @@ public class ElectronicDocument extends ServiceData {
 	 private String label_ship_to_customer_code_data;
 	 private String label_ship_to_customer_name;
 	 private String label_ship_to_customer_name_data;
-	 private String label_ship_to_customer_address;
+	 private String label_ship_to_destination_facility;
+	 private String label_ship_to_destination_facility_data;
+	 private String label_ship_to_customer_address; 
 	 private String label_ship_to_customer_address_data;
 	 private String label_ship_to_customer_city;
 	 private String label_ship_to_customer_city_data;
@@ -179,16 +184,23 @@ public class ElectronicDocument extends ServiceData {
 	 private String label_ship_to_customer_date_expected;
 	 private String label_ship_to_customer_date_arrived;
 	 
-	 private String label_payment_due_date;
+	 private String label_payment_due_date;	 
+
+	 // Set by user and can be changed
+	 private String payment_method;
 	 
+	 
+	 private ElectronicDocumentLineItem head;
 	 private ElectronicDocument next;
 	 private ElectronicDocument prev;
-	 
 
 	 
 	 // NO ARG CONSTRUCTOR
 	 public ElectronicDocument() { 
 		
+		 document_directory		 = "";
+		 file_extension			 = "";
+		 
 		 transaction_type    	 = "";
 		 //issuer_uuid 			 = "";
 		 consumer_uuid			 = "";
@@ -205,6 +217,7 @@ public class ElectronicDocument extends ServiceData {
 	     total_value             = "";
 	     tender_value        	 = "";
 	     change_value        	 = "";
+		 payment_method 		 = "";
 
 	     
 	     label_issuer_uuid		 = "";
@@ -230,6 +243,11 @@ public class ElectronicDocument extends ServiceData {
 
 	 // ************************************************************************************************************************
 
+	 public void setDirectory(String document_directory) { this.document_directory = document_directory; }
+	 public String getDirectory() {  return this.document_directory; }
+	 
+	 public void setFileExtension(String ext) { this.file_extension = ext; }
+	 public String getFileExtension() { return this.file_extension; }
 
 	 // UUID
 	 public void 		setTransactionUUID(String uuid) { this.transaction_uuid = uuid; }
@@ -407,20 +425,17 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setBillToCustomerAddressData(String value){ label_bill_to_customer_address_data = value; }
 	 public String 		getBillToCustomerAddressData(){ return label_bill_to_customer_address_data; }
 	 
-
 	 public void 		setBillToCustomerCityLabel(String value) { label_bill_to_customer_city = "City: "; }
 	 public String 		getBillToCustomerCityLabel(){ return label_bill_to_customer_city; }
 	 
 	 public void 		setBillToCustomerCityData(String value){ label_bill_to_customer_city_data = value; }
 	 public String  	getBillToCustomerCityData(){ return label_bill_to_customer_city_data; }
-
 	 
 	 public void  		setBillToCustomerStateLabel(String value) { label_bill_to_customer_state = "State: "; }
 	 public String   	getBillToCustomerStateLabel(){ return label_bill_to_customer_state; }
 	 
 	 public void   	  	setBillToCustomerStateData(String value){ label_bill_to_customer_state_data = value; }
 	 public String   	getBillToCustomerStateData(){ return label_bill_to_customer_state_data; }
-
 	 
 	 public void   		setBillToCustomerZipcodeLabel(String value) { label_bill_to_customer_zipcode = "Zipcode: "; }
 	 public String 		getBillToCustomerZipcodeLabel(){ return label_bill_to_customer_zipcode; }
@@ -441,7 +456,6 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setBillToCustomerPhoneNumberData(String value){ label_bill_to_customer_phone_number_data = value; }
 	 public String 		getBillToCustomerPhoneNumberData(){ return label_bill_to_customer_phone_number_data; }
 	 
-	 
 	 public void 		setBillToCustomerFaxNumberLabel(String value) { label_bill_to_customer_fax_number = "Fax Number: "; }
 	 public String 		getBillToCustomerFaxNumberLabel(){ return label_bill_to_customer_fax_number; }
 	 
@@ -456,6 +470,9 @@ public class ElectronicDocument extends ServiceData {
 
 	 public void 		setPaymentDueDateLabel(String value) { label_payment_due_date = "Due Date"; }
 	 public String 		getPaymentDueDate(){ return label_payment_due_date; }
+
+	 public void 		setPaymentMethod(String payment_method){ this.payment_method = payment_method; }
+	 public String 		getPaymentMethod(){ return this.payment_method; }
 
 	 
 	 // ************************************************************************************************************************
@@ -522,7 +539,6 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setShipToCustomerPhoneNumberData(String value){ label_ship_to_customer_phone_number_data = value; }
 	 public String 		getShipToCustomerPhoneNumberData(){ return label_ship_to_customer_phone_number_data; }
 	 
-	 
 	 public void 		setShipToCustomerEmailAddressLabel(String value) { label_ship_to_customer_email_address = "Email: "; }
 	 public String 		getShipToCustomerEmailAddressLabel(){ return label_ship_to_customer_email_address; }
 	 
@@ -556,13 +572,14 @@ public class ElectronicDocument extends ServiceData {
 	 public void		setTransactionDiscountTotal(String total_value) { this.total_value_discount = total_value; } 
 	 public String		getTransactionDiscountTotal() { return this.total_value_discount; }
 
+	 
 	 public void 		setTransactionTenderValue(String tender_value) { this.tender_value = tender_value; } 
 	 public String		getTransactionTenderValue() { return this.tender_value; }
 	 
 	 public void 		setTransactionChangeValue(String change_value) {  this.change_value = change_value; } 
 	 public String		getTransactionChangeValue() { return this.change_value; }
 
-	 public void 		setBalanceDue(String change_value) {  this.balance_due = balance_due; } 
+	 public void 		setBalanceDue(String balance_due) {  this.balance_due = balance_due; } 
 	 public String		getBalanceDue() { return this.balance_due; }
 
 	 public void 		setNext(ElectronicDocument next) { this.next = next; }
@@ -581,9 +598,18 @@ public class ElectronicDocument extends ServiceData {
 	 public ElectronicDocumentLineItemManager getElectronicDocumentLineItemManager() {
 		 return line_item_manager;
 	 }
-	 public void addLineItem(ElectronicDocumentLineItem line_item) { 
-		 line_item_manager.addLineItem( line_item );
+	 public void addLineItem(ElectronicDocumentLineItem line_item) {  line_item_manager.addLineItem( line_item ); }
+	 public ElectronicDocumentLineItem getLineItem(int index) { return line_item_manager.getLineItem(index); }
+	 
+	 public void parkTransaction() { 
+		 // This code will help a customer park a transaction when necessary. 
 	 }
+	 public void copyLastTransaction() { 
+		 // This function will create a copy of an electronic document.
+	 }
+	 
+	 
+	 
 	 public String buildInvoice() {
 		 StringBuilder temp = new StringBuilder();
 
