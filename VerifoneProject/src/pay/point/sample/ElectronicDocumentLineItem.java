@@ -30,11 +30,17 @@ public class ElectronicDocumentLineItem {
         private double price_wholesale; 
         private String tax_code; // can be used per line item. also the same as vat_code
         private double tax_rate; // can be used per line item. also the same as vat_rate
-        private String vat_code_transferred;
-        private double vat_rate_transferred;
+
+        private String vat_transferred_id;
+        private String vat_transferred_type_code; // code that defines it.
+        private String vat_transferred_code;
+        private double vat_transferred_value;
         private String vat_code_retained;
         private double vat_rate_retained;
-        
+
+        private String vat_code_retained;
+        private double vat_rate_retained;
+
     
         // System calculated values, Cannot be set by user
         private double on_hand_inventory;
