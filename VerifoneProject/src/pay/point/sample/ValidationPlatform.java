@@ -4,6 +4,9 @@ package pay.point.sample;
 public class ValidationPlatform {
 
 	//private String emailRegex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\\.[a-zA-Z0-9-]+)*$";
+
+	private int row_count; // used for JTable validation methods.
+	private int column_count; // used for JTable validation methods.
 	
 
 	private String error_message;
@@ -12,6 +15,21 @@ public class ValidationPlatform {
 	{
 		error_message = "";
 	}
+	
+	public void setRowCount(int row_count) {
+		this.row_count = row_count;
+	}
+	public int getRowCount() {
+		return this.row_count;
+	}
+	public void setColumnCount(int column_count) {
+		this.column_count = column_count;
+	}
+	public int getColumnCount()
+	{
+		return this.column_count;
+	}
+	
 	
 	public String validateEmailAddress(String email_address)
 	{
