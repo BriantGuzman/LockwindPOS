@@ -115,6 +115,7 @@ public class ElectronicDocument extends ServiceData {
 	 private String label_issuer_email_address;
 
 	 private String label_issuer_uuid_data;
+	 private String label_issuer_uuid_location_data;
 	 private String label_issuer_name_data;
 	 private String label_issuer_address_data;
 	 private String label_issuer_city_data;
@@ -550,7 +551,10 @@ public class ElectronicDocument extends ServiceData {
 	 
 	 public void 		setIssuerUUID(String r_uuid) { label_issuer_uuid_data = r_uuid; }
 	 public String 		getIssuerUUID() { return label_issuer_uuid_data; }
-	 
+
+	 public void 		setLocationUUID(String r_uuid) { label_issuer_uuid_location_data = r_uuid; }
+	 public String 		getLocationUUID() { return label_issuer_uuid_location_data; }
+
 	 public void 		setConsumerUUID(String r_uuid) { consumer_uuid = r_uuid; }
 	 public String 		getConsumerUUID() { return consumer_uuid; }
 	 

@@ -1,0 +1,28 @@
+----------------------------------------
+165 St. Hardware Inc.
+ 1099 St. Nicholas Avenue,  NY, NY, 10032
+ Phone #: +1 212 740 4652       FAX:             
+
+ 2/11/24    11:17:03 AM   Invoice No: 238
+ CUSTOMER CODE: CASH
+ CUSTOMER Name: CASH
+ CUSTOMER Phone Number: CASH
+ CUSTOMER Email: CASH
+ NAME:  CASH 
+ REG:   REGISTER 1
+----------------------------------------
+ QTY UPC                 PRICE  SUBTOTAL
+ DESCRIPTION                            
+                         SUB TOTAL $19.99
+                         SALES TAX $1.77
+                         TOTAL     $21.76
+
+                         TENDERED  $30.00
+                         CHANGE    $8.24
+                         
+Addenda: 
+----------------------------------------
+THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
+
+For the best Point of Sale System call Lockwind at +1 347 808 5425
+----------------------------------------

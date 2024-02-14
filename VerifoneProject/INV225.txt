@@ -1,0 +1,29 @@
+----------------------------------------
+165 ST. HARDWARE INC.
+Address Address
+CASH      null
+
+2/3/24    03:13:53 PM   Invoice No: 225
+CUSTOMER CODE: CASH
+CUSTOMER Name: CASH
+CUSTOMER Phone Number: CASH
+CUSTOMER Email: CASH
+NAME: 
+REG:   REGISTER 1
+----------------------------------------
+ QTY UPC                 PRICE  SUBTOTAL
+ DESCRIPTION                            
+ 2   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
+ GENERAL PRODUCT CODES                     
+
+                         SUB TOTAL $ 5.98
+                         SALES TAX $ 0.53
+                         TOTAL     $ 6.51
+
+                         TENDERED  $ 0.00
+                         CHANGE    $ -6.51
+Item Count: 2
+----------------------------------------
+Thank you for shopping with 165 ST. HARDWARE INC.
+For the best Point of Sale System call Lockwind at +1 347 808 5425
+----------------------------------------

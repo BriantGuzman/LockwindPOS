@@ -46,7 +46,7 @@ public class ElectronicDocumentLineItem {
         
         // System calculated values, Cannot be set by user
         private double on_hand_inventory;
-        
+        private String status;
         
         private ElectronicDocumentLineItem next;
         private ElectronicDocumentLineItem prev;
@@ -89,6 +89,11 @@ public class ElectronicDocumentLineItem {
         private String subtype2;
         private String subtype3;
 
+        public ElectronicDocumentLineItem()
+        {
+        	
+        }
+        
         /*
         public ElectronicDocumentLineItem(String date, String store, String store_sold_from, String serial_number, String customer_name, String description, String receipt_number,
         		String type, String style, String alt_style, String attribute1, String attribute2, String attribute_alternate_1, String attribute_alternate_2,
@@ -154,7 +159,7 @@ public class ElectronicDocumentLineItem {
         public void 	setUPC(String upc) { this.upc = upc; }
         public String 	getUPC() { return this.upc; }
         
-        public void 	setQTY(double qty) { this.qty = qty; }
+        public void 	setQTY(double qty) { this.qty = qty; getSubtotal(); getTaxes(); }
         public double 	getQTY() { return this.qty; }
         
         public void 	setCategory(String category) { this.category = category; }
@@ -163,7 +168,7 @@ public class ElectronicDocumentLineItem {
         public void 	setDescription(String description) { this.description = description; }
         public String 	getDescription() { return this.description; }
         
-        public void 	setRetailPrice(double price_retail) { this.price_retail = price_retail; }
+        public void 	setRetailPrice(double price_retail) { this.price_retail = price_retail; getSubtotal(); getTaxes(); }
         public double 	getRetailPrice() { return this.price_retail; }
 
         public void 	setWholesalePrice(double price_wholesale) { this.price_wholesale = price_wholesale; }
@@ -221,6 +226,13 @@ public class ElectronicDocumentLineItem {
         public void 	setVATRetainedValue(double vat_retained_value) { this.vat_retained_value = vat_retained_value; }
         public double 	getVATRetainedValue() { return this.vat_retained_value; }
 
+        public void		setStatus(String status) { this.status = status; }
+        public String 	getStatus() { return this.status; }
+        
+        public void		setScanned() { status = "scanned"; }
+        public void 	setPaid() { status = "paid"; }
+        public void		setRefunded() { status = "refunded"; }
+        public void		setQouted() { status = "quoted"; }
         
         
         public void 	setNext(ElectronicDocumentLineItem next) { this.next = next; }

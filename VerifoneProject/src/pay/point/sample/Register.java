@@ -1,4 +1,4 @@
-//Last Update: 2/1/2024
+//Last Update: 2/2/2024
 
 package pay.point.sample;
 
@@ -137,6 +137,9 @@ import org.w3c.dom.Element;
 	  private String[] column_header 			= 		{"UPC","QTY","DESCRIPTION","PRICE","SUBTOTAL","TAX","DISCOUNT","ONHAND"};
       private String[] column_header 			= 		{"UPC","QTY","CATEGORY","DESCRIPTION","PRICE","SUBTOTAL","TAX","DISCOUNT","ONHAND"};
 	  private int[]    column_width  			= 		{135,55,100,100,55,85,55,75,75};
+
+*
+*
 */
 
 
@@ -332,6 +335,7 @@ public class Register  implements ActionListener,FocusListener {
 	  // User Specific Components
 	  private String customer_selected; // This is used as a variable that is used to select the customer from the account name combobox for fulfillment. 
 	  private String retailerUUID;
+	  private String posUUID;
 	  private String da;
 	  private int index;
 	  private Ali ali;	  
@@ -566,6 +570,7 @@ public class Register  implements ActionListener,FocusListener {
 		  	// REGISTER SET COMPONENT DEFAULT VALUES
 
 		    retailerUUID                   				= "5d4de950d4f69";
+		    posUUID                   					= "65cbcf67af4bb65cbcf67af508";
 			client_id                   				= "5d4de950d4f69";
 
 		    http                        				= new API();
@@ -707,14 +712,15 @@ public class Register  implements ActionListener,FocusListener {
 			validator									. setColumnCount(table_col_count);
 		    
 			invoice										. setIssuerUUID(retailerUUID);
+			invoice										. setLocationUUID(posUUID);
 			invoice										. setConsumerUUID(client_id);
 
 			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
 		    invoice_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
 	        invoice_management_system					. setConsumerUUID( invoice.getConsumerUUID() );
 
-	        this.setInvoiceDefaultValues();
 	        this.setInitialInvoiceNumber();
+	        this.setInvoiceDefaultValues();
   		    this.setUIDefaultValues();
 			//this.setInvoiceDefaultValues();
 		    this.setComponentTextValues();
@@ -723,7 +729,17 @@ public class Register  implements ActionListener,FocusListener {
 			this.setComponentDimensionValues();
 		    this.setActionListener();
 		    this.setVerifoneDefaultValues();
-  		 
+  		
+		    
+			try { // Create the original invoice transaction number and UUID.
+				System.out.println("SetInvoiceDefaultValues()\t\t");
+					response = http.sendPost( invoice.getTransactionUUID() ,"",invoice.getIssuerUUID(),"27","","",invoice.getInvoiceNumber(),"","","","" ,"", "");
+		          System.out.println("WS Response:" + response);
+		          invoice.setTransactionUUID(response.toString());
+		          System.out.println("System Invoice Number: " + invoice.getTransactionUUID() );
+				}catch(Exception exe) { 
+					exe.printStackTrace();
+				}
 	  }
 	  public void setInitialInvoiceNumber() {
 		  try { 
@@ -764,20 +780,20 @@ public class Register  implements ActionListener,FocusListener {
 
 	  }
 	  public void setVerifoneDefaultValues() {
-		   	address 						= "192.168.50.197"; // Update this to be set depending on the POS network and verifone IP address per client.
- 		    port 							= 5015;
- 		    secondary_port 					= 5016;
+		   	address 									= "192.168.50.197"; // Update this to be set depending on the POS network and verifone IP address per client.
+ 		    port 										= 5015;
+ 		    secondary_port 								= 5016;
  		
- 		    generator 						= new Random();
- 			entryCode 						= String.valueOf(generator.nextInt(9999));
+ 		    generator 									= new Random();
+ 			entryCode 									= String.valueOf(generator.nextInt(9999));
  		
  		
  		try { 
  			
- 			kf 								= KeyFactory.getInstance("RSA");
- 			privateKey						= kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
- 			publicKey 						= kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
- 			keypair 						= new KeyPair(publicKey, privateKey);
+ 			kf 											= KeyFactory.getInstance("RSA");
+ 			privateKey									= kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
+ 			publicKey 									= kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
+ 			keypair 									= new KeyPair(publicKey, privateKey);
 
  		}catch(Exception e) {
  			
@@ -790,6 +806,7 @@ public class Register  implements ActionListener,FocusListener {
 	        invoice										. setStoreName("165 St. Hardware Inc.");
 	        invoice										. setStoreAddress("1099 St. Nicholas Avenue, ");
 			invoice										. setStoreSecondAddress("NY, NY, 10032");
+			invoice										. setStorePhoneNumber("Phone #: +1 212 740 4652 ");
 			invoice										. setStoreFaxNumber("FAX:             ");
 			invoice										. setDirectory("./");
 			invoice										. setFileExtension(".txt");
@@ -828,7 +845,10 @@ public class Register  implements ActionListener,FocusListener {
 			invoice										. setShipToCustomerPhoneNumberLabel("Phone Number:");
 			invoice										. setShipToCustomerPhoneNumberData("+xx xxx xxx xxxx");
 			invoice										. setShipToCustomerEmailAddressLabel("Email: ");
-			invoice										. setShipToCustomerEmailAddressData("xx@xxxx.com");  
+			invoice										. setShipToCustomerEmailAddressData("xx@xxxx.com");
+			
+		
+	          
 	  }
 	  
 	  public void setComponentTextValues(){
@@ -915,27 +935,27 @@ public class Register  implements ActionListener,FocusListener {
 	  
 	  public void setComponentFontValues()
 	  {
-		  storeName							.setFont(font1);
-			storePhoneNumber				.setFont(font1);
-			storeFaxNumber					.setFont(font1);
-			subtotalLabel					.setFont(font1);
-			taxesLabel						.setFont(font1);
-			totalLabel						.setFont(font1);
-			tenderLabel						.setFont(font1);
-			changeLabel						.setFont(font1);
-			discountLabel					.setFont(font1);
-			salesReport						.setFont(font1);
+		  storeName										. setFont(font1);
+			storePhoneNumber							. setFont(font1);
+			storeFaxNumber								. setFont(font1);
+			subtotalLabel								. setFont(font1);
+			taxesLabel									. setFont(font1);
+			totalLabel									. setFont(font1);
+			tenderLabel									. setFont(font1);
+			changeLabel									. setFont(font1);
+			discountLabel								. setFont(font1);
+			salesReport									. setFont(font1);
 
-			bx001							.setFont(font2);
-			bx002							.setFont(font2);
-			bx003							.setFont(font2);
-			bx004							.setFont(font2);
-			bx005							.setFont(font2);
-			bx006							.setFont(font2);
-			bx007							.setFont(font2);
-			bx008							.setFont(font2);
-			button_tender					.setFont(font2);
-			pim_button						.setFont(font2);
+			bx001										. setFont(font2);
+			bx002										. setFont(font2);
+			bx003										. setFont(font2);
+			bx004										. setFont(font2);
+			bx005										. setFont(font2);
+			bx006										. setFont(font2);
+			bx007										. setFont(font2);
+			bx008										. setFont(font2);
+			button_tender								. setFont(font2);
+			pim_button									. setFont(font2);
 	  }
 	  
 	  public void setColorScheme()
@@ -1327,24 +1347,19 @@ public class Register  implements ActionListener,FocusListener {
 	  
 
 	  
-	  public void buildTopPanel()
-	  {
-		    try {
-		        
+	  public void buildTopPanel() {
+		    
+		  try {
 		    	
 		    	client_name						= invoice.getStoreName();
 		    	invoiceNumber					= Integer.parseInt( invoice.getInvoiceNumber() );
 		        retailerUUIDDescription			. setText( invoice.getIssuerUUID() );
-
-		        }
-		        catch(Exception e) {			System.out.println(  e.toString( )); }  
+		  } catch(Exception e) {			System.out.println(  e.toString( )); }  
 		        
 
 		        timeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 30));
 		        timeLabel						.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,fmt.format(today),0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), timeLabel.getBorder()));
-		      
-
-		          
+		      		          
 		        ActionListener taskPerformer = new ActionListener() {
 
 		        	public void actionPerformed(ActionEvent evt) {
@@ -1359,10 +1374,7 @@ public class Register  implements ActionListener,FocusListener {
 		        timer = new Timer(1000, taskPerformer);
 		        timer .start();
 
-
-		          
-
-		          try {
+		  try {
 		              invoiceNumberLabel.setText(  "Invoice #:" );
 		              
 		              if (http.getCurrentInvoiceNumber(retailerUUID).toString().equalsIgnoreCase(""))
@@ -1382,9 +1394,6 @@ public class Register  implements ActionListener,FocusListener {
 				          invoiceNumberLabelDescription.setForeground(Color.decode("#0000FF"));
 		              }
 		          }catch(Exception e) { System.out.println(e.toString());}
-		      
-
-		        
 	  }
 	  
 	  public void buildTable()
@@ -2010,7 +2019,9 @@ public void updateRow(JTable table, int i){
 
 public void clearRegister() {
 	
-	subtotalLabel	.setText("$ 0.00");
+    account_name_input.setSelectedIndex(0);
+
+    subtotalLabel	.setText("$ 0.00");
 	taxesLabel		.setText("$ 0.00");
 	totalLabel		.setText("$ 0.00");
 	tenderLabel		.setText("$ 0.00");
@@ -2018,8 +2029,6 @@ public void clearRegister() {
 	discountLabel	.setText("$ 0.00");
 	tender_amount	.setText("");
 	addenda			.setText("");
-
-    account_name_input.setSelectedIndex(0);
 
 	table_manager	.clearTable(table);
 	table			.changeSelection(0,0,false,false);
@@ -2201,6 +2210,7 @@ public void buildActionListener() {
 			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating GTIN");
 			// JOptionPane.showMessageDialog(null,table_manager.getData(table,i,j).toString());
 		
+		 System.out.println("Enter Key Action Proc: Column " + j);
 		 inputGTIN				 				= table_manager.getData(table,i,0).toString(); // COL 0: GTIN
 		 table_manager							. setData(table,i,1,"1"); // COL 1: QTTY
  
@@ -2215,31 +2225,8 @@ public void buildActionListener() {
 		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 4: PRICE
 		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
 		  table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
-
-		  line_item.setUPC			(table_manager.getData	( table,i,0).toString() );
-		  line_item.setQTY			(Double.parseDouble		( table_manager.getData(table,i,1).toString() ) );
-		  line_item.setCategory		(table_manager.getData	( table,i,2).toString() );
-		  line_item.setDescription	(table_manager.getData	( table,i,3).toString() );
-		  line_item.setRetailPrice	(Double.parseDouble		( table_manager.getData(table,i,4).toString() ) );
-		  
-		  line_item.getSubtotal		();
-		  line_item.getTaxes		();
-		  line_item.setLineItemCount( i );
-		  
-		  invoice.addLineItem(line_item);
-		  System.out.println("Printing Line Items: "); 
-		  invoice.getElectronicDocumentLineItemManager().printLineItems();
-		}
-//		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 5: SUBTOTAL
-//		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-//		 table_manager.setData(table,i,5,table_manager.getSubTotal(table,i)); 
-
-		 
-		 /*
-		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 6: TAX
-		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-		 table_manager.setData(table,i,5,(table,i)); 
- 		 */
+		 }
+		
 		if(j == 1) // Column: QTY
 		{
 			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
@@ -2278,11 +2265,32 @@ public void buildActionListener() {
 
 	      if ( j == 8 )  { // Column: OnHand
 	          updateDiscount();
-	          table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
 	      }
+	      
+	      line_item.setUPC			(table_manager.getData	( table,i,0).toString() );
+		  line_item.setQTY			(Double.parseDouble		( table_manager.getData(table,i,1).toString() ) );
+		  line_item.setCategory		(table_manager.getData	( table,i,2).toString() );
+		  line_item.setDescription	(table_manager.getData	( table,i,3).toString() );
+		  line_item.setRetailPrice	(Double.parseDouble		( table_manager.getData(table,i,4).toString() ) );
+		  
+		  line_item.getSubtotal		();
+//          table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
+		  table_manager.setData( table,i,5,String.valueOf(line_item.getSubtotal() ) );
+		  line_item.getTaxes		();
+		  table_manager.setData( table,i,6,String.valueOf(line_item.getSubtotal() ) );
+		  
+		  line_item.setLineItemCount( i );
+		  line_item.setScanned();
+		  
+		  invoice.addLineItem(line_item);
+	      
+	      
+	      
 
- 			updateRow(table,i);
-	 		refreshTotal(table,0.00,0.00);
+		  System.out.println("**********------------->>>>>> line item row: " + i + ";");
+		  updateRow(table,i);
+		  
+		  refreshTotal(table,0.00,0.00);
 			
 			System.out.println( "Electronic Document: " + invoice.toString() + "");
 			subtotalLabel.setText( 	"$ " + invoice.getTransactionSubTotal() ); // Set value to UI Label
@@ -2290,24 +2298,13 @@ public void buildActionListener() {
  			totalLabel.setText(		"$ " + formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) ); // Set value to UI Label
  			discountLabel.setText(	"$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Labeloip=q1		
 
- 			// table_manager.setData( table,i,5,updateSubTotal() ); // Update Subtotal for this row
- 			// table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
-
-			System.out.println("**********------------->>>>>> line item row: " + i + ";");
 			
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionSubTotal() ) ) );
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal() ) ) );
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) );			
-			System.out.println(line_item.toString() );
 			
 			try { 
-            API http = new API();
-        	//JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
-            System.out.println("UPLOADING PRODUCT:");
-
+            API http = new API(); 
             String[] temp = new String[table.getColumnCount()*2];
             j = 0;
-            
+
             for(int k = 0; k < table.getColumnCount(); k++) // Per column 
             {
             	if(table_manager.getData(table,i,j) == null) { // Column value is null 
@@ -2319,19 +2316,62 @@ public void buildActionListener() {
             	j++;
             	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
             }
+
+            String invoice_num  = "";
+            invoice_num = http.getCurrentInvoiceNumber( invoice.getIssuerUUID() ) ;
+            invoice.setInvoiceNumber(  invoice_num );
+           // invoice.setTransactionUUID( http.getTransactionUUID(invoice.getIssuerUUID(), invoice.getInvoiceNumber()));
             
-            table_manager.setData(table, i, 9,http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9]) );
             
+            temp[10] = String.valueOf( invoice.getInvoiceNumber() );
+            temp[11] = "scanned";
+            temp[12] = http.getUUID();
+            temp[13] = invoice.getIssuerUUID();
+            temp[14] = invoice.getLocationUUID();
+            temp[15] = invoice.getTransactionUUID();
             
+            System.out.println("Register::Enter Key Action proc ->Action:Publish -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
+
+            table_manager.setData(table, i, 9, temp[12]); // set 
+
+            http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] );
             table.changeSelection(i+1,0, false,false);
 			table.requestFocus();
 
-            
-          
+			
+			
+
             
             /*
+             * 
 
-  http.sendProductPostAPILineItem( 
+//		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 5: SUBTOTAL
+//		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
+//		 table_manager.setData(table,i,5,table_manager.getSubTotal(table,i)); 
+
+		 
+		 /*
+		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 6: TAX
+		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
+		 table_manager.setData(table,i,5,(table,i)); 
+
+ 			
+ 			
+ 			// table_manager.setData( table,i,5,updateSubTotal() ); // Update Subtotal for this row
+ 			// table_manager.setData( table,i,6,table_manager.getTax(table,i)); // Update taxes for this row
+			// System.out.println("Printing Line Items: "); 
+		  	// invoice.getElectronicDocumentLineItemManager().printLineItems();
+
+
+
+			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionSubTotal() ) ) );
+			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal() ) ) );
+			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) );			
+			System.out.println(line_item.toString() );
+
+
+
+  				http.sendProductPostAPILineItem( 
             		
             		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
             		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
@@ -2359,35 +2399,33 @@ public void buildActionListener() {
             		table_manager.getData(table,i,9).toString()
             		);
             		*/
-			}catch(Exception e)
-			{
+			
+            /*
+             * The code below was removed on 2/2/24 in order to provide more clarity for the code.
+             * Code is located in the enter key action proc.
+             * 
+          	//			JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
+			//          System.out.println("UPLOADING PRODUCT:"); 
+
+*/            
+			/*		API -> SendProductPostAPI
+			 * 		 String consumer_uuid, String issuer_uuid,String client_id,String client_name,
+			 		 String customer_code,String invoice_number,String invoice_date,String invoice_time,
+					 String invoice_currency,String total_value,String tender_value,String change_value,
+					 String transaction_type,String transaction_type_value
+					 String reference_code, String quantity, String category,
+					 String description,String price, String subtotal, 
+					 String tax, String discount, String onhand, String line_item_id
+		*/
+			
+			
+			}catch(Exception e) {
 				
 				System.out.println("Error: Code Blue: uploading line item to Lockwind cloud ");
 				System.out.println( e.toString() );
 			}
-
-	/*		API -> SendProductPostAPI
-	 * 		 String consumer_uuid, String issuer_uuid,String client_id,String client_name,
-	 		 String customer_code,String invoice_number,String invoice_date,String invoice_time,
-			 String invoice_currency,String total_value,String tender_value,String change_value,
-			 String transaction_type,String transaction_type_value
-			 String reference_code, String quantity, String category,
-			 String description,String price, String subtotal, 
-			 String tax, String discount, String onhand, String line_item_id
-*/
-	
-
 			
-// Register Enter Key action Proc 
-
-	if(registerStatus == false){
-			
-	try { 
-			//registerPOS();
-			//registerStatus = true;
-		
-	} catch(Exception a1) {  }
-	}
+	if(registerStatus == false){ try {  /*registerPOS(); registerStatus = true; */ } catch(Exception a1) {  } }
 
 	if(registerStatus == true){
 			
@@ -2428,6 +2466,7 @@ public void buildActionListener() {
 				
 				if( table_manager.getData(table, i, 0).toString().equalsIgnoreCase("") ) 
 				{
+					
 				  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				}
@@ -2916,7 +2955,6 @@ public void focusLost(FocusEvent e)
           
           if( temp.getName().equalsIgnoreCase("pim_button"))
           {
-        	  
         	  try {
 		      		Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php"));
         		} catch (Exception e1) {
@@ -2926,9 +2964,9 @@ public void focusLost(FocusEvent e)
           
           if( temp.getName().equalsIgnoreCase("tender")){
               if(table.isEditing()){table.getCellEditor().stopCellEditing();}
-//              tenderAction(0.00); 
+              tenderAction(0.00); 
               // 1/24/24 ->Modified the behavior of this block to use the new createElectronicDocumentMethod for regression testing.
-              createElectronicDocument();
+              // createElectronicDocument();
       }
           if( temp.getName().equalsIgnoreCase("tender_cash")){
               if(table.isEditing()){table.getCellEditor().stopCellEditing();}
@@ -3218,7 +3256,7 @@ public void createElectronicDocument() {
       col 					= table.getSelectedColumn();
       file            		= new FileWriter( invoice.getDirectory() + "invoice_number" + invoice.getFileExtension() ,true);
       outputFile      		= new PrintWriter(file);
-      file            		= new FileWriter(  invoice.getDirectory() + "INV" + String.valueOf(invoiceNumber) + invoice.getFileExtension() );
+      file            		= new FileWriter(  invoice.getDirectory() + "INV Create Electronic Document" + String.valueOf(invoiceNumber) + invoice.getFileExtension() );
       outputFile      		= new PrintWriter(file);
       PrintReceipt tp 		= new PrintReceipt();
  	  Process p 			=  Runtime.getRuntime().exec("cmd /c printReceipt.bat");
@@ -3263,7 +3301,7 @@ public void createElectronicDocument() {
     	  // This process writes the invoice number to the file locally as a backup.
                     
           outputFile.println("----------------------------------------");
-          outputFile.println( 		invoice.getStoreName());
+          outputFile.println("           " + invoice.getStoreName() + "           ");
           outputFile.println(" " +  invoice.getStoreAddress()		+ " " + invoice.getStoreSecondAddress());
           outputFile.println(" " + 	invoice.getStorePhoneNumber()	+ "      ");
           outputFile.println( 		invoice.getStoreFaxNumber()		+"\n");
@@ -3312,14 +3350,14 @@ public void createElectronicDocument() {
           }
 
           
-          outputFile.println("                         SUB TOTAL $"+ format_manager.formatDoubleUS(subtotal));
-          outputFile.println("                         SALES TAX $"+ format_manager.formatDoubleUS(totaltaxes));
+          outputFile.println("                         SUB TOTAL $" + format_manager.formatDoubleUS(subtotal));
+          outputFile.println("                         SALES TAX $" + format_manager.formatDoubleUS(totaltaxes));
           if(discount != 0.00) {
-          outputFile.println("                         DISCOUNT  $"+ format_manager.formatDoubleUS(discount));} else{}
-          outputFile.println("                         TOTAL     $"+ format_manager.formatDoubleUS(total) + "\n\n");
-          outputFile.println("                         TENDERED  $"+ format_manager.formatDoubleUS(tendered));
-          outputFile.println("                         CHANGE    $"+ format_manager.formatDoubleUS(change) + "\n\n");
-          outputFile.println("                         Addenda: "+ addenda.getText() );
+          outputFile.println("                         DISCOUNT  $" + format_manager.formatDoubleUS(discount));} else{}
+          outputFile.println("                         TOTAL     $" + format_manager.formatDoubleUS(total) + "\n\n");
+          outputFile.println("                         TENDERED  $" + format_manager.formatDoubleUS(tendered));
+          outputFile.println("                         CHANGE    $" + format_manager.formatDoubleUS(change) + "\n\n");
+          outputFile.println("                         Addenda:  " + addenda.getText() );
           
           // refreshTotal(table,tendered,change);
 
@@ -3332,8 +3370,8 @@ public void createElectronicDocument() {
           outputFile.close();
 	  	
           
-        if(change > 0.01) { JOptionPane.showMessageDialog(null,"Change: " + "$ "+ format_manager.formatDoubleUS(change)); }
-        else { JOptionPane.showMessageDialog(null,"Balance not paid in full: " + "$ "+ format_manager.formatDoubleUS(change)); }
+  //      if(change > 0.01) { JOptionPane.showMessageDialog(null,"Change: " + "$ "+ format_manager.formatDoubleUS(change)); }
+  //      else { JOptionPane.showMessageDialog(null,"Balance not paid in full: " + "$ "+ format_manager.formatDoubleUS(change)); }
 
           
       }catch(Exception ex){
@@ -3343,7 +3381,7 @@ public void createElectronicDocument() {
     	  
       }          
           
-            saveTableToReceipt(table,client_id);
+            // saveTableToReceipt(table,client_id);
             inventory_manager.saveProductSold(table,client_id);
 
             try {
@@ -3413,7 +3451,7 @@ public void createElectronicDocument() {
               // invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID));
               // ClientInvoiceReport http = new ClientInvoiceReport();
               //http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD", format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-              //http.sendPost(client_id);
+              
               //in = 0;
               //System.out.println("UPLOADING PRODUCT:");
               //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
@@ -3441,16 +3479,10 @@ public void saveElectronicDocument() {
 
 public void sendElectronicDocument() {  
 	System.out.println(" Register->@sendElectronicDocument() ");
-	
-
-    try {
   	  
         System.out.println("Process Activation: sendElectronicDocument() -> Uploading to Lockwind Cloud:");
         
-        response = http.sendPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-        System.out.println("WS Response:" + response);
 
-    }catch(Exception ex){}
 
 	
 }
@@ -3571,6 +3603,8 @@ public void loadElectronicDocument() {
 		invoice										.setTransactionType("Invoice");
 		invoice										.setTransactionUUID(invoice.getInvoiceNumber());
 		invoice										.setIssuerUUID( invoice.getIssuerUUID() );
+		invoice										.setLocationUUID( invoice.getLocationUUID() );
+
 		invoice										.setConsumerUUID(invoice.getConsumerUUID() );		
 		invoice										.setLabelIssuerAddressData( invoice.getStoreAddress()  +  " " + invoice.getStoreSecondAddress() );
 		invoice										.setLabelIssuerPhoneNumberData( invoice.getStorePhoneNumber() );
@@ -3607,7 +3641,7 @@ public void loadElectronicDocument() {
       
       try{
           
-          file            		= 	  new FileWriter("INV"+ String.valueOf(invoiceNumber) +".txt");
+          file            		= 	  new FileWriter("INV saveTableToReceipt "+ String.valueOf(invoiceNumber) +".txt");
           outputFile      		= 	  new PrintWriter(file);
 
 
@@ -3677,7 +3711,7 @@ public void loadElectronicDocument() {
           try {
               ClientInvoiceReport http = new ClientInvoiceReport();
               http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",formatter.format(total),formatter.format(tendered),formatter.format(change));
-              http.sendPost();
+              
               in = 0;
           	
               ClientInvoiceReport http = new ClientInvoiceReport();
@@ -3704,7 +3738,7 @@ public void loadElectronicDocument() {
           outputFile.println("                         TENDERED  $ " + formatter.format(tendered));
           outputFile.println("                         CHANGE    $ " + formatter.format(change));
           
-          JOptionPane.showMessageDialog(null,"Change: " + "$"+formatter.format(change));
+//           JOptionPane.showMessageDialog(null,"Change: " + "$"+formatter.format(change));
           
           refreshTotal(table,tendered,change);
           
@@ -4082,11 +4116,6 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           invoice.setBillToCustomerCodeData(account_name_input.getSelectedItem().toString() );
           
           
-          System.out.println("Process Activation: Uploading to Lockwind Cloud:");
-          
-          response = http.sendPost( invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-          System.out.println("WS Response:" + response);
-          
 /* 
 
 
@@ -4139,7 +4168,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           outputFile	  . close();
           file			  . close();
                     
-          file            = new FileWriter(  invoice.getDirectory() + "INV" + String.valueOf(invoiceNumber) + invoice.getFileExtension() );
+          file            = new FileWriter(  invoice.getDirectory() + "INV Register-tenderaction " + String.valueOf(invoiceNumber) + invoice.getFileExtension() );
           outputFile      = new PrintWriter(file);
           
           
@@ -4159,7 +4188,6 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
                             
           today                 =     new Date();
           fmt                   =     DateFormat.getDateInstance      (styles[3], locale[0]);
-          
           simpDate             	=     new SimpleDateFormat("hh:mm:ss a");
           
           
@@ -4226,6 +4254,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
           
           outputFile.println(store_print_name);
           outputFile.println("");
+          outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
           outputFile.println("----------------------------------------");
           outputFile.close();
           
@@ -4246,7 +4275,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
               // invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID));
               // ClientInvoiceReport http = new ClientInvoiceReport();
               //http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD", format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-              //http.sendPost(client_id);
+              
               //in = 0;
               //System.out.println("UPLOADING PRODUCT:");
               //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
@@ -4280,9 +4309,19 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 
 
       
-      saveTableToReceipt(table,client_id);
+//      saveTableToReceipt(table,client_id);
       inventory_manager.saveProductSold(table,client_id);
 
+      try { // Create the original invoice transaction number and UUID.
+          System.out.println("Process Activation: Uploading to Lockwind Cloud:");
+			System.out.println("TenderAction()\t\t");
+          response = http.sendPost( invoice.getTransactionUUID(), invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),account_selected,String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD",format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
+          System.out.println("WS Response:" + response);
+          invoice.setTransactionUUID(response.toString());
+	}catch(Exception exe) { 
+		exe.printStackTrace();
+	}
+      
       try {
       http.IncrementInvoiceNumber(retailerUUID);
       invoiceNumber = Integer.parseInt( http.getCurrentInvoiceNumber(retailerUUID) );
@@ -4339,6 +4378,7 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
 				
 			}
 
+			
 
 
 
