@@ -12,6 +12,7 @@ public class ElectronicDocumentLineItem {
     //	private String GTIN;
         
         // Global Line Item Requirements
+		private String uuid;
         private String upc; // column 0 - JTable at Register.java
         private double qty; // column 1 - JTable at Register.java
         private String category; // column 2 - JTable at Register.java
@@ -156,8 +157,13 @@ public class ElectronicDocumentLineItem {
         
         
         // Global Line Items Requirements
+        
+        public void 	setUUID(String uuid) { this.uuid = uuid; }
+        public String 	getUUID() { return this.uuid; }
+
         public void 	setUPC(String upc) { this.upc = upc; }
         public String 	getUPC() { return this.upc; }
+        
         
         public void 	setQTY(double qty) { this.qty = qty; getSubtotal(); getTaxes(); }
         public double 	getQTY() { return this.qty; }

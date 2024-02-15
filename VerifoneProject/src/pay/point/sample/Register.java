@@ -711,16 +711,14 @@ public class Register  implements ActionListener,FocusListener {
 		    validator									. setRowCount(table_row_count);
 			validator									. setColumnCount(table_col_count);
 		    
-			invoice										. setIssuerUUID(retailerUUID);
-			invoice										. setLocationUUID(posUUID);
-			invoice										. setConsumerUUID(client_id);
+	        this.setInvoiceDefaultValues();
+	        this.setInitialInvoiceNumber();
 
+	        
 			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
 		    invoice_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
 	        invoice_management_system					. setConsumerUUID( invoice.getConsumerUUID() );
 
-	        this.setInitialInvoiceNumber();
-	        this.setInvoiceDefaultValues();
   		    this.setUIDefaultValues();
 			//this.setInvoiceDefaultValues();
 		    this.setComponentTextValues();
@@ -803,6 +801,10 @@ public class Register  implements ActionListener,FocusListener {
 	  
 	  public void setInvoiceDefaultValues()
 	  {
+		  	invoice										. setIssuerUUID(retailerUUID);
+			invoice										. setLocationUUID(posUUID);
+			invoice										. setConsumerUUID(client_id);
+
 	        invoice										. setStoreName("165 St. Hardware Inc.");
 	        invoice										. setStoreAddress("1099 St. Nicholas Avenue, ");
 			invoice										. setStoreSecondAddress("NY, NY, 10032");
@@ -2227,18 +2229,11 @@ public void buildActionListener() {
 		  table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
 		 }
 		
-		if(j == 1) // Column: QTY
-		{
-			// JOptionPane.showMessageDialog(null,"Register.Enter Key Action Proc - Updating QTY");
-			updateQTY();
-            updateSubTotal();
-             // table_manager.setData( table,i,5,table_manager.getSubTotal(table,i));
-		}
+		// Column: QTY
+		if(j == 1)  { updateQTY();}
 		
-		if(j == 2) // Column: Category 
-		{
-			JOptionPane.showMessageDialog(null, "Category cannot be edited");
-		}
+		// Column: Category  
+		if(j == 2) { JOptionPane.showMessageDialog(null, "Category cannot be edited"); }
 		
 	    
 		if( j == 3){ // Column: Description
@@ -2278,7 +2273,7 @@ public void buildActionListener() {
 		  table_manager.setData( table,i,5,String.valueOf(line_item.getSubtotal() ) );
 		  line_item.getTaxes		();
 		  table_manager.setData( table,i,6,String.valueOf(line_item.getSubtotal() ) );
-		  
+          
 		  line_item.setLineItemCount( i );
 		  line_item.setScanned();
 		  
@@ -2288,8 +2283,7 @@ public void buildActionListener() {
 	      
 
 		  System.out.println("**********------------->>>>>> line item row: " + i + ";");
-		  updateRow(table,i);
-		  
+		  updateRow(table,i);		  
 		  refreshTotal(table,0.00,0.00);
 			
 			System.out.println( "Electronic Document: " + invoice.toString() + "");
@@ -2297,48 +2291,41 @@ public void buildActionListener() {
  			taxesLabel.setText( 	"$ " + invoice.getTransactionTaxesTotal() ); // Set value to UI Label
  			totalLabel.setText(		"$ " + formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) ); // Set value to UI Label
  			discountLabel.setText(	"$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Labeloip=q1		
+           // invoice.setTransactionUUID( http.getTransactionUUID(invoice.getIssuerUUID(), invoice.getInvoiceNumber()));
+
+            
 
 			
 			
 			try { 
-            API http = new API(); 
-            String[] temp = new String[table.getColumnCount()*2];
-            j = 0;
+//            API http = new API(); 
+		        String invoice_num  = "";
+				invoice_num = http.getCurrentInvoiceNumber( invoice.getIssuerUUID() ) ;
+	            invoice.setInvoiceNumber(  invoice_num );
 
-            for(int k = 0; k < table.getColumnCount(); k++) // Per column 
-            {
-            	if(table_manager.getData(table,i,j) == null) { // Column value is null 
-            	System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
-            	}
-            	else {
-            	temp[k] = table_manager.getData(table,i,j).toString();
-            	}
-            	j++;
-            	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
-            }
+	            if(table_manager.getData(table, i,9) == null || table_manager.getData(table, i,9).toString().equalsIgnoreCase("") )
+	            {
+		            String line_item_uuid = http.getUUID();
+			  		line_item.setUUID(line_item_uuid);
+			  		table_manager.setData( table,i,9,line_item.getUUID());	            	
+	            }else {
+	            	System.out.println("Enter key action proc: line item already assigned" );
+	            }
 
-            String invoice_num  = "";
-            invoice_num = http.getCurrentInvoiceNumber( invoice.getIssuerUUID() ) ;
-            invoice.setInvoiceNumber(  invoice_num );
-           // invoice.setTransactionUUID( http.getTransactionUUID(invoice.getIssuerUUID(), invoice.getInvoiceNumber()));
+		  		uploadLineItem(i);
+	
+
             
             
-            temp[10] = String.valueOf( invoice.getInvoiceNumber() );
-            temp[11] = "scanned";
-            temp[12] = http.getUUID();
-            temp[13] = invoice.getIssuerUUID();
-            temp[14] = invoice.getLocationUUID();
-            temp[15] = invoice.getTransactionUUID();
-            
-            System.out.println("Register::Enter Key Action proc ->Action:Publish -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
-
-            table_manager.setData(table, i, 9, temp[12]); // set 
-
-            http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] );
             table.changeSelection(i+1,0, false,false);
 			table.requestFocus();
 
-			
+			}catch(Exception e) {
+				
+				System.out.println("Error: Code Blue: uploading line item to Lockwind cloud ");
+				System.out.println( e.toString() );
+			}
+
 			
 
             
@@ -2419,11 +2406,6 @@ public void buildActionListener() {
 		*/
 			
 			
-			}catch(Exception e) {
-				
-				System.out.println("Error: Code Blue: uploading line item to Lockwind cloud ");
-				System.out.println( e.toString() );
-			}
 			
 	if(registerStatus == false){ try {  /*registerPOS(); registerStatus = true; */ } catch(Exception a1) {  } }
 
@@ -2575,41 +2557,32 @@ public void buildActionListener() {
 	      int row = table.rowAtPoint(evt.getPoint());
 	      int col = table.columnAtPoint(evt.getPoint());
 	      if (row >= 0 && col >= 0) {
-// 		NumberFormat formatter = new DecimalFormat("#0.00");
 
 
 	if(table_manager.getData(table,row,col) == null || table_manager.getData(table,row,col).toString().equalsIgnoreCase("") )
 	{
 
-//	  refreshTotal(table,0.00,0.00);
-
-	  if(col == 0)
-	  {
-		  // actionGTIN();
-	      // refreshTotal(table,0.00,0.00);
-	  }
-	  if(col == 1)
-	  {
-	      JOptionPane.showMessageDialog(null,"Action at Quantity Column = product is null");
-//	      table.changeSelection(++row,0,false,false);
-	  }
+	  if(col == 0){ }
+	  if(col == 1) { JOptionPane.showMessageDialog(null,"Action at Quantity Column = product is null"); }
 //	if(col == 6) { /*updateDiscount(); */}
 	}
 	else
 	{
 	  if(col == 0) { /*  actionGTIN();  */ }
-	  if( col == 1) { updateQTY(); }
+	  if( col == 1) { updateQTY();}
 	  if( col == 2) {} // updateCategory(); -- implement this function to retrieve the category according to the UPC/GTIN provided.
 	  if( col == 3) { updateDescription(); }
 	  if( col == 4) { updatePrice(); }
 	  if( col == 5) { table.changeSelection(row,0,false,false); } // updateSubtotal();
 	  
-	  if( col == 6) { updateTax(); }
+	  if( col == 6) { updateTax();
+	  }
 	  if( col == 7) { updateDiscount(); }
 
-	  
 //		table_manager.setData(table,row,col,"");
 	}
+	updateRow(table,row);		  
+	refreshTotal(table,0.00,0.00);
 	table.requestFocus();
 	table.changeSelection(row,0, false,false);
 
@@ -3215,9 +3188,6 @@ public void refreshTotal()
   totalLabel.setText( "$ "+ formatter.format( Double.parseDouble(invoice.getTransactionTotal() ))); // Set value to UI Label
   discountLabel.setText( "$ "+ formatter.format( Double.parseDouble(invoice.getTransactionDiscountTotal() ))); // Set value to UI Label
   
-  // taxesLabel.setText( "$ "+ invoice.getTransactionTaxesTotal() ); // Set value to UI Label
- // totalLabel.setText("$ "+ invoice.getTransactionTotal() ); // Set value to UI Label
-//  discountLabel.setText("$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Label
   
 // verifone.endSession();
 }
@@ -3446,18 +3416,6 @@ public void createElectronicDocument() {
           			}
                 
                 
-                try {
-        	  
-              // invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID));
-              // ClientInvoiceReport http = new ClientInvoiceReport();
-              //http.setInformation(account_name_input.getSelectedItem().toString(),String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD", format_manager.formatDoubleUS(total) ,format_manager.formatDoubleUS(tendered), format_manager.formatDoubleUS(change));
-              
-              //in = 0;
-              //System.out.println("UPLOADING PRODUCT:");
-              //http.sendProductPost(client_id,client_name,String.valueOf(invoiceNumber),table_manager.getData(table,in,0).toString(),table_manager.getData(table,in,1).toString(),table_manager.getData(table,in,2).toString(),table_manager.getData(table,in,3).toString(),table_manager.getData(table,in,4).toString(),table_manager.getData(table,in,5).toString(),table_manager.getData(table,in,6).toString(),table_manager.getData(table,in,7).toString() );
-              
-              //Thread.sleep(500);
-          }catch(Exception xexe){}
           */
           
       }
@@ -3503,7 +3461,7 @@ public void loadElectronicDocument() {
   String change_value_string 		= "";
   String sub_total_value_string 	= "";
   String tax_value_string 			= "";
-  String total_value_String 		= "";
+  String total_value_string 		= "";
   String discount_value_string 		= "";
 
   sub_total_value = table_manager.getColumnTotal(table,5) ; // 6/26/23 Updated value to column 5 per new jTable design including category
@@ -3515,31 +3473,27 @@ public void loadElectronicDocument() {
   invoice.setTransactionTaxesTotal( String.valueOf(tax_value));
   invoice.setTransactionDiscountTotal( String.valueOf(discount_value));
   invoice.setTransactionTotal( String.valueOf(total_value));
-  
-
 
   sub_total_value_string 	= formatter.format( Double.parseDouble(invoice.getTransactionSubTotal() ) );
   tax_value_string 			= formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal() ) );
-  total_value_String 		= formatter.format( Double.parseDouble(invoice.getTransactionTotal()) );
+  total_value_string 		= formatter.format( Double.parseDouble(invoice.getTransactionTotal()) );
   discount_value_string 	= format_manager.formatDoubleUS( Double.parseDouble(invoice.getTransactionDiscountTotal() ) );
+  tender_value_string 		= formatter.format(tender_value);
+  change_value_string 		= formatter.format(change_value);
+
+  subtotalLabel						. setText( "$ "+  sub_total_value_string); // Set value to UI Label
+  taxesLabel						. setText( "$ "+  tax_value_string ); // Set value to UI Label
+  totalLabel						. setText( "$ "+  total_value_string ); // Set value to UI Label
+  discountLabel						. setText( "$ "+  discount_value_string ); // Set value to UI Label
+  tenderLabel						. setText( "$ " + invoice.getTransactionTenderValue() );
+  changeLabel						. setText( "$ " + invoice.getTransactionChangeValue() );
+
+  													 
+//  subtotalLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionSubTotal() ))); // Set value to UI Label
+//  taxesLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionTaxesTotal() ))); // Set value to UI Label
+//  totalLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionTotal() ))); // Set value to UI Label
+//  discountLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionDiscountTotal() ))); // Set value to UI Label
   
-  subtotalLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionSubTotal() ))); // Set value to UI Label
-  taxesLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionTaxesTotal() ))); // Set value to UI Label
-  totalLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionTotal() ))); // Set value to UI Label
-  discountLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionDiscountTotal() ))); // Set value to UI Label
-  
-  if( tender_value != 0.00 ) {
-      System.out.println(tender_value);
-      System.out.println(change_value);
-
-      
-      tender_value_string = formatter.format(tender_value);
-      change_value_string = formatter.format(change_value);
-
-      tenderLabel.setText("$ " + invoice.getTransactionTenderValue() );
-      changeLabel.setText("$ " + invoice.getTransactionChangeValue() );
-
-  }else{ }
 
   
   System.out.println(" Register.refreshTotal() ");
@@ -3952,21 +3906,18 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
   i = table.getSelectedRow();
   j = 6; // 6 is currently the tax column in the JTable, hardcoded
   
-  if(table_manager.getData(table,i,6).toString().equalsIgnoreCase("0") || table_manager.getData(table,i,6) == null)
+  if(table_manager.getData(table,i,j).toString().equalsIgnoreCase("") || table_manager.getData(table,i,j) == null)
   {
-      table_manager.setData(table,i,6,table_manager.getTax(table,i));
-      table.changeSelection(++i,0,false,false);
+      table_manager.setData(table,i,j,table_manager.getTax(table,i));
   }
   else
   {
-      table_manager.setData(table,i,6,"0");
+      table_manager.setData(table,i,j,"0");
       line_item.setTaxRate(0.00);
       line_item.setTaxes();
-      table.changeSelection(++i,0,false,false);
   }
   
   refreshTotal(table,0.00,0.00);
-  table.changeSelection(++i,0, false,false);
 
 }
 
@@ -4007,7 +3958,8 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 	  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
 	  
       table_manager.setData(table,i,j,format_manager.formatDoubleUS(line_item.getSubtotal() ) );
-      table.changeSelection(++i,0,false,false);
+      i++;
+      table.changeSelection(i,0,false,false);
 
   // refreshTotal(table,0.00,0.00);
   
@@ -4051,7 +4003,81 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       this.saveElectronicDocument();  
       
   }
+
+  public void uploadLineItem(
+int i
+		  ) { 
+      String[] temp = new String[table.getColumnCount()*2];
+      j = 0;
+for(int k = 0; k < table.getColumnCount(); k++) // Per column 
+  {
+  	if(table_manager.getData(table,i,j) == null) { // Column value is null 
+  	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+  	}
+  	else {
+  	temp[k] = table_manager.getData(table,i,j).toString();
+  	}
+  	j++;
+  	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+  }
+
   
+  
+  temp[10] = String.valueOf( invoice.getInvoiceNumber() );
+  temp[11] = "scanned";
+//  temp[12] = "";
+  temp[13] = invoice.getIssuerUUID();
+  temp[14] = invoice.getLocationUUID();
+  temp[15] = invoice.getTransactionUUID();
+  
+  System.out.println("Register::Enter Key Action proc ->Action:Publish -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
+
+//  table_manager.setData(table, i, 9, temp[12]); // set 
+
+  try {
+	  http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] );;
+	  
+      }catch(Exception e) {};
+
+  }
+  
+  public void tenderLineItem( int i ) { 
+
+	  
+	  System.out.println("Register->tenderLineItem(int i) :: + "  + table_manager.getData(table, i, 0) );
+	  String[] temp = new String[table.getColumnCount()*2];
+      j = 0;
+for(int k = 0; k < table.getColumnCount(); k++) // Per column 
+  {
+  	if(table_manager.getData(table,i,j) == null) { // Column value is null 
+  	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+  	}
+  	else {
+  	temp[k] = table_manager.getData(table,i,j).toString();
+  	}
+  	j++;
+  	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+  }
+
+  
+  
+  temp[10] = String.valueOf( invoice.getInvoiceNumber() );
+  temp[11] = "paid";
+//  temp[12] = "";
+  temp[13] = invoice.getIssuerUUID();
+  temp[14] = invoice.getLocationUUID();
+  temp[15] = invoice.getTransactionUUID();
+  
+  System.out.println("Register::Enter Key Action proc ->Action:Publish -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
+
+//  table_manager.setData(table, i, 9, temp[12]); // set 
+
+  try {
+	  http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] );;
+	  
+      }catch(Exception e) {};
+
+  }
   
   
   public void tenderAction(double transaction_tender_value)
@@ -4223,6 +4249,10 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
                   da = da + format_manager.increaseLength(table_manager.getData(table,in,3).toString(),10);
                   da = da + format_manager.increaseLength(table_manager.getData(table,in,4).toString(),4);}
               
+              if(table_manager.getData(table,in,9) == null || table_manager.getData(table,in,9).toString().equalsIgnoreCase("")){ } 
+              else {	  System.out.println("Register->tenderAction()\n\n");
+            	  this.tenderLineItem(in);
+              }
               outputFile.println(da);
               outputFile.println(productName+"\n");
               
@@ -4230,6 +4260,9 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
               da = "";in++;
               
           }
+		  in = 0; 
+	      // Must reset counter to zero to start loop again.
+
           
           outputFile.println("                         SUB TOTAL $"+ format_manager.formatDoubleUS(subtotal));
           outputFile.println("                         SALES TAX $"+ format_manager.formatDoubleUS(totaltaxes));
@@ -4328,14 +4361,19 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       invoiceNumberLabelDescription.setText( String.valueOf(invoiceNumber));
       }
       catch(Exception ex) {}
+
+
       
       table_manager.setData(table,row,col,"");
       table_manager.clearTable(table);
 	  clearRegister();
       
+	  // Reset for user 
 	  table.requestFocus();
 	  table.changeSelection(0,0,false,false);
 	  table.requestFocus();
+	  
+	  
 
 
             	System.out.println(payment_method.getSelectedItem() + " selected");
@@ -4379,6 +4417,20 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
 			}
 
 			
+		  	invoice										= new Invoice();
+		  	setInvoiceDefaultValues();
+		  	setInitialInvoiceNumber();
+//		  	invoice.setTransactionUUID(String.valueOf(invoiceNumber));
+		      try { // Create the original invoice transaction number and UUID.
+		          System.out.println("Process Activation: Uploading New invoice to Lockwind Cloud:");
+					System.out.println("TenderAction()\t\t");
+		          response = http.sendPost( "", invoice.getConsumerUUID(),invoice.getIssuerUUID(),client_id,invoice.getStoreName().trim(),"",String.valueOf(invoiceNumber),fmt.format(today),simpDate.format(today),"USD","" ,"", "");
+		          System.out.println("WS Response:" + response);
+		          System.out.println("TenderAction -> WS Response after clearing invoice : " + response.toString() );
+		          invoice.setTransactionUUID(response.toString());
+			}catch(Exception exe) { 
+				exe.printStackTrace();
+			}
 
 
 

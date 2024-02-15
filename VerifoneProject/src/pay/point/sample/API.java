@@ -105,11 +105,15 @@ public class API {
 		 try {
 		 
 			 this.sendPost("https://lockwind.com/test/TM/AddTransactionLineItemAPIv2.php", uuid,action);
+			 for(int i = 0; i < uuid.length; i++)
+			 {
+			 System.out.println("updateLineItemStatus:" + url + " " + uuid[i]  +" " + action[i]);
+			 }
 		 }catch(Exception e) { e.printStackTrace(); };
 	 }
 	 // Factory method/function for reducing API code for each different message API request.
 	 public String sendPost(String url, String key[], String value[]) throws Exception { 
-		 System.out.println("API->getCurrentInvoiceNumber()");
+		 System.out.println("API->sendPost(String url, String key[], String value[])");
 	     
 	     obj = new URL(url);
 	     con = (HttpURLConnection) obj.openConnection();
@@ -121,7 +125,7 @@ public class API {
 	     
 	     String urlParameters = "";
 	     
-	     for(int i = 0; i < key.length; i++) { urlParameters +=  key[0] + "="+ value[0] +"&" ; }
+	     for(int i = 0; i < key.length; i++) { urlParameters +=  key[i] + "="+ value[i] +"&" ; }
 
 	     // Send post request
 	     con.setDoOutput(true);
@@ -131,9 +135,9 @@ public class API {
 	     wr.close();
 	     
 	     responseCode = con.getResponseCode();
-//	     System.out.println("\nSending 'POST' request to URL : " + url);
-//	     System.out.println("Post parameters : " + urlParameters);
-//	     System.out.println("Response Code : " + responseCode);
+	     System.out.println("\nSending 'POST' request to URL : " + url);
+	     System.out.println("Post parameters : " + urlParameters);
+	     System.out.println("Response Code : " + responseCode);
 	     
 	     in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
 	     response_buffer = new StringBuffer();
@@ -310,14 +314,15 @@ public class API {
 	
 	 
 	 
-	 // Current one activated under Enter Key Action Proc
+
 	// Send the line item information to the Lockwind Cloud	 
 	 public String sendProductPostAPILineItem( 
 			 
 		 
 			 String reference_code, String quantity, String category,String description, 
-			 String price, String subtotal, String tax, String discount, String onhand, String line_item_id, String document_number,
-			 String transaction_type_status, String pos_uuid, String issuer_uuid, String location_uuid, String transaction_uuid ) throws Exception {
+			 String price, String subtotal, String tax, String discount, 
+			 String onhand, String line_item_id, String document_number, String transaction_type_status, 
+			 String pos_uuid, String issuer_uuid, String location_uuid, String transaction_uuid ) throws Exception {
 		 	
 		 // package and send data to Lockwind Cloud. (No calculations or API requests except 1)
 		 	 url 			= "";
@@ -331,6 +336,7 @@ public class API {
 			 con.setRequestProperty("User-Agent", USER_AGENT);
 			 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
 			
+			 urlParameters += "uuid="+ line_item_id +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
 			 urlParameters += "transaction_type="+ "ELECTRONIC_DOCUMENT" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
 			 urlParameters += "transaction_type_value="+ "LINE_ITEM" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
 		     urlParameters += "transaction_type_status="+ transaction_type_status +"&"; // in MySQL Table JAVAPOS_TRANSACTION
@@ -410,6 +416,7 @@ public class API {
 			 }
 			 in.close();
 
+			 System.out.println("API->getUUID() \t\t + " + response_buffer.toString() );
 			 return response_buffer.toString();
 
 		}

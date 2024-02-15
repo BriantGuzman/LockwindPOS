@@ -3,7 +3,7 @@
  1099 St. Nicholas Avenue,  NY, NY, 10032
  Phone #: +1 212 740 4652       FAX:             
 
- 2/15/24    08:47:37 AM   Invoice No: 3
+ 2/14/24    05:55:45 PM   Invoice No: 13
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -13,9 +13,6 @@
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
-
                          SUB TOTAL $2.99
                          SALES TAX $0.27
                          TOTAL     $3.26
