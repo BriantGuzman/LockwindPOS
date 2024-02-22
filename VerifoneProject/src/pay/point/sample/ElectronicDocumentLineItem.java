@@ -90,6 +90,8 @@ public class ElectronicDocumentLineItem {
         private String subtype2;
         private String subtype3;
 
+        
+        private String invoice_number;
         public ElectronicDocumentLineItem()
         {
         	
@@ -234,7 +236,10 @@ public class ElectronicDocumentLineItem {
 
         public void		setStatus(String status) { this.status = status; }
         public String 	getStatus() { return this.status; }
-        
+
+        public void		setInvoiceNumber(String invoice_number) { this.invoice_number = invoice_number; }
+        public String 	getInvoiceNumber() { return this.invoice_number; }
+
         public void		setScanned() { status = "scanned"; }
         public void 	setPaid() { status = "paid"; }
         public void		setRefunded() { status = "refunded"; }
@@ -257,7 +262,7 @@ public class ElectronicDocumentLineItem {
         	this.getUPC () 			+ " " + this.getQTY() 			+ " " + this.getCategory()	+ " " + 
         	this.getDescription() 	+ " " + this.getRetailPrice() 	+ " " + this.getSubtotal()  + " " + 
         	this.getTaxes() + " " 	+ " " + this.getDiscount() 		+ " " + this.getOnHand() 	+ " " + 
-        	this.getLineItemCount();
+        	this.getLineItemCount() + " " + this.getInvoiceNumber() + " " + this.getUUID() 		+ " " ;
         	
         	return temp;
         }

@@ -72,7 +72,8 @@ public class TableManager {
 		for(int i = 0; i < columnName.length; i++)
 		{
 			columnMapper.addColumn(columnName[i]);
-			System.out.println("TableManager -> Adding Column to ColumnMapper:" + columnName[i] + " at " + columnMapper.getColumnNumber(columnName[i] ) );
+			// Removed statement below to make the output smaller - 2/15/24
+//			System.out.println("TableManager -> Adding Column to ColumnMapper:" + columnName[i] + " at " + columnMapper.getColumnNumber(columnName[i] ) );
 		}
 
   }

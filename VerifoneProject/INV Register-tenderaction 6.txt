@@ -1,9 +1,10 @@
 ----------------------------------------
-165 St. Hardware Inc.
+-------------165 St. Hardware Inc.-------------
  1099 St. Nicholas Avenue,  NY, NY, 10032
- Phone #: +1 212 740 4652       FAX:             
+ Phone #: +1 212 740 4652       
+FAX:             
 
- 2/14/24    05:41:12 PM   Invoice No: 6
+ 2/21/24    03:29:16 PM   Invoice No: 6
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -13,14 +14,21 @@
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
+ 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
+ GENERAL PRODUCT CODES                     
+
                          SUB TOTAL $2.99
                          SALES TAX $0.27
                          TOTAL     $3.26
 
-                         TENDERED  $20.00
-                         CHANGE    $16.74
+                         TENDERED  $4.00
+                         CHANGE    $0.74
                          
 Addenda: 
+                         
+Line Item Count: 1
+                         
+Unit Item Count: 1.0
 ----------------------------------------
 THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
 

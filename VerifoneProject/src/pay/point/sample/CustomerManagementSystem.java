@@ -123,7 +123,7 @@ public class CustomerManagementSystem extends Service {
 	                 customer.setBillToPhoneNumber( str.nextToken() );
 	                 customer.setBillToEmailAddress( str.nextToken() );
 	                 this.add(customer);
-	                 System.out.println(customer.toString());
+	                 // System.out.println(customer.toString());
 	                 
 	             }
 	         }

@@ -155,7 +155,8 @@ public class API {
 	 
 	 public String getTransactionUUID(String issuerUUID, String invoice_number) throws Exception { 
 		 
-		   	 System.out.println("API->getTransactionUUID()");
+		   	 System.out.println("API->getTransactionUUID(String issuerUUID, String invoice_number)");
+		   	 System.out.println("API->getTransactionUUID(" + issuerUUID + "," + invoice_number + ")");
 		     url = "https://lockwind.com/test/TM/GetTransactionUUID.php";
 		     
 		     String[] key = {"issuer_uuid","invoice_number"};
@@ -170,8 +171,10 @@ public class API {
 	 public String getCurrentInvoiceNumber(String issuerUUID) throws Exception {
 	     
 	     System.out.println("API->getCurrentInvoiceNumber()");
-	     
-	     url = "https://lockwind.com/test/TM/GetInvoiceNumber.php";
+	   	 System.out.println("API->getCurrentInvoiceNumber(" + issuerUUID + ")");
+
+//	     url = "https://lockwind.com/test/TM/GetInvoiceNumber.php";
+	     url = "https://lockwind.com/test/JAVAPOS_API_GET_INVOICE_NUMBER.php";
 	     obj = new URL(url);
 	     con = (HttpURLConnection) obj.openConnection();
 	     

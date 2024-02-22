@@ -51,7 +51,7 @@ public class PrinterManagementSystem {
 	     
 	     for (PrintService printer : printServices) {
 	    	 
-		       System.out.println("Printer: " + printer.getName());
+//		       System.out.println("Printer: " + printer.getName());
 		       temp = new Printer("","","",printer.getName() );
 		       add(temp );
 	     }
