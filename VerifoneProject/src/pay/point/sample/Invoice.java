@@ -8,6 +8,10 @@ public class Invoice extends ElectronicDocument {
 	// private InvoiceLineItem line_item;
 		
 	public Invoice() { }
+	public Invoice(String issuer_uuid)
+	{
+		super(issuer_uuid);
+	}
 		
 	}
 

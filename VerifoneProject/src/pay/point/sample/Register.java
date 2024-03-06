@@ -146,12 +146,9 @@ import java.lang.reflect.Method;
 //---------------------------------------------------- CLASS REGISTER : THIS IS THE MAIN CLASS
 public class Register  implements ActionListener,FocusListener {
 
+	  private RegisterVerifone register_verifone;
 	  private APIVerifone verifone;
 	  
-	  private Document POSStatus;
-	  private Element statusElement;
-	
-	  private String mac_label					= "Register1"; // This is the name of the point of sale that is identifiable by Verifone.
 	  private Invoice invoice;
 
 	  String invoice_directory 					= 		"./target/classes/lockwind/com/outbound_invoice/";
@@ -313,7 +310,7 @@ public class Register  implements ActionListener,FocusListener {
 	  private JButton bx005; // new_stock
 	  private JButton bx006; // inventory
 	  private JButton bx007; // Verifone Manager
-	  private JButton bx008; // Verifone Manager
+//	  private JButton bx008; // Verifone Manager
 	  private JButton pim_button;
 	  private JButton salesReport;
 	  
@@ -337,7 +334,22 @@ public class Register  implements ActionListener,FocusListener {
 	  
 	  private double total;
 	  
+	  private Font 		font1,font2;
+      private Timer 	timer;
+
+      private String 	account_selected;
+      private String 	response;
+      private int 		in;
+      private String 	productName;
+      private String 	store_print_name;
+      private int 		item_count;
+
+      
 	  // ADVANCED COMMUNICATIONS & SIGNALS
+	  private Document POSStatus;
+	  private Element statusElement;
+	
+	  private String 	mac_label					= "Register1"; // This is the name of the point of sale that is identifiable by Verifone.
 	  private boolean 	registerStatus;
 	  private boolean 	sessionInProgress;
 	  private String 	address;
@@ -381,15 +393,6 @@ public class Register  implements ActionListener,FocusListener {
 		
 	  private String 	temp;
 
-	  private Font 		font1,font2;
-      private Timer 	timer;
-
-      private String 	account_selected;
-      private String 	response;
-      private int 		in;
-      private String 	productName;
-      private String 	store_print_name;
-      private int 		item_count;
       
       
       
@@ -450,7 +453,7 @@ public class Register  implements ActionListener,FocusListener {
 		    bx005                   					= null;
 		    bx006                   					= null;
 		    bx007                   					= null;
-		    bx008                   					= null;
+//		    bx008                   					= null;
 		    
 		    button_tender               			    = null;
 		    z                   						= null;
@@ -565,6 +568,8 @@ public class Register  implements ActionListener,FocusListener {
 		    productName 		 						= "";
 		    store_print_name 	 						= "";
 		    item_count 			 						= 0;
+		    
+		    register_verifone							= null;
 
 	  }
 	  
@@ -572,6 +577,7 @@ public class Register  implements ActionListener,FocusListener {
 		  
 		  	// REGISTER SET COMPONENT DEFAULT VALUES
 
+		  	register_verifone							= new RegisterVerifone();
 		    retailerUUID                   				= "5d4de950d4f69";
 		    posUUID                   					= "65cbcf67af4bb65cbcf67af508";
 			client_id                   				= "5d4de950d4f69";
@@ -682,7 +688,7 @@ public class Register  implements ActionListener,FocusListener {
 		    bx005                          				= new JButton("");
 		    bx006                          				= new JButton("");
 		    bx007                          				= new JButton("");
-		    bx008                          				= new JButton("");
+//		    bx008                          				= new JButton("");
 
 		    button_tender              				 	= new JButton("");
   		    pim_button				  				 	= new JButton("");
@@ -712,7 +718,7 @@ public class Register  implements ActionListener,FocusListener {
 			
 			// Compile time errands
 			System.out.println("Compile time functions being loaded");
-			invoice										= new Invoice();
+			invoice										= new Invoice( retailerUUID );
 			this.setInvoiceDefaultValues();
 	        System.out.println("Register -> Invoice Number: " + invoice.getInvoiceNumber() + " -> UUID: " + invoice.getTransactionUUID() );
 	        
@@ -830,7 +836,7 @@ public class Register  implements ActionListener,FocusListener {
 		    bx005										. setName("new_stock");
 		    bx006										. setName("inventory");
 		    bx007										. setName("verifone_manager");
-		    bx008										. setName("extra_button");
+//		    bx008										. setName("extra_button");
 		    button_tender								. setName("tender");
 			pim_button									. setName("pim_button");
 			salesReport									. setName("sales_report_button");
@@ -845,7 +851,7 @@ public class Register  implements ActionListener,FocusListener {
 			bx005										. setText("New Stock"); //  2nd Column of buttons, 2nd from the top
 			bx006										. setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
 			bx007										. setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
-			bx008										. setText("Extra button"); // 2nd Column of buttons, 3rd from the top
+			// bx008										. setText("Extra button"); // 2nd Column of buttons, 3rd from the top
 			salesReport									. setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
 			button_tender								. setText("Tender"); // 3rd Column of buttons, 1st from the top
 			pim_button									. setText("PIM"); // 3rd Column of buttons, 3rd from the top
@@ -924,7 +930,7 @@ public class Register  implements ActionListener,FocusListener {
 			bx005										. setFont(font2);
 			bx006										. setFont(font2);
 			bx007										. setFont(font2);
-			bx008										. setFont(font2);
+//			bx008										. setFont(font2);
 			button_tender								. setFont(font2);
 			pim_button									. setFont(font2);
 	  }
@@ -951,7 +957,7 @@ public class Register  implements ActionListener,FocusListener {
 		    bx005										. setForeground(Color.BLUE);
 		    bx006										. setForeground(Color.BLUE);
 		    bx007										. setForeground(Color.BLUE);
-		    bx008										. setForeground(Color.BLUE);
+//		    bx008										. setForeground(Color.BLUE);
 			button_tender								. setForeground(Color.BLACK);
 			pim_button									. setForeground(Color.BLACK);
 			
@@ -989,7 +995,7 @@ public class Register  implements ActionListener,FocusListener {
 		    bx005							.addActionListener(this);
 		    bx006							.addActionListener(this);
 		    bx007							.addActionListener(this);
-		    bx008							.addActionListener(this);
+//		    bx008							.addActionListener(this);
 		    button_tender					.addActionListener(this);
 		    salesReport						.addActionListener(this);
 		    pim_button						.addActionListener(this);
@@ -1037,7 +1043,7 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.NORTH, bx005,50,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, bx006,100,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, bx007,150,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx008,200,layout.NORTH, panel);
+//		  panelLayout.putConstraint(panelLayout.NORTH, bx008,200,layout.NORTH, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.NORTH, button_tender,5,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, salesReport,50,layout.NORTH, panel);
@@ -1090,7 +1096,7 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, bx005,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx006,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx007,550,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, bx008,550,layout.WEST, panel);
+///		  panelLayout.putConstraint(panelLayout.WEST, bx008,550,layout.WEST, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.WEST, button_tender,700,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, salesReport,700,layout.WEST, panel);
@@ -1247,7 +1253,7 @@ public class Register  implements ActionListener,FocusListener {
 		  panel.add(bx005);
 		  panel.add(bx006);
 		  panel.add(bx007);
-		  panel.add(bx008);
+//		  panel.add(bx008);
 		  
 		  panel.add(button_tender);
 		  
@@ -2017,7 +2023,7 @@ public void buildActionListener() {
 
 		if(registerStatus == true){
 		try { 
-			removeLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+			register_verifone.removeLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 			String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 		}catch (Exception e1) {
 			System.out.println("Register - delete key action error: " + "cannot connect to register" + e1.toString() );
@@ -2131,86 +2137,7 @@ public void buildActionListener() {
 				System.out.println( e.toString() );
 			}
 		}
-		
-
-
-
-            
-            /*
-             * 
-
-//		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 5: SUBTOTAL
-//		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-//		 table_manager.setData(table,i,5,table_manager.getSubTotal(table,i)); 
-
-		 
-		 /*
-		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); } // COL 6: TAX
-		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-		 table_manager.setData(table,i,5,(table,i)); 
-
- 			
- 			
-			// System.out.println("Printing Line Items: "); 
-		  	// invoice.getElectronicDocumentLineItemManager().printLineItems();
-
-
-
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionSubTotal() ) ) );
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal() ) ) );
-			System.out.println(formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) );			
-			System.out.println(line_item.toString() );
-
-
-
-  				http.sendProductPostAPILineItem( 
-            		
-            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
-            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
-            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
-            		table_manager.getData(table,i,9).toString()
-            		);
-
-
-                        http.sendProductPostAPILineItem( 
-            		
-            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
-            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
-            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
-            		table_manager.getData(table,i,9).toString()
-            		);
-
-            
-            http.sendProductPostAPI(
-            		"consumer_uuid","issuer_uuid",client_id,client_name,
-            		"customer code",String.valueOf(invoiceNumber),"invoice_date","invoice_time",
-            		"USD",String.valueOf(invoice.getInvoiceTotal() ),"Tender Value",invoice.getTransactionChangeValue(),"ELECTRONIC DOCUMENT","INVOICE",
-            		table_manager.getData(table,i,0).toString(),table_manager.getData(table,i,1).toString(),table_manager.getData(table,i,2).toString(),
-            		table_manager.getData(table,i,3).toString(),table_manager.getData(table,i,4).toString(),table_manager.getData(table,i,5).toString(),
-            		table_manager.getData(table,i,6).toString(),table_manager.getData(table,i,7).toString(),table_manager.getData(table,i,8).toString(),
-            		table_manager.getData(table,i,9).toString()
-            		);
-            		*/
-			
-            /*
-             * The code below was removed on 2/2/24 in order to provide more clarity for the code.
-             * Code is located in the enter key action proc.
-             * 
-          	//			JOptionPane.showMessageDialog(null, "ITEM COUNT: " + item_count);
-			//          System.out.println("UPLOADING PRODUCT:"); 
-
-*/            
-			/*		API -> SendProductPostAPI
-			 * 		 String consumer_uuid, String issuer_uuid,String client_id,String client_name,
-			 		 String customer_code,String invoice_number,String invoice_date,String invoice_time,
-					 String invoice_currency,String total_value,String tender_value,String change_value,
-					 String transaction_type,String transaction_type_value
-					 String reference_code, String quantity, String category,
-					 String description,String price, String subtotal, 
-					 String tax, String discount, String onhand, String line_item_id
-		*/
-			
-			
+	    
 			
 	if(registerStatus == false){ try {  /*registerPOS(); registerStatus = true; */ } catch(Exception a1) {  } }
 
@@ -2224,7 +2151,7 @@ public void buildActionListener() {
 
 //			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
 			mac_label =  temp; // returns mac_label
-			startSession();
+			register_verifone.startSession();
         
 	  		System.out.println("New Message from Verifone: ");
 	  		temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
@@ -2233,7 +2160,7 @@ public void buildActionListener() {
 
 //			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );  // return Session Started
 
-	  		addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+            register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 			String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 
 			System.out.println("New Message from Verifone: ");
@@ -2252,27 +2179,24 @@ public void buildActionListener() {
 			if( table_manager.getData(table, i, 0).toString().equalsIgnoreCase("") ) 
 				{
 					
-				  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+				register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				}
 				else { 
-				 overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+					register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				}
 
 				} catch(Exception exx){
 			JOptionPane.showMessageDialog( null, exx.toString() +  " : " + Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );
 				try { 
-				  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+					register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
-				 overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+					register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				} catch(Exception exe){
 			JOptionPane.showMessageDialog( null, exe.toString() +  " : " + Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );
 } } } } else {  System.out.println("Register Enter Key Action Error: Credit card payment terminal cannot be reached"); } } });
-
-
-
 
 
 /*
@@ -2290,16 +2214,6 @@ public void buildActionListener() {
 					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 
 		}
-
-
-
-
-
-
-
-
-
-
 
 
 		JOptionPane.showMessageDialog(null,  " Current Response " + Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", null) );
@@ -2358,12 +2272,12 @@ public void buildActionListener() {
 	}
 	else
 	{
-	  if(col == 0) { editTableCell(); }
+	  if( col == 0) { editTableCell(); }
 	  if( col == 1) { updateQTY();}
 	  if( col == 2) {} // updateCategory(); -- implement this function to retrieve the category according to the UPC/GTIN provided.
 	  if( col == 3) { updateDescription(); }
 	  if( col == 4) { updatePrice(); }
-	  if( col == 5) { table.changeSelection(row,0,false,false); } // updateSubtotal();
+	  if( col == 5) { table.changeSelection(row,0,false,false); } 
 	  if( col == 6) { updateTax(); }
 	  if( col == 7) { updateDiscount(); }
 	}
@@ -2384,7 +2298,7 @@ public void buildActionListener() {
 			System.out.println("Terminating POS System");
 
 			try { 
-				  unregisterPOSAll();
+				  register_verifone.unregisterPOSAll();
 				  Thread.sleep(1000);
 			}catch(Exception e){
 				System.out.println("error could not unregister POS");
@@ -2533,13 +2447,8 @@ public void focusLost(FocusEvent e) {
           }else {}
           
           
-          if( temp.getName().equalsIgnoreCase("account_name_input")){
-              JOptionPane.showMessageDialog(null,"Action Source: " + temp.getName() ) ;
-
-          }
-          else{
-              
-          }
+          if( temp.getName().equalsIgnoreCase("account_name_input")){ JOptionPane.showMessageDialog(null,"Action Source: " + temp.getName() ) ; }
+          else{ }
       }
       
       if(e.getSource() instanceof JButton )
@@ -2698,147 +2607,6 @@ public void focusLost(FocusEvent e) {
 
       }   
       }
-  
-  
-  
-  /*
-  
-	  public void askGTIN(JTable table,int i, int j, String temp) {
-
-   
-		Date currentTime = new Date();
-		SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-		String currentTimeString = sdf.format(currentTime);
-		System.out.println("@askGTIN ->  STARTING FUNCTION CALL: " + currentTimeString) ;
-
-		StringBuilder tempData = new StringBuilder();
-		String inputGTIN = "";
-		String productInfo = "";
-   
-		System.out.println("@askGTIN ->  PROCESSING: " + currentTimeString) ;
-	 
-		// Process A: GTIN is not provided by user using barcode scanner.
-		currentTimeString = sdf.format(currentTime);
-		System.out.println("@askGTIN ->  Checking if GTIN is provided or not: " + currentTimeString) ;		 
-		
-		if (temp.equalsIgnoreCase("") ) {  
-		
-		currentTimeString = sdf.format(currentTime);
-		System.out.println("@askGTIN ->  GTIN is not provided: " + currentTimeString) ;		 
-
-		currentTimeString = sdf.format(currentTime);		
-		System.out.println("@askGTIN ->  Requesting GTIN Information to user: " + currentTimeString) ;
-		inputGTIN = JOptionPane.showInputDialog(null,"SCAN/ENTER BARCODE:");
-		table_manager.setData( table,i,0, inputGTIN );
-		 
-		currentTimeString = sdf.format(currentTime);		
-		System.out.println("@askGTIN -> Validating the GTIN reference code using the class ValidationPlatform: " + currentTimeString) ;
-		 error_message = validator.validateReferenceCode(inputGTIN);
-   
-		 if(error_message.equalsIgnoreCase("") )
-		 {
-
-			table_manager.setData( table,i,0,table_manager.getData(table,i,0).toString() );
-			inputGTIN = table_manager.getData(table,i,0).toString();
-			table_manager.setData( table,i,1,"1" );
-		   
-			try { productInfo = product_management_system.getProductInfoAPICategory(inputGTIN); }
-			catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
-			table_manager.setData(table,i,2,productInfo);
-   
-			try { productInfo = product_management_system.getProductInfoAPIBrandDescription(inputGTIN); }
-			catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
-			table_manager.setData(table,i,3,productInfo);
-   
-			try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); }
-			catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-			// table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
-			
-			
-
-//			table_manager.setData(table,i,5,"9.99"); // SUBTOTAL
-//		   table_manager.setData(table,i,5,"0.00"); // SUBTOTAL
-//		   table_manager.setData(table,i,5,"0.00"); // TAX
-//		   table_manager.setData(table,i,5,"0.00"); // DISCOUNT
-		   // table_manager.setData(table,i,5,""); // ONHAND	
-
-		 // Process A.1 - Validation of GTIN is successful now proceed to input data into JTable.
-//			 table_manager.setData(table,i,0,inputGTIN);
-//			 product_management_system.setRetailerUUID(table_manager.getRetailerUUID());			  
-//			 productInfo = product_management_system.getProductInfoAPI(u);
-//			 productInfo = product_management_system.getProductInfoAPI();
-
-			 //			 table_manager.fillRow(table,i,table_manager.getData(table,i,0).toString(),product_management_system.getRetailerUUID());
-//			 table_manager.setData(table,i,1,"1");
-//			 table_manager.setData(table,i,4,table_manager.getSubTotal(table,i));table_manager.setData(table,i,5,table_manager.getTax(table,i));
-	 
-			 // Change this to get quantity on hand and apply to both this method and the calling method , actionGTIN so that both may be seen regardless of action taken by user.
-   
-//			 updateOnHand(table);
-//			 refreshTotal(table,0.00,0.00);
-		 }else {
-			 JOptionPane.showMessageDialog(null, error_message);
-			 table_manager.setData(table,i,0,"");
-			 table.changeSelection(i,0,false,false);
-		 }
-	 }
-
-
-	 // Process B: GTIN is provided by user using barcode scanner.	
-	 else { 
-		 
-		 error_message = validator.validateReferenceCode(temp);
-   
-		 if(error_message.equalsIgnoreCase("") == true)
-		 {
-		 
-//		 inputGTIN = table_manager.getData(table,i,0).toString();
-
-		 table_manager.setData( table,i,0,table_manager.getData(table,i,0).toString() );
-		 table_manager.setData( table,i,1,"1" );
-		
-		 try { productInfo = product_management_system.getProductInfoAPICategory(inputGTIN); }
-		 catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
-		 table_manager.setData(table,i,2,productInfo);
-
-		 try { productInfo = product_management_system.getProductInfoAPIBrandDescription(inputGTIN); }
-		 catch(Exception e) { System.out.println("Exception thrown on askGTIN"); }
-		 table_manager.setData(table,i,3,productInfo);
-
-
-		 try { productInfo = product_management_system.getProductInfoAPIPriceRetail(inputGTIN); }
-		 catch(Exception e) { System.out.println("Exception thrown on askGTIN Retail Price"); }
-		 
-		 // table_manager.setData(table,i,4,productInfo); // PRICE RETAIL
-		 //	table_manager.setData(table,i,5,"9.99"); // SUBTOTAL
-		 //	table_manager.setData(table,i,5,"0.00"); // SUBTOTAL
-		 //	table_manager.setData(table,i,5,"0.00"); // TAX
-		 //	table_manager.setData(table,i,5,"0.00"); // DISCOUNT
-		 // table_manager.setData(table,i,5,""); // ONHAND
-
-		 
-
-		 table.changeSelection(i,0,false,false);
-		}
-
-		
-		 //table_manager.fillRow( table, i,table_manager.getData(table,i,0).toString(), product_management_system.getRetailerUUID()  );
-		else {
-			JOptionPane.showMessageDialog(null, error_message);
-			table_manager.setData(table,i,0,"");
-			table.changeSelection(i,0,false,false);
-		}
-	   }
-
-	   System.out.println("Current Selection Cell: " + i + " " + j);
-	   updateOnHand(table);
-	   
-
-	   // table_manager.setData(table,i,5,table_manager.getTax(table,i) );
-	   table.changeSelection((i+1),0,false,false);
-	}
-  
-*/
 
 public void actionGTIN() {
   
@@ -2880,8 +2648,6 @@ public void actionGTIN() {
   	  table_manager.setData(table,i,7,String.valueOf( qty_on_hand ) );
 
 }
-
-
 
  public double getTableSubTotalValue(){ return table_manager.getColumnTotal(table,5) ; } // 6/26/23 Updated value to column 5 per new jTable design including category
  public double getTableTaxValue(){ return table_manager.getColumnTotal(table,6); } // 6/26/23 Updated value to column 6 per new jTable design including category
@@ -3434,67 +3200,20 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 }
 
 
-  public void updateSubTotal(){
-
-
-	  /*
-	  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
-  
-	  int i = 0;
-	  int j = 0;
-
-	  i = table.getSelectedRow();
-	  j = table.getSelectedColumn();
-  
-	  if(table_manager.getData(table,i,1).toString().equalsIgnoreCase("0") == false || table_manager.getData(table,i,1) == null) {
-	  
-	  double qty = 0;
-  	  double price = 0;
-  
-     qty =  Double.parseDouble( table_manager.getData(table, i, 1).toString() ); 
-     price =  Double.parseDouble( table_manager.getData(table, i, 4).toString() ); 
-
-  }
-  else
-  {
-//      table_manager.setData(table,i,5,"0");
-  }
-
-
-      */
-	  int i,j = 0;
-
-	  i = table.getSelectedRow();
-	  j = table.getSelectedColumn();
-
-	  if(table.isEditing()){table.getCellEditor().stopCellEditing();}
-	  
-      table_manager.setData(table,i,j,format_manager.formatDoubleUS(line_item.getSubtotal() ) );
-      i++;
-      table.changeSelection(i,0,false,false);
-
-  // refreshTotal(table,0.00,0.00);
-  
-//  table.changeSelection(i,0, false,false);
-
-}
-
 
   public void updateDiscount(){
   
   int i = 0; int j = 0;
   if(table.isEditing()){table.getCellEditor().stopCellEditing();}
   
-  formatter = new DecimalFormat("#0.00");
+  	formatter = new DecimalFormat("#0.00");
   
-  i = table.getSelectedRow();
-  j = table.getSelectedColumn();
+  	i = table.getSelectedRow();
+  	j = table.getSelectedColumn();
 
   
-  String inputQty = "";
-  inputQty = ali.requestDiscount();
-  
-  
+  	String inputQty = "";
+  	inputQty = ali.requestDiscount();
   
   System.out.println("The customer has requested a discount of " + inputQty + " %");
 
@@ -3516,19 +3235,13 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       
   }
 */
-  public void uploadLineItem(
-int i
-		  ) { 
+  public void uploadLineItem( int i ) { 
       String[] temp = new String[table.getColumnCount()*2];
       j = 0;
-for(int k = 0; k < table.getColumnCount(); k++) // Per column 
-  {
-  	if(table_manager.getData(table,i,j) == null) { // Column value is null 
+      for(int k = 0; k < table.getColumnCount(); k++) { // Per column  
+    	  if(table_manager.getData(table,i,j) == null) { // Column value is null 
   	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
-  	}
-  	else {
-  	temp[k] = table_manager.getData(table,i,j).toString();
-  	}
+  	} else { temp[k] = table_manager.getData(table,i,j).toString(); }
   	j++;
   	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
   }
@@ -3568,7 +3281,8 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
   	temp[k] = table_manager.getData(table,i,j).toString();
   	}
   	j++;
-  	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+//   	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+  	System.out.print ( temp[k]  + " |  " );
   }
 
   
@@ -3821,7 +3535,7 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
       
       http.IncrementInvoiceNumber( invoice.getIssuerUUID() );
       
-      invoice										= new Invoice();
+      invoice										= new Invoice( retailerUUID );
       setInvoiceDefaultValues();
 	  System.out.println("Register-> setInvoiceDefaultValues() -> ** retailer_uuid: " + retailerUUID);
 	  System.out.println("Register-> setInvoiceDefaultValues() -> ** invoice_number: " + invoice.getInvoiceNumber() );
@@ -3872,7 +3586,7 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 
 			if(payment_method.getSelectedItem().toString().equalsIgnoreCase("CASH") ) {
 			//Display mesasge on verifone
-			try { displayMessage("Balance Due: $0.00",10); /* Thread.sleep(5000); */ endSession(); }
+			try { register_verifone.displayMessage("Balance Due: $0.00",10); /* Thread.sleep(5000); */ register_verifone.endSession(); }
 			catch(Exception e){ System.out.println(e.toString() ); }
 			}else{
 			
@@ -3883,11 +3597,11 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 			
 			  try { 
 
-				  captureCardEarlyReturn();
+				  register_verifone.captureCardEarlyReturn();
 				  Thread.sleep(1000);
-				  authorizeCard();
+				  register_verifone.authorizeCard();
 				  Thread.sleep(1000);
-				  endSession();
+				  register_verifone.endSession();
 //				  Thread.sleep(2000);
 
 				  }catch(Exception verifone_exception) {
@@ -3921,2288 +3635,13 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
   
   
   
-  
-  
-	public boolean registerPOS() throws Exception {
-
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 44
-
-		
-		// generate a random ENTRY_CODE
-		//Random generator = new Random();
-		//String entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		// System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-		
-		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        // final KeyFactory kf = KeyFactory.getInstance("RSA");
-        // final PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
-        // final PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
-		// final KeyPair keypair = new KeyPair(publicKey, privateKey);
-
-		System.out.format("Public key is (as base64) %s%n", PUBLIC_KEY);
-		System.out.format("Private key is (as base64) %s%n", PRIVATE_KEY);
-
-
-		// build request
-		//Document request = Documents.create("TRANSACTION");
-		//Element docElement = request.getDocumentElement();
-		
-		
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECURITY");
-		Documents.addElement(docElement, "COMMAND", "REGISTER");
-		Documents.addElement(docElement, "ENTRY_CODE", entryCode);
-		Documents.addElement(docElement, "KEY", PUBLIC_KEY);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		
-		
-		if( Documents.selectFirst(responseDocElement, "RESULT", "OK").toString().equalsIgnoreCase("OK") ) {
-	
-//		registerStatus = true;
-//		JOptionPane.showMessageDialog(null, "Registered with CC Terminal" + registerStatus);
-		System.out.println( "Registered with CC Terminal: " + registerStatus);
-
-		//  		System.out.println("New Message from Verifone: ");
-
-		}else{
-					registerStatus = false;
-					throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error unable to Register POS"));
-		}
-		
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-
-		
-		// validate that the MAC_KEY was returned
-		//String encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-	
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-		
-		return registerStatus;
-	}
-	
-	public void startSession() throws Exception {
-
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 70
-
-		
-		// generate a random ENTRY_CODE
-//		Random generator = new Random();
-	//	String entryCode = String.valueOf(generator.nextInt(9999));
-
-		
-		
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-//		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        // KeyFactory kf = KeyFactory.getInstance("RSA");
-        // PrivateKey privateKey = kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
-        // PublicKey publicKey = kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
-		// KeyPair keypair = new KeyPair(publicKey, privateKey);
-
-//		System.out.format("Public key is (as base64) %s%n", PUBLIC_KEY);
-//		System.out.format("Private key is (as base64) %s%n", PRIVATE_KEY);
-
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SESSION");
-		Documents.addElement(docElement, "COMMAND", "START");
-		Documents.addElement(docElement, "INVOICE", String.valueOf(invoice_number++) );
-		Documents.addElement(docElement, "SWIPE_AHEAD", String.valueOf(1));
-		Documents.addElement(docElement, "STORE_NUM", String.valueOf(27));
-		Documents.addElement(docElement, "LANE", String.valueOf(1));
-		Documents.addElement(docElement, "CASHIER_ID", String.valueOf(1));
-		Documents.addElement(docElement, "SERVER_ID", String.valueOf(1));
-		Documents.addElement(docElement, "SHIFT_ID", String.valueOf(1));
-		Documents.addElement(docElement, "TABLE_NUM", String.valueOf(0));
-		Documents.addElement(docElement, "BUSINESSDATE", "20230624");
-		Documents.addElement(docElement, "PURCHASE_ID", "STELLAR MANAGEMENT");
-		Documents.addElement(docElement, "TRAINING_MODE", "ON");
-		Documents.addElement(docElement, "TRAINING_MODE", "TRUE");
-		
-//		Documents.addElement(docElement, "ENTRY_CODE", entryCode);
-//		Documents.addElement(docElement, "KEY", PUBLIC_KEY);
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-		/*
-		 * COMMAND RESPONSE
-		 * <RESPONSE>
-<RESPONSE_TEXT>SESSION started</RESPONSE_TEXT>
-<RESULT>OK</RESULT>
-<RESULT_CODE>-1</RESULT_CODE>
-<TERMINATION_STATUS>SUCCESS</TERMINATION_STATUS>
-<COUNTER>2</COUNTER>
-</RESPONSE>
-		 * 
-		 * This start session command does not return the MAC_LABEL XML element, therefore I remove line.
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-		// validate that the MAC_KEY was returned
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-*/
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-	}
-	
-	
-	
-	public void endSession() throws Exception {
-
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 76
-
-		
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-//		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        
-//		System.out.format("Public key is (as base64) %s%n", PUBLIC_KEY);
-//		System.out.format("Private key is (as base64) %s%n", PRIVATE_KEY);
-
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SESSION");
-		Documents.addElement(docElement, "COMMAND", "FINISH");
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-	}
-	
-	
-public void addLineItem() throws Exception {
-		
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 158
-
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "ADD");
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", "04.98");
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", "00.43");
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", "05.42");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		Element docElement2 = request.createElement("LINE_ITEMS");
-		Element docElement3 = request.createElement("MERCHANDISE");
-
-		docElement.appendChild(docElement2);
-		docElement2.appendChild(docElement3);
-		
-		Documents.addElement(docElement3, "LINE_ITEM_ID", "1");
-		Documents.addElement(docElement3, "SKU", "1");
-		Documents.addElement(docElement3, "UPC", "1");
-		
-		Documents.addElement(docElement3, "DESCRIPTION", "TEFLON TAPE");
-		Documents.addElement(docElement3, "QUANTITY", "1");
-		Documents.addElement(docElement3, "UNIT_PRICE", "1.99");
-		Documents.addElement(docElement3, "EXTENDED_PRICE", "1.99");
-		Documents.addElement(docElement3, "FONT_COL_VALUE", "000000");
-//		Documents.addElement(docElement3, "LINE_ITEM_ID", "1");
-
-		
-		boolean offer = false;
-		
-		if(offer == true)
-		{
-			Element docElement4 = request.createElement("OFFER");
-			Documents.addElement(docElement4, "TYPE", "1");
-			Documents.addElement(docElement4, "LINE_ITEM_ID", "1");
-			Documents.addElement(docElement4, "DESCRIPTION", "EMPLOYEE DISCOUNT");
-			Documents.addElement(docElement4, "OFFER_AMOUNT", "1.00");
-			Documents.addElement(docElement4, "OFFER_LINE_ITEM", "3"); // Create a table for managing the discounts applicable to the system.			
-		}
-		
-		docElement3 = request.createElement("MERCHANDISE");
-		docElement2.appendChild(docElement3);
-		Documents.addElement(docElement3, "UNIT_PRICE", "2.99");
-		Documents.addElement(docElement3, "DESCRIPTION", "TAPE");
-		Documents.addElement(docElement3, "LINE_ITEM_ID", "2");
-		Documents.addElement(docElement3, "EXTENDED_PRICE", "2.99");
-		Documents.addElement(docElement3, "QUANTITY", "1");
-		
-		
-		//Documents.addElement(docElement, "MERCHANDISE", ""); // NO VALUE
-		//Documents.addElement(docElement, "LINE_ITEMS", ""); // NO VALUE
-		
-		//Documents.addElement(docElement, "TRANSACTION", ""); // NO VALUE
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-		/*
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-		// validate that the MAC_KEY was returned
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-*/
-	
-}
-	
-public void addLineItem(String subtotal,String tax_amount,String trans_amount, String line_item_id, String SKU,String UPC, String line_item_description,String quantity, String unit_price,String extended_price) throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 158
-
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "ADD");
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", subtotal);
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", tax_amount);
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", trans_amount);
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		Element docElement2 = request.createElement("LINE_ITEMS");
-		Element docElement3 = request.createElement("MERCHANDISE");
-
-		docElement.appendChild(docElement2);
-		docElement2.appendChild(docElement3);
-		
-		Documents.addElement(docElement3, "LINE_ITEM_ID", line_item_id);
-		Documents.addElement(docElement3, "SKU", SKU);
-		Documents.addElement(docElement3, "UPC", UPC);
-		
-		Documents.addElement(docElement3, "DESCRIPTION", line_item_description);
-		Documents.addElement(docElement3, "QUANTITY", quantity);
-		Documents.addElement(docElement3, "UNIT_PRICE", unit_price);
-		Documents.addElement(docElement3, "EXTENDED_PRICE", extended_price);
-		Documents.addElement(docElement3, "FONT_COL_VALUE", "000000");
-//		Documents.addElement(docElement3, "LINE_ITEM_ID", "1");
-
-		
-		boolean offer = false;
-		
-		if(offer == true)
-		{
-			Element docElement4 = request.createElement("OFFER");
-			Documents.addElement(docElement4, "TYPE", "1");
-			Documents.addElement(docElement4, "LINE_ITEM_ID", "1");
-			Documents.addElement(docElement4, "DESCRIPTION", "EMPLOYEE DISCOUNT");
-			Documents.addElement(docElement4, "OFFER_AMOUNT", "1.00");
-			Documents.addElement(docElement4, "OFFER_LINE_ITEM", "3"); // Create a table for managing the discounts applicable to the system.			
-		}
-		
-/*
-  		docElement3 = request.createElement("MERCHANDISE");
- 		docElement2.appendChild(docElement3);
-		Documents.addElement(docElement3, "UNIT_PRICE", "2.99");
-		Documents.addElement(docElement3, "DESCRIPTION", "TAPE");
-		Documents.addElement(docElement3, "LINE_ITEM_ID", "2");
-		Documents.addElement(docElement3, "EXTENDED_PRICE", "2.99");
-		Documents.addElement(docElement3, "QUANTITY", "1");
-*/
-		
-		
-		//Documents.addElement(docElement, "MERCHANDISE", ""); // NO VALUE
-		//Documents.addElement(docElement, "LINE_ITEMS", ""); // NO VALUE
-		
-		//Documents.addElement(docElement, "TRANSACTION", ""); // NO VALUE
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-		/*
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-		// validate that the MAC_KEY was returned
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-*/
-	
-}
-
-
-public void overrideLineItem(String subtotal,String tax_amount,String trans_amount, String line_item_id, String SKU,String UPC, String line_item_description,String quantity, String unit_price,String extended_price) throws Exception {
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 161
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "OVERRIDE");
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", subtotal);
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", tax_amount);
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", trans_amount);
-
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		Documents.addElement(docElement, "LINE_ITEM_ID", line_item_id);
-		Documents.addElement(docElement, "DESCRIPTION", line_item_description);
-		Documents.addElement(docElement, "QUANTITY", quantity);
-		Documents.addElement(docElement, "UNIT_PRICE", unit_price);
-		Documents.addElement(docElement, "EXTENDED_PRICE", extended_price);
-		Documents.addElement(docElement, "FONT_COL_VALUE", "000000");
-//		Documents.addElement(docElement3, "LINE_ITEM_ID", "1");
-
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-			
-}
-
-
-public void overrideLineItem() throws Exception {
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 161
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "OVERRIDE");
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", "04.98");
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", "00.43");
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", "05.42");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		Documents.addElement(docElement, "LINE_ITEM_ID", "1"); // You must change the line item to reference the one that must be changed.
-		Documents.addElement(docElement, "DESCRIPTION", "TEFLON TAPE"); // description can be changed with override command.
-		Documents.addElement(docElement, "QUANTITY", "1");
-		Documents.addElement(docElement, "UNIT_PRICE", "2.99");// price can be changed with override command.
-		Documents.addElement(docElement, "EXTENDED_PRICE", "2.99");
-		Documents.addElement(docElement, "FONT_COL_VALUE", "000000");
-//		Documents.addElement(docElement3, "LINE_ITEM_ID", "1");
-
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-			
-}
-	
-
-
-public void getCounter() throws Exception {
-
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 79
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "ADMIN");
-		Documents.addElement(docElement, "COMMAND", "GET_COUNTER");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-			
-}
-
-
-
-
-public void removeLineItem(String subtotal,String tax_amount,String trans_amount, String line_item_id, String SKU,String UPC, String line_item_description,String quantity, String unit_price,String extended_price) throws Exception {
-
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "REMOVE");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", subtotal);
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", tax_amount);
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", trans_amount);
-		
-		Documents.addElement(docElement, "LINE_ITEM_ID", line_item_id); // This only removes the second line item if it exists.
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-public void removeLineItem() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "REMOVE");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", "00.00");
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", "00.00");
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", "00.00");
-		
-		Documents.addElement(docElement, "LINE_ITEM_ID", "2"); // This only removes the second line item if it exists.
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-public void removeLineItemAll() throws Exception {
-	
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "LINE_ITEM");
-		Documents.addElement(docElement, "COMMAND", "REMOVEALL");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		Documents.addElement(docElement, "RUNNING_SUB_TOTAL", "00.00");
-		Documents.addElement(docElement, "RUNNING_TAX_AMOUNT", "00.00");
-		Documents.addElement(docElement, "RUNNING_TRANS_AMOUNT", "00.00");
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-	
-
-public void requestEmail() throws Exception {
-	
-	// generate a random ENTRY_CODE
-	generator = new Random();
-	entryCode = String.valueOf(generator.nextInt(9999));
-
-	// print out entry code to the user through the UI
-	System.out.printf("ENTRY_CODE is %s%n", entryCode);
-	
-//	JOptionPane.showMessageDialog(null, entryCode);
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "COMMAND", "EMAIL");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-
-
-
-public void activateGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "ACTIVATE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT/ MERCH_CREDIT");
-		Documents.addElement(docElement, "PAYMENT_SUBTYPE", ""); // OPTIONAL
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00"); // MUST BE A NON-ZERO AMOUNT
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		Documents.addElement(docElement, "SAF_FLAG", "");
-		
-		
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-public void reactivateGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "REACTIVATE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT/ MERCH_CREDIT");
-		Documents.addElement(docElement, "PAYMENT_SUBTYPE", ""); // OPTIONAL
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00"); // MUST BE A NON-ZERO AMOUNT
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		
-		Documents.addElement(docElement, "TOT_NUM_CARDS", "");
-		
-		
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		
-		
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-public void addValueGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "ADD_VALUE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT");
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00"); // MUST BE A NON-ZERO AMOUNT
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		/*
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		*/
-		
-		
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-
-
-
-public void checkBalanceGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "BALANCE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		/*
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		*/
-		
-		
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-public void cashOutGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "GIFT_CLOSE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		/*
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		*/
-		
-		
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-public void deactivateGiftCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "DEACTIVATE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "GIFT");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "TRUE");
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", ""); // OPTIONAL
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		/*
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		*/
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-public void checkBalanceEBT() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 134
-	// This command checks the balance on an EBT card.
-	
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "BALANCE");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "EBT");
-		Documents.addElement(docElement, "EBT_TYPE", "EBT"); // FOOD_STAMP or CASH_BENEFITS -> required for EBT Transactions
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-	
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-
-
-
-
-
-public void tokenQueryCard() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 154
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "TOKEN_QUERY");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "TRUE");
-		Documents.addElement(docElement, "ACCT_NUM", ""); // OPTIONAL
-		Documents.addElement(docElement, "CARD_EXP_MONTH", ""); // OPTIONAL
-		Documents.addElement(docElement, "CARD_EXP_YEAR", ""); // OPTIONAL
-		Documents.addElement(docElement, "MANUAL_PROMPT_OPTIONS", "ZIP"); // OPTIONAL
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		/*
-		Documents.addElement(docElement, "ACCT_NUM", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BARCODE", "");
-		Documents.addElement(docElement, "PIN_CODE", "");
-		Documents.addElement(docElement, "CVV2", "");
-		*/
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-
-
-
-
-
-public void getDeviceName() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 196
-
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "COMMAND", "GET_DEVICENAME");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		
-	
-}
-	
-	/**
-	 * Tests that the MAC_LABEL is successfully registered
-	 * 
-	 * @throws Exception
-	 */
-	public void requestDonation() throws Exception {
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "COMMAND", "CHARITY");
-		Documents.addElement(docElement, "DISPLAY_TEXT1", "How much do you love me?");
-		Documents.addElement(docElement, "AMOUNT1", "Not at all");
-		Documents.addElement(docElement, "AMOUNT2", "A little");
-		Documents.addElement(docElement, "AMOUNT3", "A lot");
-		Documents.addElement(docElement, "POS_RECON", "GET ECHO FROM TERMINAL");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-
-	
-	
-	public void authorizeCard() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 100
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "AUTH");
-//		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00");
-		Documents.addElement(docElement, "TRANS_AMOUNT", formatter.format(Double.parseDouble(invoice.getTransactionTotal())));
-
-
-		Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT");
-		Documents.addElement(docElement, "AUTH_CODE", "SAMPLE_CODE"); // NOT A REALISTIC VALUE
-		Documents.addElement(docElement, "MANUAL_ENTRY", "TRUE");
-		Documents.addElement(docElement, "CUSTOMER_STREET", "1099 ST NICHOLAS");
-		Documents.addElement(docElement, "CUSTOMER_ZIP", "10032");
-		Documents.addElement(docElement, "MANUAL_PROMPT", "");
-		Documents.addElement(docElement, "REF_TROUTD", "5.00");
-		Documents.addElement(docElement, "REF_CTROUTD", "5.00");
-		Documents.addElement(docElement, "RECURRING", "5.00");
-		Documents.addElement(docElement, "BILLPAY", "5.00");
-		Documents.addElement(docElement, "FORCE_FLAG", "5.00");
-		Documents.addElement(docElement, "CAPTURECARD_EARLYRETURN", "5.00");
-
-		// TAX AMOUNTS
-		Documents.addElement(docElement, "TAX_AMOUNT", formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())));
-		Documents.addElement(docElement, "TAX_IND", "2"); // 0 = TAX NOT PROVIDED, 2 - TAX = 0.0, 1 - TAX != 0.00
-		Documents.addElement(docElement, "CMRCL_FLAG", ""); // B = BUSINESS, C = CORPORATE, P = PURCHASING
-		
-		
-		// KEYED ACCOUTN  INFORMATION FOR GIFT OR CREDIT CARD PAYMENT TYPES ONLY
-/*
-		Documents.addElement(docElement, "ACCT_NUM", "373953192351004");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "12");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "25");
-		Documents.addElement(docElement, "BARCODE","");
-		Documents.addElement(docElement, "PIN_CODE","");
-		Documents.addElement(docElement, "CVV2", "");
-	*/	
-		// PROCESSOR BASED TOKEN PROCESSING (CONDITIONAL)
-//		Documents.addElement(docElement, "CARD_TOKEN", "");
-//		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-//		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-//		Documents.addElement(docElement, "BANK_USERDATA","");
-//		Documents.addElement(docElement, "OC_INDUSTRY_CODE","");
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-  
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "APPROVED"))) { 
-//			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-			JOptionPane.showMessageDialog(null,"APPROVED");
-		}
-		else {
-		
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-		}
-	}
-	
-	
-	
-	
-	public void captureCard() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 107
-		
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "CAPTURE");
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00");
-		Documents.addElement(docElement, "TIP_AMOUNT", "5.00");
-		Documents.addElement(docElement, "POS_RECON", "1234");
-		Documents.addElement(docElement, "EBTCASH_ELEGIBLE", "1234");
-		Documents.addElement(docElement, "EBTSNAP_ELEGIBLE", "1234");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT");
-		Documents.addElement(docElement, "PAYMENT_SUBTYPE", "CREDIT");
-		Documents.addElement(docElement, "EBT_TYPE", "TRUE");
-		Documents.addElement(docElement, "AUTH_CODE", "TRUE");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "TRUE");
-		Documents.addElement(docElement, "CUSTOMER_STREET", "1099 ST NICHOLAS");
-		Documents.addElement(docElement, "CUSTOMER_ZIP", "10032");
-		Documents.addElement(docElement, "MANUAL_PROMPT", "");
-		Documents.addElement(docElement, "PAYMENT_TYPES", "CREDIT|DEBIT|GIFT|FSA");
-		
-		Documents.addElement(docElement, "REF_TROUTD", "5.00");
-		Documents.addElement(docElement, "REF_CTROUTD", "5.00");
-		Documents.addElement(docElement, "RECURRING", "5.00");
-		Documents.addElement(docElement, "BILLPAY", "5.00");
-		Documents.addElement(docElement, "FORCE_FLAG", "5.00");
-		Documents.addElement(docElement, "CAPTURECARD_EARLYRETURN", "5.00");
-
-		// TAX AMOUNTS
-		Documents.addElement(docElement, "TAX_AMOUNT", "5.00");
-		Documents.addElement(docElement, "TAX_IND", "2"); // 0 = TAX NOT PROVIDED, 2 - TAX = 0.0, 1 - TAX != 0.00
-		Documents.addElement(docElement, "CMRCL_FLAG", ""); // B = BUSINESS, C = CORPORATE, P = PURCHASING
-		
-		
-		// KEYED ACCOUTN  INFORMATION FOR GIFT OR CREDIT CARD PAYMENT TYPES ONLY
-/*
-		Documents.addElement(docElement, "ACCT_NUM", "A lot");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "12");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "49");
-		Documents.addElement(docElement, "BARCODE","");
-		Documents.addElement(docElement, "PIN_CODE","");
-		Documents.addElement(docElement, "CVV2", "");
-
-		// PROCESSOR BASED TOKEN PROCESSING (CONDITIONAL)
-		Documents.addElement(docElement, "CARD_TOKEN", "A lot");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "12");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "49");
-		Documents.addElement(docElement, "BANK_USERDATA","");
-		Documents.addElement(docElement, "OC_INDUSTRY_CODE","");
-			*/	
-
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-  
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-	
-	
-	
-
-	public void creditCard() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 118
-
-		// This transactions returns funds to a customers account.
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "CREDIT");
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT"); // CREDIT|DEBIT|GIFT|EBT\CHECK\ALIPAY/KLARNA/WECHAT/PAYPAL/VENMO
-		Documents.addElement(docElement, "MANUAL_ENTRY", "TRUE");
-		Documents.addElement(docElement, "CTROUTD", "TRUE"); // DO NOT USE IF PAYMENT_TYPE=DEBIT
-		Documents.addElement(docElement, "FORCE_FLAG", "TRUE");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// KEYED ACCOUNT  INFORMATION FOR GIFT OR CREDIT CARD PAYMENT TYPES ONLY
-		Documents.addElement(docElement, "ACCT_NUM", "A lot");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "12");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "49");
-		Documents.addElement(docElement, "BARCODE","");
-		Documents.addElement(docElement, "PIN_CODE","");
-		Documents.addElement(docElement, "CVV2", "");
-	
-		Documents.addElement(docElement, "AMOUNT_HEALTHCARE", "");
-		Documents.addElement(docElement, "AMOUNT_PRESCRIPTION", "");
-		Documents.addElement(docElement, "AMOUNT_VISION", "");
-		Documents.addElement(docElement, "AMOUNT_CLINIC", "");
-		Documents.addElement(docElement, "AMOUNT_DENTAL", "");
-
-		Documents.addElement(docElement, "CARD_TOKEN", "");
-		Documents.addElement(docElement, "CARD_EXP_MONTH", "");
-		Documents.addElement(docElement, "CARD_EXP_YEAR", "");
-		Documents.addElement(docElement, "BANK_USERDATA", "");
-		Documents.addElement(docElement, "OC_INDUSTRY_CODE", "");
-  
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-	
-public void voidTransaction() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 125
-
-		// This transactions returns funds to a customers account.
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "void");
-		Documents.addElement(docElement, "TRANS_AMOUNT", "5.00");
-		Documents.addElement(docElement, "CTROUTD", "TRUE"); // DO NOT USE IF PAYMENT_TYPE=DEBIT
-		Documents.addElement(docElement, "EMV_REVERSAL_TYPE", "401"); // CREDIT|DEBIT|GIFT|EBT\CHECK\ALIPAY/KLARNA/WECHAT/PAYPAL/VENMO
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-
-public void addTip() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 128
-
-		// This transactions returns funds to a customers account.
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "ADD_TIP");
-		Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT"); // CREDIT|DEBIT|GIFT
-		Documents.addElement(docElement, "CTROUTD", " "); // Transaction ID to which tip will be attached. NOTE: Not used for SVS. SVS requires swiped track data or keyed account number
-		Documents.addElement(docElement, "TIP_AMOUNT", "5.00");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-
-
-public void removeTip() throws Exception {
-	
-	// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 130
-
-	// This transactions removes the tip from a transaction.
-	
-	// get counter and calculate mac
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-	// build request
-	request = Documents.create("TRANSACTION");
-	docElement = request.getDocumentElement();
-	Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-	Documents.addElement(docElement, "COMMAND", "RESET_TIP");
-	Documents.addElement(docElement, "PAYMENT_TYPE", "CREDIT"); // CREDIT|DEBIT|GIFT
-	Documents.addElement(docElement, "CTROUTD", " "); // Transaction ID to which tip will be attached. NOTE: Not used for SVS. SVS requires swiped track data or keyed account number
-	Documents.addElement(docElement, "COUNTER", nextCounter);
-	Documents.addElement(docElement, "MAC", mac);
-	Documents.addElement(docElement, "MAC_LABEL", macLabel);
-	
-	// transmit to Point Solution and interrogate the response
-	responseXml = send(address, port, request);
-	responseDocElement = responseXml.getDocumentElement();
-
-	// validate that the RESULT_CODE came back a SUCCESS
-	if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-		throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-	}
-}
-
-
-
-
-
-
-	//
-	public void cancelTransaction() throws Exception {
-
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 83
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "CANCEL");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	public void rebootDevice() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 85
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "REBOOT");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	public void getStatus() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 87 -> Get device Status
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "STATUS");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-	public void getStatusSAF() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 93
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "STATUS");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}	
-	
-	
-	public void checkForUpdates() throws Exception {
-		
-		// SCA 4.0 ENGAGE INTEGRATION GUIDE 3.00 PAGE 95
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "ANY_UPDATES");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}	
-	
-	
-public void checkUpdateStatus() throws Exception {
-		
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 96
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-		Documents.addElement(docElement, "COMMAND", "UPDATE_STATUS");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-//		Document responseXml = send(address, port, request); 
-		responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}	
-	
-
-
-
-public void applyUpdates() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 82
-	
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-	// build request
-	request = Documents.create("TRANSACTION");
-	docElement = request.getDocumentElement();
-	
-	Documents.addElement(docElement, "FUNCTION_TYPE", "ADMIN");
-	Documents.addElement(docElement, "COMMAND", "APPLYUPDATES");
-	Documents.addElement(docElement, "FLAG", "TRUE");
-	Documents.addElement(docElement, "COUNTER", nextCounter);
-	Documents.addElement(docElement, "MAC", mac);
-	Documents.addElement(docElement, "MAC_LABEL", macLabel);
-	
-	// transmit to Point Solution and interrogate the response
-//	Document responseXml = send(address, port, request); 
-	responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-	responseDocElement = responseXml.getDocumentElement();
-
-	// validate that the RESULT_CODE came back a SUCCESS
-	if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-		throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-	}
-}	
-
-	
-public void confirmationAPMKlarna() throws Exception {
-	
-	// Point SCA 4.0 Engage Integration Guide 3.00 Page 87
-	
-	nextCounter = String.valueOf(++counter);
-	mac = printMacAsBase64(macKey, nextCounter);
-	System.out.format("COUNTER is 1. MAC is %s%n", mac);
-	
-	// build request
-	request = Documents.create("TRANSACTION");
-	docElement = request.getDocumentElement();
-	Documents.addElement(docElement, "FUNCTION_TYPE", "SECONDARYPORT");
-	Documents.addElement(docElement, "COMMAND", "CONFIRMATION");
-	Documents.addElement(docElement, "VALUE", "CONFIRMED"); // Possible Values: CONFIRMED/DENIED
-	Documents.addElement(docElement, "COUNTER", nextCounter);
-	Documents.addElement(docElement, "MAC", mac);
-	Documents.addElement(docElement, "MAC_LABEL", macLabel);
-	
-	// transmit to Point Solution and interrogate the response
-//	Document responseXml = send(address, port, request); 
-	responseXml = send(address, secondary_port, request); // Added this line using the secondary port on 7/26/23
-	responseDocElement = responseXml.getDocumentElement();
-
-	// validate that the RESULT_CODE came back a SUCCESS
-	if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-		throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-	}
-}	
-
-
-
-	public void setIdleScreen() throws Exception {
-		
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 80
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		temp = "";
-		temp = JOptionPane.showInputDialog(null,"Provide message for Idle Screen");
-
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "FUNCTION_TYPE", "ADMIN");
-		Documents.addElement(docElement, "COMMAND", "LANE_CLOSED");
-		Documents.addElement(docElement, "DISPLAY_TEXT", temp);
-		Documents.addElement(docElement, "FONT_COL_VALUE", "000000");
-		Documents.addElement(docElement, "FONT_SIZE", "50");
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-		
-	
-	
-	
-	
-	
-	/**
-	 * Tests that the MAC_LABEL is successfully registered
-	 * 
-	 * @throws Exception
-	 */
-	public void testMac() throws Exception {
-		
-		// Point SCA 4.0 Engage Integration Guide 3.00 Page 
-
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECURITY");
-		Documents.addElement(docElement, "COMMAND", "TEST_MAC");
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) { 
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-	public void laneClosed() throws Exception {
-		
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "ADMIN");
-		Documents.addElement(docElement, "COMMAND", "LANE_CLOSED");
-		Documents.addElement(docElement, "DISPLAY_TEXT", "Lane is Closed.");
-		Documents.addElement(docElement, "FONT_COL_VALUE", "FF0000");
-		Documents.addElement(docElement, "FONT_SIZE", "50");
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-/*
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-*/
-		// validate that the MAC_KEY was returned
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-	}
-
-
-	
-	public void lastTransaction() throws Exception {
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        
-		System.out.format("Public key is (as base64) %s%n", PUBLIC_KEY);
-		System.out.format("Private key is (as base64) %s%n", PRIVATE_KEY);
-
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "REPORT");
-		Documents.addElement(docElement, "COMMAND", "LAST_TRAN");
-//		Documents.addElement(docElement, "ENTRY_CODE", entryCode);
-//		Documents.addElement(docElement, "KEY", PUBLIC_KEY);
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-/*
-		// validate that the MAC_LABEL was returned
-		macLabel = Documents.selectFirst(responseDocElement, "MAC_LABEL", null);
-		if (null == macLabel || macLabel.isEmpty())  {
-			throw new Exception("MAC_LABEL was not returned");
-		}
-*/
-		// validate that the MAC_KEY was returned
-		encryptedMACKey = Documents.selectFirst(responseDocElement, "MAC_KEY", null);
-		if (null == encryptedMACKey || encryptedMACKey.isEmpty()) {
-			throw new Exception("MAC_KEY was not returned");
-		}
-		
-		// base 64 decode MAC_KEY
-		macKeyBase64Decoded = DatatypeConverter.parseBase64Binary(encryptedMACKey);
-
-		// initialize cipher
-		cipher = Cipher.getInstance("RSA/ECB/PKCS1Padding");
-		cipher.init(Cipher.DECRYPT_MODE, keypair.getPrivate());
-
-		// Decrypt MAC_KEY with Private RSA Key
-		macKey = cipher.doFinal(macKeyBase64Decoded);
-		System.out.format("Decrypted MAC_KEY is (as base64) %s%n", DatatypeConverter.printBase64Binary(macKey));
-	}
-	
-	
-	
-	
-	public void captureCardEarlyReturn() throws Exception {
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-//		JOptionPane.showMessageDialog(null, entryCode);
-
-		// generate an RSA 2048 Public/Private keypair
-		//KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
-		//keyGen.initialize(2048);
-		//KeyPair keypair = keyGen.genKeyPair();
-		
-		// load RSA 2048 Keys from strings
-        
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "PAYMENT");
-		Documents.addElement(docElement, "COMMAND", "CAPTURE");
-		
-		
-				
-		Documents.addElement(docElement, "TRANS_AMOUNT", formatter.format(Double.parseDouble(invoice.getTransactionTotal())) );
-		Documents.addElement(docElement, "CAPTURECARD_EARLYRETURN", "TRUE");
-		Documents.addElement(docElement, "MANUAL_ENTRY", "FALSE");
-		Documents.addElement(docElement, "FORCE_FLAG", "FALSE");
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-	}
-	
-	
-	
-	
-	public void displayMessage() throws Exception {
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "COMMAND", "DISPLAY_MESSAGE");
-		Documents.addElement(docElement, "DISPLAY_TEXT", "BALANCE DUE: $ 0.00");
-		Documents.addElement(docElement, "TIMEOUT_DATA", "10");
-		Documents.addElement(docElement, "BUTTON_DISPLAY", "0");
-		Documents.addElement(docElement, "BUTTON_LABEL", "OKAY");
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-
-	}
-	
-	
-		public void displayMessage(String message, int timeout_duration) throws Exception {
-		// generate a random ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-
-		// print out entry code to the user through the UI
-		System.out.printf("ENTRY_CODE is %s%n", entryCode);
-		
-		// get counter and calculate mac
-		nextCounter = String.valueOf(++counter);
-		mac = printMacAsBase64(macKey, nextCounter);
-		System.out.format("COUNTER is 1. MAC is %s%n", mac);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		
-		Documents.addElement(docElement, "FUNCTION_TYPE", "DEVICE");
-		Documents.addElement(docElement, "COMMAND", "DISPLAY_MESSAGE");
-		Documents.addElement(docElement, "DISPLAY_TEXT", message);
-		Documents.addElement(docElement, "TIMEOUT_DATA", String.valueOf(timeout_duration));
-		Documents.addElement(docElement, "BUTTON_DISPLAY", "0");
-		Documents.addElement(docElement, "BUTTON_LABEL", "OKAY");
-		
-		Documents.addElement(docElement, "COUNTER", nextCounter);
-		Documents.addElement(docElement, "MAC", mac);
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099"))) {
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-		}
-
-	}
-	
-	
-		
-	/**
-	 * Unregisters the POS with the Device
-	 * 
-	 * @throws Exception
-	 */
-	public void unregisterPOS() throws Exception {
-		// generate an ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-		
-		// print out entry code to the user through the UI
-		System.out.format("ENTRY_CODE is %s%n", entryCode);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECURITY");
-		Documents.addElement(docElement, "COMMAND", "UNREGISTER");
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-		Documents.addElement(docElement, "ENTRY_CODE", entryCode);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099")))
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-	}
-
-	
-	
-	public void unregisterPOSAll() throws Exception {
-		// generate an ENTRY_CODE
-		generator = new Random();
-		entryCode = String.valueOf(generator.nextInt(9999));
-		
-		// print out entry code to the user through the UI
-		System.out.format("ENTRY_CODE is %s%n", entryCode);
-		
-		// build request
-		request = Documents.create("TRANSACTION");
-		docElement = request.getDocumentElement();
-		Documents.addElement(docElement, "FUNCTION_TYPE", "SECURITY");
-		Documents.addElement(docElement, "COMMAND", "UNREGISTERALL");
-		Documents.addElement(docElement, "MAC_LABEL", macLabel);
-
-		// transmit to Point Solution and interrogate the response
-		responseXml = send(address, port, request);
-		responseDocElement = responseXml.getDocumentElement();
-
-		// validate that the RESULT_CODE came back a SUCCESS
-		if (!"-1".equals(Documents.selectFirst(responseDocElement, "RESULT_CODE", "990099")))
-			throw new Exception(Documents.selectFirst(responseDocElement, "RESPONSE_TEXT", "unknown error"));
-	}
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	/**
-	 * Calculates the MAC of the COUNTER and base 64 encodes it as a String
-	 */
-	private static String printMacAsBase64(byte[] macKey, String counter) throws Exception {
-		// import AES 128 MAC_KEY
-		SecretKeySpec signingKey = new SecretKeySpec(macKey, "AES");
-		
-		// create new HMAC object with SHA-256 as the hashing algorithm
-		Mac mac = Mac.getInstance("HmacSHA256");
-		mac.init(signingKey);
-
-		// integer -> string -> bytes -> encrypted bytes
-		byte[] counterMac = mac.doFinal(counter.getBytes("UTF-8"));
-
-		// base 64 encoded string
-		return DatatypeConverter.printBase64Binary(counterMac);
-	}
-	
-	/**
-	 * Sends an Document over socket to the address and port and returns
-     *  the response as a Document
-	 */
-	private static Document send(String address, int port, Document request) throws Exception {
-		Socket socket = null;
-		try {
-			// create new socket
-			System.out.format("request: %n%s%n", Documents.print(request, true));
-			socket = new Socket(address, port);
-			Documents.write(request, socket.getOutputStream());
-			
-			final Document response = Documents.parse(new BufferedInputStream(socket.getInputStream()));
-			System.out.format("response: %n%s%n", Documents.print(response, true));
-			return response;
-		} finally {
-			// close socket if not closed
-			if (!(socket == null || socket.isClosed())) {
-				try {
-					socket.close();
-				} catch (IOException e) {
-					// log error
-					e.printStackTrace();
-				}
-			}
-		}
-	}
-
-  
 
   
 public static void main(String[] args){Register test = new Register();
 
 System.out.println("This is Lockwind POS Version 3.9 with a modification date of 2/21/24");
 System.out.println("\n\n********************************************************************************");
- 
-
 // test.printMethods(); -> this method can be used to view the stack of methods currently operating.
-
 }
 
   
@@ -6210,233 +3649,3 @@ System.out.println("\n\n********************************************************
 
 
 
-
-/*
-public void createElectronicDocument() {  
-	
-
-
-    
-    try{
-
-	System.out.println(" Register->@createElectronicDocument() "); 
-	      
-      row 					= 0; 
-      col 					= 0;
-	  da          			= "";
-      fmt					= null;
-      file        			= null;
-      outputFile  			= null;
-      tendered             	= 0.00;
-      subtotal             	= 0.00;
-      totaltaxes           	= 0.00;
-      total                	= 0.00;
-      discount             	= 0.00;
-      change               	= 0.00;
-
-      
-	  formatter 			= new DecimalFormat("#0.00");
-      today                 = new Date();
-      fmt                   = DateFormat.getDateInstance(styles[3], locale[0]);
-      simpDate             	= new SimpleDateFormat("hh:mm:ss a");
-      row 					= table.getSelectedRow();
-      col 					= table.getSelectedColumn();
-      file            		= new FileWriter( invoice.getDirectory() + "invoice_number" + invoice.getFileExtension() ,true);
-      outputFile      		= new PrintWriter(file);
-      file            		= new FileWriter(  invoice.getDirectory() + "INV Create Electronic Document" + String.valueOf(invoiceNumber) + invoice.getFileExtension() );
-      outputFile      		= new PrintWriter(file);
-      PrintReceipt tp 		= new PrintReceipt();
- 	  Process p 			=  Runtime.getRuntime().exec("cmd /c printReceipt.bat");
-
-      if(					tender_amount.getText().equalsIgnoreCase("")) { tendered = ali.chargeCustomer(); }
-      else { 				tendered = Double.parseDouble(tender_amount.getText() ); }
-          
-      
-
-      subtotal 				= table_manager.getColumnTotal(table,5);
-      totaltaxes 			= table_manager.getColumnTotal(table,6);
-      discount 				= table_manager.getColumnTotal(table,7);
-      account_selected 		= account_name_input.getSelectedItem().toString();
-
-      total 				= subtotal + totaltaxes;
-      total 				= total - discount;
-      change 				= tendered - total;
-      
-      invoice				. setTransactionTenderValue(String.valueOf( tendered ));
-      invoice				. setTransactionCurrency("USD");
-      invoice				. setTransactionSubTotal(String.valueOf(subtotal));
-      invoice				. setTransactionTaxesTotal(String.valueOf(totaltaxes));
-      invoice				. setTransactionTotal(String.valueOf(total));
-      invoice				. setTransactionDiscountTotal(String.valueOf(discount));
-      invoice				. setTransactionTenderValue(String.valueOf(tendered));
-      invoice				. setTransactionChangeValue(String.valueOf(change));
-      invoice				. setBalanceDue(String.valueOf(total-tendered));
-      invoice				. setBillToCustomerCodeData(account_name_input.getSelectedItem().toString() );
-
-//      outputFile	  		. println( invoice.getInvoiceNumber() );
-//      outputFile	  		. close();
-//      file			  		. close();
-          
-      
-      try { 
-    		  
-    	  
-    	  invoiceNumber = Integer.parseInt(http.getCurrentInvoiceNumber(retailerUUID)); 
-          invoice.setInvoiceNumber( String.valueOf(invoiceNumber));
-          store_print_name = " " + invoice.getStoreName().trim() + " ";
-
-    	  // This process writes the invoice number to the file locally as a backup.
-                    
-          outputFile.println("----------------------------------------");
-          outputFile.println("           " + invoice.getStoreName() + "           ");
-          outputFile.println(" " +  invoice.getStoreAddress()		+ " " + invoice.getStoreSecondAddress());
-          outputFile.println(" " + 	invoice.getStorePhoneNumber()	+ "      ");
-          outputFile.println( 		invoice.getStoreFaxNumber()		+"\n");
-                            
-          
-          
-          outputFile.println(" " + fmt.format(today) +  "    " + simpDate.format(today) + "   Invoice No: " + invoiceNumber);
-          outputFile.println(" Customer: " + account_name_input.getSelectedItem() );
-          outputFile.println(" Name: " + account_name_input.getSelectedItem() );
-          outputFile.println(" Phone Number: " + account_name_input.getSelectedItem() );
-          outputFile.println(" Email: " + account_name_input.getSelectedItem() );
-          outputFile.println(" REG:   REGISTER 1");
-          outputFile.println("----------------------------------------");
-          outputFile.println(" QTY UPC                 PRICE  SUBTOTAL");
-          outputFile.println(" DESCRIPTION                            ");
-          
-          
-          
-          while(table_manager.getData(table,in,0) != null && (!table_manager.getData(table,in,0).toString().equals("")) ){
-              
-              da = " ";
-              if(table_manager.getData(table,in,1)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,1).toString(),3);}
-              if(table_manager.getData(table,in,0)!= null){da = da + format_manager.increaseLength(table_manager.getData(table,in,0).toString(),19);}
-              
-              if(table_manager.getData(table,in,2)!= null){
-                  productName = table_manager.getData(table,in,2).toString();
-                  productName = format_manager.increaseLength(productName,43);
-                  productName = " "+ productName.substring(0,42);}
-              
-              if(table_manager.getData(table,in,4)!= null){
-                  da = da + format_manager.increaseLength(table_manager.getData(table,in,3).toString(),10);
-                  da = da + format_manager.increaseLength(table_manager.getData(table,in,4).toString(),4);}
-              
-              outputFile.println(da);
-              outputFile.println(productName+"\n");
-              
-              System.out.println("saving account " + in);
-              da = "";in++;
-              
-          }
-          
-          for( int i = 0; i < table.getRowCount();i++) // Modify this to include line item count on receipt.
-          {
-              if(table.getValueAt(i,0) == null || table.getValueAt(i,0).toString().equalsIgnoreCase("")  ) {} 
-              else{ item_count++; }
-          }
-
-          
-          outputFile.println("                         SUB TOTAL $" + format_manager.formatDoubleUS(subtotal));
-          outputFile.println("                         SALES TAX $" + format_manager.formatDoubleUS(totaltaxes));
-          if(discount != 0.00) {
-          outputFile.println("                         DISCOUNT  $" + format_manager.formatDoubleUS(discount));} else{}
-          outputFile.println("                         TOTAL     $" + format_manager.formatDoubleUS(total) + "\n\n");
-          outputFile.println("                         TENDERED  $" + format_manager.formatDoubleUS(tendered));
-          outputFile.println("                         CHANGE    $" + format_manager.formatDoubleUS(change) + "\n\n");
-          outputFile.println("                         Addenda:  " + addenda.getText() );
-          
-          // refreshTotal(table,tendered,change);
-
-          outputFile.println("----------------------------------------");
-          outputFile.print("THANKS FOR SHOPPING AT");
-          
-          outputFile.println(store_print_name);
-          outputFile.println("");
-          outputFile.println("----------------------------------------");
-          outputFile.close();
-	  	
-          
-  //      if(change > 0.01) { JOptionPane.showMessageDialog(null,"Change: " + "$ "+ format_manager.formatDoubleUS(change)); }
-  //      else { JOptionPane.showMessageDialog(null,"Balance not paid in full: " + "$ "+ format_manager.formatDoubleUS(change)); }
-
-          
-      }catch(Exception ex){
-    	  
-    	  System.out.println("System Exception Error: at CreateElectronicDocument ");
-    	  ex.printStackTrace();
-    	  
-      }          
-          
-            // saveTableToReceipt(table,client_id);
-            inventory_manager.saveProductSold(table,client_id);
-
-            try {
-            http.IncrementInvoiceNumber(retailerUUID);
-            invoiceNumber = Integer.parseInt( http.getCurrentInvoiceNumber(retailerUUID) );
-            invoiceNumberLabelDescription.setText( String.valueOf(invoiceNumber));
-            }
-            catch(Exception ex) {}
-                
-            table_manager.setData(table,row,col,"");
-            table_manager.clearTable(table);
-          	  
-            clearRegister();
-              
-            table.requestFocus();
-          	table.changeSelection(0,0,false,false);
-          	table.requestFocus();
-
-          	
-          	
-            /*
-            // Print Receipt Function should be in another function.
-            		System.out.println("Printing receipt to this printer: " + default_printer_receipt.getSelectedItem().toString());
-            		//       test.main(null);
-                  tp.main(default_printer_receipt.getSelectedItem().toString() );
-                  tp.printToDisplayPrinter(default_printer_display.getSelectedItem().toString(), "Total: " + format_manager.formatDoubleUS(total) );
-                  System.out.println("Initiating Printing Process: " + p.pid());
-
-                      */
-
-          	  
-/*          	  
-          	System.out.println(payment_method.getSelectedItem() + " selected");
-  
-          			if(payment_method.getSelectedItem().toString().equalsIgnoreCase("CASH") ) {
-          			
-          			try {
-          				displayMessage("Balance Due: $0.00",10);
-          				// Thread.sleep(5000);
-          				endSession(); 
-          				} catch(Exception e){
-          				  System.out.println(e.toString() );
-          				  
-          			} }else{
-          			
-          			if(registerStatus == true){
-          			
-          			  try { 
-
-          				  captureCardEarlyReturn();
-          				  Thread.sleep(1000);
-          				  authorizeCard();
-          				  Thread.sleep(1000);
-          				  endSession();
-//          				  Thread.sleep(2000);
-
-          				  }catch(Exception verifone_exception) {
-          					  System.out.println(verifone_exception.toString());
-          				  }
-
-          			}else { System.out.println("Register tenderAction Error: Credit card payment terminal cannot be reached"); }
-          			}
-                
-                
-          
-      }
-      catch(Exception ex){}
-      
-}
-
-*/

@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/24/24    07:49:57 AM   Invoice No: 7
+ 2/22/24    06:10:40 PM   Invoice No: 2
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,19 +14,19 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   075720431151        POLAND SPRING WATER BOTTLE1.99
- BEVERAGE                                  
+ 1   075877171016        GOTHAM 18 PINS RIM/MORTISE CYLINDER19.99
+ LOCKSMITH | CYLINDER                      
 
-                         SUB TOTAL $1.99
-                         SALES TAX $0.18
-                         TOTAL     $2.17
+                         SUB TOTAL $19.99
+                         SALES TAX $1.79
+                         TOTAL     $21.78
 
-                         TENDERED  $20.00
-                         CHANGE    $17.83
+                         TENDERED  $25.00
+                         CHANGE    $3.22
                          
 Addenda: 
                          
-Line Item Count: 2
+Line Item Count: 3
                          
 Unit Item Count: 1.0
 ----------------------------------------

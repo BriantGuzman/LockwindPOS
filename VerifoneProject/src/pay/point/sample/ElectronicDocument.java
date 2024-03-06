@@ -241,6 +241,15 @@ public class ElectronicDocument extends ServiceData {
 	 }
 	 
 	 
+	 
+	 public ElectronicDocument(String issuer_uuid)
+	 {
+		 super();
+	     line_item_manager 		= new ElectronicDocumentLineItemManager();
+		 this.setIssuerUUID(issuer_uuid);
+		 this.setInvoiceNumber();
+		 this.setTransactionUUID( this.getIssuerUUID() );
+	 }
 
 	 // ************************************************************************************************************************
 

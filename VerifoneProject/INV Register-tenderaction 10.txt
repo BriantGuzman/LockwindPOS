@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/24/24    07:49:57 AM   Invoice No: 7
+ 2/25/24    05:11:48 PM   Invoice No: 10
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,15 +14,15 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   075720431151        POLAND SPRING WATER BOTTLE1.99
- BEVERAGE                                  
+ 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
+ GENERAL PRODUCT CODES                     
 
-                         SUB TOTAL $1.99
-                         SALES TAX $0.18
-                         TOTAL     $2.17
+                         SUB TOTAL $2.99
+                         SALES TAX $0.27
+                         TOTAL     $3.26
 
-                         TENDERED  $20.00
-                         CHANGE    $17.83
+                         TENDERED  $30.00
+                         CHANGE    $26.74
                          
 Addenda: 
                          

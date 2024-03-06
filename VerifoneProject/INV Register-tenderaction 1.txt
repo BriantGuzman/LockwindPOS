@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/24/24    07:49:57 AM   Invoice No: 7
+ 2/22/24    06:09:32 PM   Invoice No: 1
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,21 +14,24 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   075720431151        POLAND SPRING WATER BOTTLE1.99
- BEVERAGE                                  
+ 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
+ GENERAL PRODUCT CODES                     
 
-                         SUB TOTAL $1.99
-                         SALES TAX $0.18
-                         TOTAL     $2.17
+ 1   075877171016        GOTHAM 18 PINS RIM/MORTISE CYLINDER19.99
+ LOCKSMITH | CYLINDER                      
 
-                         TENDERED  $20.00
-                         CHANGE    $17.83
+                         SUB TOTAL $22.98
+                         SALES TAX $2.06
+                         TOTAL     $25.04
+
+                         TENDERED  $30.00
+                         CHANGE    $4.96
                          
 Addenda: 
                          
 Line Item Count: 2
                          
-Unit Item Count: 1.0
+Unit Item Count: 2.0
 ----------------------------------------
 THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
 
