@@ -6,8 +6,12 @@ import java.io.IOException;
 
 public class GenerateCalendarInviteImport {
     public static void main(String[] args) {
-        try {
+
+    	try { 
+    	try {
             // Specify the path to the iCalendar (.ics) file to be attached
+        	String outlookPath = "";
+        	String icsFilePath = "";
             File icsFile = new File("example.ics");
 
             // Open the default email client and create a new email
@@ -18,5 +22,9 @@ public class GenerateCalendarInviteImport {
         } catch (IOException e) {
             System.out.println("Error opening email client: " + e.getMessage());
         }
+    	}catch(Exception e)
+    	{
+    		
+    	}
     }
 }

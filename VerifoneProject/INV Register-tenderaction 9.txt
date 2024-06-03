@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/25/24    05:11:34 PM   Invoice No: 9
+ 6/2/24    11:13:20 AM   Invoice No: 9
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,19 +14,19 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+ 1   801654111254         NAIL CUTTER LARGE1.99
+ NAIL CUTTER                               
 
-                         SUB TOTAL $2.99
-                         SALES TAX $0.27
-                         TOTAL     $3.26
+                         SUB TOTAL $1.99
+                         SALES TAX $0.18
+                         TOTAL     $2.17
 
-                         TENDERED  $20.00
-                         CHANGE    $16.74
+                         TENDERED  $5.00
+                         CHANGE    $2.83
                          
 Addenda: 
                          
-Line Item Count: 1
+Line Item Count: 3
                          
 Unit Item Count: 1.0
 ----------------------------------------

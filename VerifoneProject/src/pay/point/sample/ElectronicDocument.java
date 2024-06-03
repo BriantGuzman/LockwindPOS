@@ -74,12 +74,23 @@ public class ElectronicDocument extends ServiceData {
 	 private String transaction_time;
 
 	 // Where?
-	 private String origin_system;
+	 private String origin_system;  // The URL or location of the system
 	 private String destination_system;
 
 	 private String origin_system_id;
 	 private String destination_system_id;
 
+	 private String origin_system_name;  // The name of the origin system . ie. REG1
+	 private String destination_system_name;  // The name of the destination system
+
+	 private String open_employee_id; // State the employee that opened the store that day
+	 private String close_employee_id; // State the employee that closed the store that day 
+
+	 private String header_comment; // Add a comment to the electronic document at the header level
+	 
+	 private String currency_type_key; // This is to denote an array of currency denominations.
+	 private String currency_type_value; // This is to store the quantity of those currency denominations.
+	 
 	 // Why?
 	 private String po_number;
 	 private String invoice_number;
@@ -195,6 +206,7 @@ public class ElectronicDocument extends ServiceData {
 	 private ElectronicDocument next;
 	 private ElectronicDocument prev;
 
+	 private API http;
 	 
 	 // NO ARG CONSTRUCTOR
 	 public ElectronicDocument() { 
@@ -237,6 +249,8 @@ public class ElectronicDocument extends ServiceData {
 	     
 	     line_item_manager		= null;
 	     
+	     http					= null;
+		 http = new API();
 	     line_item_manager 		= new ElectronicDocumentLineItemManager();
 	 }
 	 
@@ -265,7 +279,7 @@ public class ElectronicDocument extends ServiceData {
 	 public void 		setTransactionUUID(String retailer_uuid) { 
 		 // The purpose of this function is to only return the UUID related to that specific invoice number being worked on right now.
 		 try { 
-		 API http = new API();
+		  API http = new API();
 		 
 		 this.setInvoiceNumber();
 		 this.transaction_uuid = http.getTransactionUUID( this.getIssuerUUID(), this.getInvoiceNumber());
@@ -284,8 +298,7 @@ public class ElectronicDocument extends ServiceData {
 	 // INVOICE NUMBER
 	 private void setInvoiceNumber() {
 		  try { 
-
-			  API http = new API();
+			  	http = new API();
 				String temp = http.getCurrentInvoiceNumber(this.getIssuerUUID());
 
 				if( this.getIssuerUUID() == null || this.getIssuerUUID().equalsIgnoreCase("") ) { 
@@ -308,7 +321,10 @@ public class ElectronicDocument extends ServiceData {
 			} catch(Exception e){ }
 	 }
 //	 public void 		setInvoiceNumber(String invoice_number) { this.invoice_number = invoice_number; }
-	 public String 		getInvoiceNumber() { setInvoiceNumber(); return this.invoice_number; }
+	 public String 		getInvoiceNumber() {  
+		 if( invoice_number.equalsIgnoreCase("") || invoice_number == null)  { this.setInvoiceNumber(); }else { }
+		 return this.invoice_number; }
+//	 public String 		getInvoiceNumber() { setInvoiceNumber(); return this.invoice_number; }
 
 	 // SYSTEM OF ORIGIN
 	 public void 		setOriginSystem(String origin_system) { this.origin_system = origin_system; }

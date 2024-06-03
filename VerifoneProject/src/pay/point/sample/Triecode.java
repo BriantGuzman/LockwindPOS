@@ -62,7 +62,7 @@ class TrieNode {
 public class Triecode {
     // ... (rest of the Trie class remains the same as before)
 
-    public static void main(String[] args) {
+    public void main(String[] args) {
         Trie trie = new Trie();
 
         // Assuming you have a list of unique codes, add them to the Trie
@@ -88,4 +88,5 @@ public class Triecode {
         trie.root.printTrie("");
     }
 }
+
 }

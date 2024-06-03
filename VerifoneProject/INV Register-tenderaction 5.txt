@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/23/24    03:02:25 PM   Invoice No: 5
+ 5/30/24    07:58:22 AM   Invoice No: 5
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -17,18 +17,21 @@ FAX:
  1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
  GENERAL PRODUCT CODES                     
 
-                         SUB TOTAL $2.99
-                         SALES TAX $0.27
-                         TOTAL     $3.26
+ 1   10                  GENERAL_PRODUCT_CODES PRODUCT A1.99
+ GENERAL PRODUCT CODES                     
 
-                         TENDERED  $20.00
-                         CHANGE    $16.74
+                         SUB TOTAL $4.98
+                         SALES TAX $0.45
+                         TOTAL     $5.43
+
+                         TENDERED  $10.00
+                         CHANGE    $4.57
                          
 Addenda: 
                          
-Line Item Count: 1
+Line Item Count: 2
                          
-Unit Item Count: 1.0
+Unit Item Count: 2.0
 ----------------------------------------
 THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
 

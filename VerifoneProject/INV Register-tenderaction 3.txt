@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/22/24    06:12:00 PM   Invoice No: 3
+ 5/28/24    02:20:02 PM   Invoice No: 3
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -21,12 +21,12 @@ FAX:
                          SALES TAX $0.27
                          TOTAL     $3.26
 
-                         TENDERED  $3.00
-                         CHANGE    $-0.26
+                         TENDERED  $5.00
+                         CHANGE    $1.74
                          
 Addenda: 
                          
-Line Item Count: 4
+Line Item Count: 2
                          
 Unit Item Count: 1.0
 ----------------------------------------

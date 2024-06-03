@@ -11,5 +11,6 @@
 	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jaxb-api-2.3.0.jar"/>
 	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/javax.activation-api-1.2.0.jar"/>
 	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample - backup - 09102023/jakarta.xml.bind.jar"/>
+	<classpathentry kind="lib" path="/Users/bguzman/Desktop/GitHub/LockwindPOS/VerifoneProject/src/pay/point/sample/javax.xml.bind.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

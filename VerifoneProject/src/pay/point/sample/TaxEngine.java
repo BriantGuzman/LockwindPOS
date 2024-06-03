@@ -1,3 +1,4 @@
+package pay.point.sample;
 
 public class TaxEngine { 
 	

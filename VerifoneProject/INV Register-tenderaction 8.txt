@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/25/24    02:29:12 PM   Invoice No: 8
+ 6/2/24    11:10:46 AM   Invoice No: 8
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,21 +14,24 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+ 1   801654111254         NAIL CUTTER LARGE1.99
+ NAIL CUTTER                               
 
-                         SUB TOTAL $2.99
-                         SALES TAX $0.27
-                         TOTAL     $3.26
+ 1   645397939160        NEBO COLUMBO KEYCHAIN FLASHLIGHT11.99
+ FLASHLIGHT                                
 
-                         TENDERED  $10.00
-                         CHANGE    $6.74
+                         SUB TOTAL $13.98
+                         SALES TAX $1.25
+                         TOTAL     $15.23
+
+                         TENDERED  $20.00
+                         CHANGE    $4.77
                          
 Addenda: 
                          
-Line Item Count: 1
+Line Item Count: 2
                          
-Unit Item Count: 1.0
+Unit Item Count: 2.0
 ----------------------------------------
 THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
 

@@ -2,15 +2,19 @@
 
 package pay.point.sample;
 
+
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-
+import java.io.PrintWriter;
 import java.net.URL;
 import java.net.HttpURLConnection;
 import java.io.DataOutputStream;
+import java.io.FileWriter;
 import java.util.Date;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
+
+import java.util.StringTokenizer;
 
 public class API {
 
@@ -319,6 +323,9 @@ public class API {
 	 
 
 	// Send the line item information to the Lockwind Cloud	 
+
+	 
+	 
 	 public String sendProductPostAPILineItem( 
 			 
 		 
@@ -386,6 +393,102 @@ public class API {
 			 return response_buffer.toString();
 
 		}
+	 
+	 
+	 
+	 
+	 
+
+	 public String downloadAPILineItem( 			 
+			 String issuer_uuid, String document_number, String transaction_type_status, 
+			 String transaction_uuid, String pos_uuid,  String location_uuid) throws Exception {
+		 	
+		 // package and send data to Lockwind Cloud. (No calculations or API requests except 1)
+		 	 url 			= "";
+		 	 urlParameters 	= "";
+
+		 	 url 			= "https://lockwind.com/test/TM/getTransactionLineItemAPI.php";
+			 obj 			= new URL(url);
+			 con 			= (HttpURLConnection) obj.openConnection();
+
+			 con.setRequestMethod("POST");
+			 con.setRequestProperty("User-Agent", USER_AGENT);
+			 con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+			
+		     urlParameters += "issuer_uuid="+ issuer_uuid +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "document_number="+ document_number +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "transaction_type_status="+ transaction_type_status +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+
+		     
+			 urlParameters += "transaction_type="+ "ELECTRONIC_DOCUMENT" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+			 urlParameters += "transaction_type_value="+ "LINE_ITEM" +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "pos_uuid="+ pos_uuid +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "location_uuid="+ location_uuid +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "transaction_uuid="+ transaction_uuid +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+
+
+		     /*
+		     urlParameters += "uuid="+ line_item_id +"&" ;			 // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "reference_code="+ reference_code +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "quantity="+ quantity +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "category="+ category +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "description="+ description +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "price="+ price +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "subtotal="+ subtotal +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "tax="+ tax +"&";// in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "discount="+ discount +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "onhand="+ onhand +"&";  // in MySQL Table JAVAPOS_TRANSACTION
+		     urlParameters += "line_item_id="+ line_item_id +"&"; // in MySQL Table JAVAPOS_TRANSACTION
+		      */
+
+		     
+		     
+		     
+		     con.setDoOutput(true);
+			 wr = new DataOutputStream(con.getOutputStream());
+			 wr.writeBytes(urlParameters);
+			 wr.flush();
+			 wr.close();
+
+			 responseCode = con.getResponseCode();
+			 System.out.println("\nSending 'POST' request to URL : " + url);
+			 System.out.println("Post parameters : " + urlParameters);
+			 System.out.println("Response Code : " + responseCode);
+
+			 try {
+
+			 in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+			 response_buffer= new StringBuffer();
+
+			  FileWriter file = new FileWriter("shopping_cart.txt");
+			  PrintWriter outputFile = new PrintWriter(file);
+
+			  
+			 while ((inputLine = in.readLine()) != null) {
+				response_buffer.append(inputLine);
+				  outputFile.println(response_buffer.toString()); 
+			 }
+			 in.close();					  
+			 outputFile.close();
+			      
+			 
+			 }catch(Exception e) {};
+
+//			 System.out.println("LINE ITEM DOWNLOAD COMPLETE");
+
+			 
+			 return response_buffer.toString();
+
+			 
+			 
+		}
+	  
+	 
+	 
+	 
+	 
+	 
+	 
 	 
 
  public String getUUID( ) throws Exception {
@@ -502,5 +605,30 @@ public class API {
 
 		}
 	
+	 public static void main(String[] args)
+	 {
+		 
+		 /*
+		 try { 
+		 API test = new API();
+		 String invoice_number = "14";
+		 String issuer_uuid = "5d4de950d4f69";
+		 // test.getProductPostAPILineItem(invoice_number);
+		 String temp =  test.downloadAPILineItem(issuer_uuid,invoice_number,"","","","") ;
+
+		 
+		 StringTokenizer str = new StringTokenizer(temp,",");
+		 
+		 while(str.hasMoreTokens()) 
+		 { 
+			 System.out.println(str.nextToken());
+		 }
+		 
+		 }
+		 catch(Exception e) {}
+		 */
+		 
+		 
+	 }
 	 
 }

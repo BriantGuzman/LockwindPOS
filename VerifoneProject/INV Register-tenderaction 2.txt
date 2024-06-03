@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/22/24    06:10:40 PM   Invoice No: 2
+ 5/28/24    02:19:53 PM   Invoice No: 2
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,19 +14,16 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   075877171016        GOTHAM 18 PINS RIM/MORTISE CYLINDER19.99
- LOCKSMITH | CYLINDER                      
+                         SUB TOTAL $0.00
+                         SALES TAX $0.00
+                         TOTAL     $0.00
 
-                         SUB TOTAL $19.99
-                         SALES TAX $1.79
-                         TOTAL     $21.78
-
-                         TENDERED  $25.00
-                         CHANGE    $3.22
+                         TENDERED  $2.00
+                         CHANGE    $2.00
                          
 Addenda: 
                          
-Line Item Count: 3
+Line Item Count: 1
                          
 Unit Item Count: 1.0
 ----------------------------------------

@@ -1,4 +1,4 @@
-//Last Update: 2/2/2024
+//Last Update: 4/10/2024
 
 package pay.point.sample;
 
@@ -20,6 +20,12 @@ import java.io.FileWriter;
 import java.io.FileInputStream;
 import java.io.InputStream;
 import java.io.PrintWriter;
+import java.io.ObjectOutputStream;
+import java.io.ObjectInputStream;
+
+import java.io.FileOutputStream;
+import java.io.FileInputStream;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -124,13 +130,13 @@ import javax.crypto.Mac;
 import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
-import jakarta.xml.bind.DatatypeConverter;	
-// import javax.xml.bind.DatatypeConverter;
+// import jakarta.xml.bind.DatatypeConverter;	
+ import javax.xml.bind.DatatypeConverter;
 
-import org.w3c.dom.Document;
-import org.w3c.dom.Element;
+// import org.w3c.dom.Document;
+// import org.w3c.dom.Element;
 
-import java.lang.reflect.Method;
+ import java.lang.reflect.Method;
 
 /* Code removed from Register class
 	  
@@ -144,9 +150,9 @@ import java.lang.reflect.Method;
 
 
 //---------------------------------------------------- CLASS REGISTER : THIS IS THE MAIN CLASS
-public class Register  implements ActionListener,FocusListener {
+public class Register  extends JFrame implements ActionListener,FocusListener {
 
-	  private RegisterVerifone register_verifone;
+	  // private RegisterVerifone register_verifone;
 	  private APIVerifone verifone;
 	  
 	  private Invoice invoice;
@@ -241,6 +247,7 @@ public class Register  implements ActionListener,FocusListener {
       
       // UI LABELS FOR TRANSACTION HEADER DATA
 	  private JLabel  internetLabel;
+	  private JLabel  verifoneLabel;
 	  private JLabel  timeLabel;
 	  private JLabel  invoiceNumberLabel;
 	  private JLabel  subtotalLabel;
@@ -393,11 +400,12 @@ public class Register  implements ActionListener,FocusListener {
 		
 	  private String 	temp;
 
-      
-      
-      
-      
-      public void printMethods() { 
+	  
+	  private JButton saveTable;
+	  private JButton loadTable;
+	  
+	  
+	  public void printMethods() { 
     	  Class c = java.lang.Thread.class;
 //          Method[] methods = c.getMethods();
           Method[] methods2 = c.getDeclaredMethods();
@@ -406,9 +414,78 @@ public class Register  implements ActionListener,FocusListener {
              System.out.println(methods2[i].getName() );
           }
       }
-
       
+      
+      
+      
+      public void loadShoppingCart() { 
+    	  
+    	  System.out.println("Loading shopping cart for Register");
+    	  
+    	  try { 
+    	  File 		file 		= new File("shopping_cart.txt");
+    	  Scanner 	inputFile 	= new Scanner(file);
+    	  String 	line 		= "";
+    	  StringTokenizer str 	= null;
+    	  
+    	  String temp = "";
+    	  int i = 0;
+    	  int j = 0;
+    	  
+    	  while(inputFile.hasNextLine()) { 
+    		  
+    		  line = inputFile.nextLine();
+    		  
+    		  str = new StringTokenizer(line,",");
+    		  
+			  for( i = 0; i < table_manager.getColumnCount();i++)
+			  {
+				  while(str.hasMoreTokens()) { 
+					  
+					  temp = str.nextToken();
+					  
+					  table_manager.setData(table, j, i, temp);
+	    			  System.out.println( "Loading shopping cart" + temp );
+	    	  }
+			    		
+					  
+			  }
+			  j++;
 
+			  	  
+    	  }
+    	  
+    	  }catch(Exception e) { } 
+      
+      }
+      
+      public void saveShoppingCart( int i ) { 
+    	  System.out.println("Function Action: saveLineItem -> row: " + i);
+    	  
+    	  String[] temp = null;
+          
+    	  
+    	  temp = new String[table.getColumnCount()*2];
+          
+    	  j = 0;
+          for(int k = 0; k < table.getColumnCount(); k++) { // Per column  
+        	  if(table_manager.getData(table,i,j) == null) { // Column value is null 
+        		  temp[k] = "";
+        // temp[i] = String.valueOf("");
+      	// System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+      	} else { 
+      		
+      		temp[k] = table_manager.getData(table,i,j).toString();
+      	
+      	}
+      	j++;
+      	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+          }
+      }
+      
+      
+      
+      
       
 	  public void setConstructorValues() {
 			// action: organize elements, Initialize components,
@@ -427,6 +504,8 @@ public class Register  implements ActionListener,FocusListener {
 		    screenSize        							= null;
 		    internet                    				= null;
 		    internetLabel               				= null;	
+		    verifoneLabel               				= null;	
+		    
 		    frame                       				= null;
 		    panel                       				= null;
 		    tablePanel                  				= null;
@@ -550,7 +629,7 @@ public class Register  implements ActionListener,FocusListener {
 			
 			encryptedMACKey 							= "";
 			macKeyBase64Decoded 						= null;
-			cipher = null;
+			cipher 										= null;
 
 			nextCounter 								= "";
 			mac 										= "";
@@ -569,7 +648,11 @@ public class Register  implements ActionListener,FocusListener {
 		    store_print_name 	 						= "";
 		    item_count 			 						= 0;
 		    
-		    register_verifone							= null;
+		    saveTable									= null;
+		    loadTable									= null; 
+
+		    
+//		    register_verifone							= null;
 
 	  }
 	  
@@ -577,7 +660,7 @@ public class Register  implements ActionListener,FocusListener {
 		  
 		  	// REGISTER SET COMPONENT DEFAULT VALUES
 
-		  	register_verifone							= new RegisterVerifone();
+		  	// register_verifone							= new RegisterVerifone();
 		    retailerUUID                   				= "5d4de950d4f69";
 		    posUUID                   					= "65cbcf67af4bb65cbcf67af508";
 			client_id                   				= "5d4de950d4f69";
@@ -592,6 +675,7 @@ public class Register  implements ActionListener,FocusListener {
 		    inventory_manager 		  					= new QTY();
 		    ali											= new Ali();
 		    internet                    				= new Internet();
+		    
 			erp                       					= new ERP();
 //			record 										= new ElectronicDocument();
 		  	
@@ -621,6 +705,7 @@ public class Register  implements ActionListener,FocusListener {
 		  	
 		    timeLabel                   				= new JLabel("");
 		  	internetLabel              					= new JLabel("");
+		  	verifoneLabel              					= new JLabel("");
 		    subtotalLabel            		  		 	= new JLabel("");
 		    taxesLabel                			  		= new JLabel("");
 		    totalLabel               		  	 		= new JLabel("");
@@ -689,6 +774,8 @@ public class Register  implements ActionListener,FocusListener {
 		    bx006                          				= new JButton("");
 		    bx007                          				= new JButton("");
 //		    bx008                          				= new JButton("");
+		    saveTable									= new JButton("Save Table");
+			loadTable									= new JButton("Load Table");
 
 		    button_tender              				 	= new JButton("");
   		    pim_button				  				 	= new JButton("");
@@ -718,8 +805,10 @@ public class Register  implements ActionListener,FocusListener {
 			
 			// Compile time errands
 			System.out.println("Compile time functions being loaded");
-			invoice										= new Invoice( retailerUUID );
-			this.setInvoiceDefaultValues();
+			
+			invoice										= new Invoice( retailerUUID,posUUID,client_id );
+			invoice										. setInvoiceDefaultValues();
+			invoice. setTransactionUUID( invoice.getIssuerUUID() );			
 	        System.out.println("Register -> Invoice Number: " + invoice.getInvoiceNumber() + " -> UUID: " + invoice.getTransactionUUID() );
 	        
 	        
@@ -764,10 +853,11 @@ public class Register  implements ActionListener,FocusListener {
  		    generator 									= new Random();
  			entryCode 									= String.valueOf(generator.nextInt(9999));
  		
- 		
- 		try { 
+ 			try { 
  			
  			kf 											= KeyFactory.getInstance("RSA");
+
+ 			// This statement requires the java.xml.bind jar package
  			privateKey									= kf.generatePrivate(new PKCS8EncodedKeySpec(DatatypeConverter.parseBase64Binary(PRIVATE_KEY)));
  			publicKey 									= kf.generatePublic(new X509EncodedKeySpec(DatatypeConverter.parseBase64Binary(PUBLIC_KEY)));
  			keypair 									= new KeyPair(publicKey, privateKey);
@@ -776,59 +866,9 @@ public class Register  implements ActionListener,FocusListener {
  
 	  }
 	  
-	  public void setInvoiceDefaultValues()
-	  {
-		  	invoice										. setIssuerUUID(retailerUUID);
-			invoice										. setLocationUUID(posUUID);
-			invoice										. setConsumerUUID(client_id);
-			invoice										. setTransactionUUID( invoice.getIssuerUUID() );
-//			invoiceNumber								= Integer.parseInt(invoice.getInvoiceNumber() );
-			invoice										. setStoreName("165 St. Hardware Inc.");
-	        invoice										. setStoreAddress("1099 St. Nicholas Avenue, ");
-			invoice										. setStoreSecondAddress("NY, NY, 10032");
-			invoice										. setStorePhoneNumber("Phone #: +1 212 740 4652 ");
-			invoice										. setStoreFaxNumber("FAX:             ");
-			invoice										. setDirectory("./");
-			invoice										. setFileExtension(".txt");
-			invoice										. setOriginSystemID("POS0001");
-			invoice										. setDestinationSystemID("ERP0001");
-			invoice										. setOriginSystem("Lockwind POS");
-			invoice										. setDestinationSystem("Lockwind ERP");
-		  	invoice										. setBillToCustomerNameLabel("Bill to Customer: ");
-			invoice										. setBillToCustomerNameData("Customer Name");
-			invoice										. setBillToCustomerAddressLabel("Address: ");
-			invoice										. setBillToCustomerAddressData("Address");
-			invoice										. setBillToCustomerCityLabel("City: ");
-			invoice										. setBillToCustomerCityData("city");
-			invoice										. setBillToCustomerStateLabel("State: ");
-			invoice										. setBillToCustomerStateData("state");
-			invoice										. setBillToCustomerZipcodeLabel("Zipcode: ");
-			invoice										. setBillToCustomerZipcodeData("zipcode");
-			invoice										. setBillToCustomerCountryLabel("Country: ");
-			invoice										. setBillToCustomerCountryData("Country");
-			invoice										. setBillToCustomerPhoneNumberLabel("Phone Number:");
-			invoice										. setBillToCustomerPhoneNumberData("+xx xxx xxx xxxx");
-			invoice										. setBillToCustomerEmailAddressLabel("Email: ");
-			invoice										. setBillToCustomerEmailAddressData("xx@xxxx.com");
-			invoice										. setShipToCustomerNameLabel("Ship To Customer: ");
-			invoice										. setShipToCustomerNameData("customer name");
-			invoice										. setShipToCustomerAddressLabel("Ship To Address: ");
-			invoice										. setShipToCustomerAddressData("address");			
-			invoice										. setShipToCustomerCityLabel("City: ");
-			invoice										. setShipToCustomerCityData("city");
-			invoice										. setShipToCustomerStateLabel("State: ");
-			invoice										. setShipToCustomerStateData("state");
-			invoice										. setShipToCustomerZipcodeLabel("Zipcode: ");
-			invoice										. setShipToCustomerZipcodeData("zipcode");
-			invoice										. setShipToCustomerCountryLabel("Country: ");
-			invoice										. setShipToCustomerCountryData("country");
-			invoice										. setShipToCustomerPhoneNumberLabel("Phone Number:");
-			invoice										. setShipToCustomerPhoneNumberData("+xx xxx xxx xxxx");
-			invoice										. setShipToCustomerEmailAddressLabel("Email: ");
-			invoice										. setShipToCustomerEmailAddressData("xx@xxxx.com");
-	  }
+	
 	  
-	  public void setComponentTextValues(){
+	  public void setComponentTextValues() {
 		    bx001										. setName("customers");
 		    bx002										. setName("suppliers");
 		    bx003										. setName("update");
@@ -837,6 +877,9 @@ public class Register  implements ActionListener,FocusListener {
 		    bx006										. setName("inventory");
 		    bx007										. setName("verifone_manager");
 //		    bx008										. setName("extra_button");
+		    saveTable									. setName("save_table");
+		    loadTable									. setName("load_table");
+		    
 		    button_tender								. setName("tender");
 			pim_button									. setName("pim_button");
 			salesReport									. setName("sales_report_button");
@@ -844,6 +887,8 @@ public class Register  implements ActionListener,FocusListener {
 			tender_amount								. setName("tender_amount");
 			addenda										. setName("addenda ");
 			label_addenda								. setName("Label Addenda ");
+			
+			
 		  	bx001										. setText("Customers"); // 1st Column of buttons, 1st from the top
 			bx002										. setText("Suppliers"); // 1st Column of buttons, 2nd from the top
 			bx003										. setText("Update"); // 1st Column of buttons, 3rd from the top
@@ -852,6 +897,10 @@ public class Register  implements ActionListener,FocusListener {
 			bx006										. setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
 			bx007										. setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
 			// bx008										. setText("Extra button"); // 2nd Column of buttons, 3rd from the top
+			saveTable									. setText("Save Table");
+			loadTable									. setText("Load Table");
+			
+			
 			salesReport									. setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
 			button_tender								. setText("Tender"); // 3rd Column of buttons, 1st from the top
 			pim_button									. setText("PIM"); // 3rd Column of buttons, 3rd from the top
@@ -910,9 +959,8 @@ public class Register  implements ActionListener,FocusListener {
 			storeFaxNumber            					. setText( invoice.getStoreFaxNumber());  
 	  }
 	  
-	  public void setComponentFontValues()
-	  {
-		  storeName										. setFont(font1);
+	  public void setComponentFontValues() {
+		  	storeName									. setFont(font1);
 			storePhoneNumber							. setFont(font1);
 			storeFaxNumber								. setFont(font1);
 			subtotalLabel								. setFont(font1);
@@ -935,8 +983,7 @@ public class Register  implements ActionListener,FocusListener {
 			pim_button									. setFont(font2);
 	  }
 	  
-	  public void setColorScheme()
-	  {
+	  public void setColorScheme() {
 		  panel											. setBackground(Color.decode("#F0F0F0"));
 		    bottomPanel									. setBackground(Color.decode("#F0F0F0"));
 		    tablePanel									. setBackground(Color.decode("#000000"));
@@ -963,8 +1010,7 @@ public class Register  implements ActionListener,FocusListener {
 			
 	  }
 	  
-	  public void setComponentDimensionValues()
-	  {
+	  public void setComponentDimensionValues() {
 		    frame							.setPreferredSize(new Dimension(w,h-30));
 		    panel							.setPreferredSize(new Dimension(w,250));
 			bottomPanel						.setPreferredSize(new Dimension(w,100));
@@ -977,6 +1023,8 @@ public class Register  implements ActionListener,FocusListener {
 			bx005							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
+			saveTable							.setPreferredSize(new Dimension(130,30));
+			loadTable							.setPreferredSize(new Dimension(130,30));
 
 			button_tender					.setPreferredSize(new Dimension(130,30)); 
 			pim_button						.setPreferredSize(new Dimension(130,30));
@@ -986,8 +1034,7 @@ public class Register  implements ActionListener,FocusListener {
 		    addenda							.setPreferredSize(new Dimension(150,30));
 		    label_addenda					.setPreferredSize(new Dimension(150,30));
 	  }
-	  public void setActionListener()
-	  {
+	  public void setActionListener() {
 		    bx001							.addActionListener(this);
 		    bx002							.addActionListener(this);
 		    bx003							.addActionListener(this);
@@ -996,6 +1043,9 @@ public class Register  implements ActionListener,FocusListener {
 		    bx006							.addActionListener(this);
 		    bx007							.addActionListener(this);
 //		    bx008							.addActionListener(this);
+		    saveTable						.addActionListener(this);
+		    loadTable						.addActionListener(this);
+		    
 		    button_tender					.addActionListener(this);
 		    salesReport						.addActionListener(this);
 		    pim_button						.addActionListener(this);
@@ -1013,14 +1063,19 @@ public class Register  implements ActionListener,FocusListener {
 
 
 		  panelLayout.putConstraint(panelLayout.NORTH, timeLabel,00,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, account_name_input,90,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, account_name_label,95,layout.NORTH, panel);
+		  
 		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabel,70,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabelDescription,70,layout.NORTH, panel);
+
+		  panelLayout.putConstraint(panelLayout.NORTH, account_name_input,90,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, account_name_label,95,layout.NORTH, panel);
+		  
 		  panelLayout.putConstraint(panelLayout.NORTH, internetLabel,120,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, storeName,140,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, storePhoneNumber,160,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, storeFaxNumber,180,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, verifoneLabel,140,layout.NORTH, panel);
+		  
+		  panelLayout.putConstraint(panelLayout.NORTH, storeName,160,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, storePhoneNumber,180,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, storeFaxNumber,200,layout.NORTH, panel);
 
 		  
 		  panelLayout.putConstraint(panelLayout.NORTH, subtotalLabel,10,layout.NORTH, panel);
@@ -1044,6 +1099,8 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.NORTH, bx006,100,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, bx007,150,layout.NORTH, panel);
 //		  panelLayout.putConstraint(panelLayout.NORTH, bx008,200,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, saveTable,200,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, loadTable,220,layout.NORTH, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.NORTH, button_tender,5,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, salesReport,50,layout.NORTH, panel);
@@ -1077,6 +1134,7 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabel,35,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabelDescription,110,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, internetLabel,35,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, verifoneLabel,35,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, subtotalLabel,300,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, taxesLabel,300,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, totalLabel,300,layout.WEST, panel);
@@ -1096,6 +1154,8 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, bx005,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx006,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx007,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, saveTable,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, loadTable,550,layout.WEST, panel);
 ///		  panelLayout.putConstraint(panelLayout.WEST, bx008,550,layout.WEST, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.WEST, button_tender,700,layout.WEST, panel);
@@ -1106,9 +1166,8 @@ public class Register  implements ActionListener,FocusListener {
 		  int bill_to_north_data 	= 30;
 
 		  // SHIP TO COMPONENTS
-		  int bill_to_west 		= 850;
-		  int bill_to_west_data = 970;
-
+		  int bill_to_west 			= 850;
+		  int bill_to_west_data 	= 970;
 //	      label_bill_to_customer_name		.setFont(new Font("Times New Roman", Font.BOLD, 10));
 //	      label_bill_to_customer_name		.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,"today",0,0,new Font("Times New Roman", Font.BOLD, 10), Color.BLUE), timeLabel.getBorder()));
 
@@ -1160,18 +1219,9 @@ public class Register  implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_phone_number,bill_to_west,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_phone_number_data,bill_to_west_data,layout.WEST, panel);
 
-		  
-
-		  
-
-		  
-		  
 		  // BILL TO COMPONENTS
 		  int ship_to_west 		= 1100;
 		  int ship_to_west_data = 1250;
-		  
-		  
-
 		  
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_name,10,layout.NORTH, panel);
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_name_data,10,layout.NORTH, panel);
@@ -1253,7 +1303,10 @@ public class Register  implements ActionListener,FocusListener {
 		  panel.add(bx005);
 		  panel.add(bx006);
 		  panel.add(bx007);
+		  panel.add(saveTable);
+		  panel.add(loadTable);
 //		  panel.add(bx008);
+		  
 		  
 		  panel.add(button_tender);
 		  
@@ -1263,6 +1316,7 @@ public class Register  implements ActionListener,FocusListener {
 		// Made adjustment 
 		  panel.add(invoiceNumberLabel);
 		  panel.add(internetLabel);
+		  panel.add(verifoneLabel);
 		  panel.add(totalLabel);
 		  panel.add(subtotalLabel);
 		  panel.add(taxesLabel);
@@ -1354,13 +1408,18 @@ public class Register  implements ActionListener,FocusListener {
 		              today 			= new Date();
 		              timeLabel			. setText(simpDate.format(today) );
 		              internetLabel		. setText( internet.checkConnection() );
+		              
 		          
 		        }};
 		        
 		        timer = new Timer(1000, taskPerformer);
 		        timer .start();
 
+	            verifoneLabel		. setText( "Verifone Status: " + String.valueOf(registerStatus)  );
+
+		        
 		        System.out.println("Register -> buildTopPanel()");
+		        System.out.println("Register -> registerStatus : " + String.valueOf(registerStatus));
 		  try {
 		              invoiceNumberLabel.setText(  "Invoice #:" );
 		              
@@ -1782,6 +1841,7 @@ public class Register  implements ActionListener,FocusListener {
 //		CONSTRUCTOR
 public Register(){
 	
+	
 	setConstructorValues();
     setComponentDefaultValues();
     buildTable();
@@ -1820,23 +1880,25 @@ public Register(){
 
 	System.out.println("Column:count - > "  + table.getModel().getColumnCount());
 
+	// loadShoppingCart();
+	
 	// Print names of columns assigned to table model
 //	for(int i = 0; i < table.getModel().getColumnCount(); i++){
 //		System.out.println(table.getColumnName(i)); }
 	
 	
-	
-/*// Temporarily disabled in order to complete it correctly. on 9/18/2023.
+	// Temporarily disabled in order to complete it correctly. on 9/18/2023.	
 
+/*
 			System.out.println("Register-> Session with Verifone Device");
 			try { 
-			  registerPOS();
+			  register_verifone.registerPOS();
 			  registerStatus = true;
 			System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
 }catch(Exception e){
 System.out.println( "Failed to register POS, please register manually: " + e.toString() );
 }
-*/
+			
 
 /* 
 	line_item_table = new JTable();	
@@ -1878,37 +1940,34 @@ System.out.println( "Failed to register POS, please register manually: " + e.toS
   
 }
 
-
+/*
 public void RegisterVerifone() { 
 
 	
 	System.out.println("Register-> Session with Verifone Device");
     
 	if(registerStatus == false) // Start Verifone Session
-try {
+		try {
 
-	/*
-	//	  registerPOS();
-	//	  Thread.sleep(1000);
-	//	  registerStatus = true;
-	//		System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
-*/
 	
-}catch(Exception e) {
-		System.out.println("Error at Register set default values " + e.toString());
-	}
+		  register_verifone.registerPOS();
+		  Thread.sleep(1000);
+		  registerStatus = true;
+			System.out.println( Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
+
+	
+		} catch(Exception e) { System.out.println("Error at Register set default values " + e.toString()); }
 	else {
 		System.out.println( "Failed to register POS, please register manually: " + e.toString() );
 	} 
 	
 }
-
+*/
 
 public void updateRow(JTable table, int i){
-	if(table_manager.getData(table,i,0).toString().equalsIgnoreCase("") || table_manager.getData(table, i, 0) == null) {
-		
+	//if(table_manager.getData(table,i,0).toString().equalsIgnoreCase("") || table_manager.getData(table, i, 0) == null) {
+	if (table_manager.getData(table, i, 0) == null || table_manager.getData(table, i, 0).toString().trim().equalsIgnoreCase("")) {
 		System.out.println("Register->updateRow():ErrorCode:null at GTIN;");
-		
 	}
 	else {
 	table_manager.setData( table,i,5,table_manager.getSubTotal(table,i)); // Update Subtotal for this row
@@ -2017,10 +2076,23 @@ public void buildActionListener() {
 		if(table.isEditing()){table.getCellEditor().stopCellEditing();}
 
 		table_manager.clearRow(table,i);
+		if(invoice.getTransactionTenderValue() == null)
+ 		{
+ 			tenderLabel.setText(	"$ 0.00");
+ 			changeLabel.setText(	"$ 0.00");
+ 		}else {
+// 		tenderLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionTenderValue() 	))); // Set value to UI Labeloip=q1		
+// 		changeLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionChangeValue() 	))); // Set value to UI Labeloip=q1		
+ 		}
+ 		
 		refreshTotal(table,0.00,0.00);
+		
+		
 
 		// JOptionPane.showMessageDialog(null,"Refreshing Total Now");
 
+		/*
+		 * register_verifone -> removeLineItem
 		if(registerStatus == true){
 		try { 
 			register_verifone.removeLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
@@ -2028,11 +2100,13 @@ public void buildActionListener() {
 		}catch (Exception e1) {
 			System.out.println("Register - delete key action error: " + "cannot connect to register" + e1.toString() );
 			  } }else {}
+		*/
+		
 			table.changeSelection(i,0, false,false);
 		}});
 	//---------------------------------------------------------DELETE KEY ACTION END 
 
-	//---------------------------------------------------------ENTER KEY ACTION PROC
+	//----------------------------------------------------------
 		
 		KeyStroke enterKey 		= KeyStroke.getKeyStroke(KeyEvent.VK_ENTER, 0);
 		inputMap				. put(enterKey, "Action.enter");
@@ -2117,11 +2191,20 @@ public void buildActionListener() {
 		refreshTotal(table,0.00,0.00);
 		System.out.println("**********------------->>>>>> line item row: " + i + ";");			
 		System.out.println( "Electronic Document: " + invoice.toString() + "");
-		subtotalLabel.setText( 	"$ " + invoice.getTransactionSubTotal() ); // Set value to UI Label
- 		taxesLabel.setText( 	"$ " + invoice.getTransactionTaxesTotal() ); // Set value to UI Label
- 		totalLabel.setText(		"$ " + formatter.format(Double.parseDouble(invoice.getTransactionTotal() ) ) ); // Set value to UI Label
- 		discountLabel.setText(	"$ " + invoice.getTransactionDiscountTotal() ); // Set value to UI Labeloip=q1		
+		subtotalLabel.setText( 	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionSubTotal() 		))); // Set value to UI Label
+ 		taxesLabel.setText( 	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionTaxesTotal() 		))); // Set value to UI Label
+ 		totalLabel.setText(		"$ " + formatter.format(Double.parseDouble( invoice.getTransactionTotal() 			))); // Set value to UI Label
+ 		discountLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionDiscountTotal() 	))); // Set value to UI Labeloip=q1		
 
+ 		if(invoice.getTransactionTenderValue() == null)
+ 		{
+ 			tenderLabel.setText(	"$ 0.00");
+ 			changeLabel.setText(	"$ 0.00");
+ 		}else {
+// 		tenderLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionTenderValue() 	))); // Set value to UI Labeloip=q1		
+// 		changeLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionChangeValue() 	))); // Set value to UI Labeloip=q1		
+ 		}
+ 		
  		try {
  			if(table_manager.getData(table, i,9) == null || table_manager.getData(table, i,9).toString().equalsIgnoreCase("") ) {
 		            String line_item_uuid = http.getUUID();
@@ -2130,6 +2213,7 @@ public void buildActionListener() {
 	            }else { System.out.println("Enter key action proc: line item already assigned" ); }
 	
  	 	uploadLineItem(i);
+// 	 	saveShoppingCart(i);
  		table.changeSelection(i+1,0, false,false);
 		table.requestFocus();
 		}catch(Exception e) {
@@ -2138,8 +2222,18 @@ public void buildActionListener() {
 			}
 		}
 	    
-			
-	if(registerStatus == false){ try {  /*registerPOS(); registerStatus = true; */ } catch(Exception a1) {  } }
+		
+	 
+	  //	Part of register_verifone code -> review and consolidate 
+	  
+	  
+	if(registerStatus == false){ try {  
+//		 register_verifone.registerPOS(); 
+	//	 registerStatus = true; 
+
+	System.out.println("Hardware Error: Verifone Device is not connected."); 
+	
+	} catch(Exception a1) {  } }
 
 	if(registerStatus == true){
 			
@@ -2149,19 +2243,18 @@ public void buildActionListener() {
 			System.out.println("New Message from Verifone: ");
 			temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
 
-//			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
+			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ); // returns mac_label
 			mac_label =  temp; // returns mac_label
-			register_verifone.startSession();
+		//	register_verifone.startSession();
         
 	  		System.out.println("New Message from Verifone: ");
 	  		temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
             System.out.println(temp);
             sessionInProgress = true;
 
-//			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );  // return Session Started
+			JOptionPane.showMessageDialog( null, Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );  // return Session Started
 
-            register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-			String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+          //  register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())), String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 
 			System.out.println("New Message from Verifone: ");
 			temp = Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) ;
@@ -2170,7 +2263,9 @@ public void buildActionListener() {
 			} catch(Exception e){
 				  
 			System.out.println("Error starting session: " + e.toString() );
-			// startSession();
+			try {
+//			register_verifone.startSession();
+			}catch(Exception ee) {}
 
 			try { 
 			//	  			  addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
@@ -2179,24 +2274,25 @@ public void buildActionListener() {
 			if( table_manager.getData(table, i, 0).toString().equalsIgnoreCase("") ) 
 				{
 					
-				register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+				// register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())), String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				}
 				else { 
-					register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+					// register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())), String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				}
 
 				} catch(Exception exx){
 			JOptionPane.showMessageDialog( null, exx.toString() +  " : " + Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );
 				try { 
-					register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
-					register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
-					String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+				//	register_verifone.addLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+			//		String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
+		//			register_verifone.overrideLineItem( formatter.format(Double.parseDouble(invoice.getTransactionSubTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTaxesTotal())) ,formatter.format(Double.parseDouble(invoice.getTransactionTotal())),
+		//			String.valueOf(i), "SKU",table_manager.getData(table, i, 0).toString(), table_manager.getData(table, i, 3).toString(),table_manager.getData(table, i, 1).toString(), table_manager.getData(table, i, 4).toString(),table_manager.getData(table, i, 5).toString() ) ;
 				} catch(Exception exe){
 			JOptionPane.showMessageDialog( null, exe.toString() +  " : " + Documents.selectFirst( responseDocElement, "RESPONSE_TEXT", "" ) );
 } } } } else {  System.out.println("Register Enter Key Action Error: Credit card payment terminal cannot be reached"); } } });
+
+
+
 
 
 /*
@@ -2298,7 +2394,7 @@ public void buildActionListener() {
 			System.out.println("Terminating POS System");
 
 			try { 
-				  register_verifone.unregisterPOSAll();
+//				  register_verifone.unregisterPOSAll();
 				  Thread.sleep(1000);
 			}catch(Exception e){
 				System.out.println("error could not unregister POS");
@@ -2336,6 +2432,12 @@ public void focusLost(FocusEvent e) {
 }
 
 
+
+
+
+
+
+
   public void actionPerformed(ActionEvent e) {
 
 	  if( e.getSource() instanceof JMenuItem){
@@ -2346,12 +2448,32 @@ public void focusLost(FocusEvent e) {
     	  System.out.println( " Menu Item Selected::::: " + menu_item.getName()  );
     	  
     	  if(menu_item.getName().equalsIgnoreCase("Customers")) { JOptionPane.showMessageDialog(null,"Opening CRM"); }
+    	  if(menu_item.getName().equalsIgnoreCase("ParkTransaction")) { saveTable(); }
+    	  if(menu_item.getName().equalsIgnoreCase("CopyLastTransaction")) { loadInvoice(); }
+    	  
+    	  
+    	  
     	  
 
 		  if(menu_item.getName().equalsIgnoreCase("ProductCatalogue")) {
 			JOptionPane.showMessageDialog(null,"Opening Product Menu");
 			RestaurantMenuGUI test = new RestaurantMenuGUI(); }
-		}
+
+    	  if(menu_item.getName().equalsIgnoreCase("SalesReport")) { 
+    		  
+    		  menu_item.addActionListener(new ActionListener() {
+    		
+    			  public void actionPerformed(ActionEvent ev) { try { Desktop.getDesktop().browse(new URI("https://lockwind.com/test/SalesReport.php" )); }  catch (Exception e1) { e1.printStackTrace(); } } }); 
+    		  
+    	  }
+    	  if(menu_item.getName().equalsIgnoreCase("About")) { 
+
+    		   try { Desktop.getDesktop().browse(new URI("https://www.lockwind.com/#about_us" )); }  catch (Exception e1) { e1.printStackTrace(); }
+    	  
+    	  }
+
+	  
+	  }
 	  
       if( e.getSource() instanceof JComboBox){
           
@@ -2455,6 +2577,13 @@ public void focusLost(FocusEvent e) {
       {
           JButton temp = (JButton) e.getSource();
           
+
+          if( temp.getName().equalsIgnoreCase("save_table")) { saveTable(); }
+
+          
+          if( temp.getName().equalsIgnoreCase("load_table")) { loadTable(); }
+          
+          
           if( temp.getName().equalsIgnoreCase("customers"))
           {
 
@@ -2548,14 +2677,16 @@ public void focusLost(FocusEvent e) {
           row = table.getSelectedRow();
           col = 0;
 
-          if(table_manager.getData(table, row, col) != null) 
-          {
+          if(table_manager.getData(table, row, col) != null)  {
     	  try { 
-        	  String x = table_manager.getData(table,row,col).toString();
-    		  Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php?retailer_uuid=" + retailerUUID + "&reference_code=" + x ));
+//        	  String x = table_manager.getData(table,row,col).toString();
+//    		  Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php?retailer_uuid=" + retailerUUID + "&reference_code=" + x ));
+    		  Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php?retailer_uuid=" + retailerUUID ));
           } catch(Exception e2) {
 
-        	  try { Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php" ) ); } 
+        	  try { 
+        		  Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php?retailer_uuid=" + retailerUUID ));
+        	  } 
         	  catch (Exception e1) { e1.printStackTrace(); }
 
         	  e2.printStackTrace();
@@ -2563,7 +2694,9 @@ public void focusLost(FocusEvent e) {
           }
           else { 
         	  System.out.println("Opening new stock window because table manager is null;");
-        	  try { Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php" ) );  
+        	  try { 
+        		  Desktop.getDesktop().browse(new URI("https://lockwind.com/test/pim_index.php?retailer_uuid=" + retailerUUID ));
+  
         	  } catch (Exception e1) { e1.printStackTrace(); }
 
           }
@@ -2579,7 +2712,8 @@ public void focusLost(FocusEvent e) {
           if( temp.getName().equalsIgnoreCase("sales_report_button"))
           {
         	  try { 
-        	        Desktop.getDesktop().browse(new URI("https://lockwind.com/test/SalesReport.php"));  
+        	        // Desktop.getDesktop().browse(new URI("https://lockwind.com/test/SalesReport.php"));
+        		  downloadAPILineItem();
         	    } catch (Exception e1) {
         	        e1.printStackTrace();
         	    }
@@ -2608,6 +2742,96 @@ public void focusLost(FocusEvent e) {
       }   
       }
 
+  
+  
+  private void saveInvoice() {
+          
+    	  File file = new File(System.getProperty("user.home") + "/invoice/" + invoice.getInvoiceNumber() + ".txt");
+          try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+        	  DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        	  Vector<Vector> dataVector = tableModel.getDataVector();
+              oos.writeObject(dataVector);
+              JOptionPane.showMessageDialog(this, "Table saved successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+          } catch (IOException ex) {
+              ex.printStackTrace();
+              JOptionPane.showMessageDialog(this, "Error saving table.", "Error", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+  private void loadInvoice() {
+      
+          File file = new File(System.getProperty("user.home") + "/invoice/" + (Integer.parseInt(invoice.getInvoiceNumber() ) - 1) + ".txt");
+         
+          try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+              Vector<Vector<Object>> dataVector = (Vector<Vector<Object>>) ois.readObject();
+              DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+              tableModel.setRowCount(0);
+              for (Vector<Object> row : dataVector) {
+                  tableModel.addRow(row);
+              }
+              JOptionPane.showMessageDialog(this, "Table loaded successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+          } catch (IOException | ClassNotFoundException ex) {
+              ex.printStackTrace();
+              JOptionPane.showMessageDialog(this, "Error loading table.", "Error", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+      
+  
+  
+  
+  
+  
+  
+  private void saveTable() {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/invoice/parked/"));
+      
+      int option = fileChooser.showSaveDialog(this);
+      if (option == JFileChooser.APPROVE_OPTION) {
+          
+    	  File file = fileChooser.getSelectedFile();
+          try (ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(file))) {
+        	  DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+        	  Vector<Vector> dataVector = tableModel.getDataVector();
+              oos.writeObject(dataVector);
+              JOptionPane.showMessageDialog(this, "Table saved successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+          } catch (IOException ex) {
+              ex.printStackTrace();
+              JOptionPane.showMessageDialog(this, "Error saving table.", "Error", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+  }
+
+  private void loadTable() {
+      JFileChooser fileChooser = new JFileChooser();
+      fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/invoice/parked/"));
+      
+      int option = fileChooser.showOpenDialog(this);
+      if (option == JFileChooser.APPROVE_OPTION) {
+          File file = fileChooser.getSelectedFile();
+         
+          try (ObjectInputStream ois = new ObjectInputStream(new FileInputStream(file))) {
+              Vector<Vector<Object>> dataVector = (Vector<Vector<Object>>) ois.readObject();
+              DefaultTableModel tableModel = (DefaultTableModel) table.getModel();
+              tableModel.setRowCount(0);
+              for (Vector<Object> row : dataVector) {
+                  tableModel.addRow(row);
+              }
+              JOptionPane.showMessageDialog(this, "Table loaded successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
+          } catch (IOException | ClassNotFoundException ex) {
+              ex.printStackTrace();
+              JOptionPane.showMessageDialog(this, "Error loading table.", "Error", JOptionPane.ERROR_MESSAGE);
+          }
+      }
+  }  
+  
+  
+  
+  
+  
+  
+  
+  
+  
 public void actionGTIN() {
   
     String temp = "";
@@ -2759,8 +2983,8 @@ public void loadElectronicDocument() {
   taxesLabel						. setText( "$ "+  tax_value_string ); // Set value to UI Label
   totalLabel						. setText( "$ "+  total_value_string ); // Set value to UI Label
   discountLabel						. setText( "$ "+  discount_value_string ); // Set value to UI Label
-  tenderLabel						. setText( "$ " + invoice.getTransactionTenderValue() );
-  changeLabel						. setText( "$ " + invoice.getTransactionChangeValue() );
+  // tenderLabel						. setText( "$ " + invoice.getTransactionTenderValue() );
+  // changeLabel						. setText( "$ " + invoice.getTransactionChangeValue() );
 
   													 
 //  subtotalLabel						. setText( "$ "+ formatter.format(Double.parseDouble(  invoice.getTransactionSubTotal() ))); // Set value to UI Label
@@ -2984,6 +3208,12 @@ public void loadElectronicDocument() {
           outputFile.println("Item Count: " + item_count);
           outputFile.println("----------------------------------------");
           outputFile.println("Thank you for shopping with " + invoice.getStoreName() + "");
+          outputFile.println("STORE HOURS: ");
+          outputFile.println("MONDAY - SATURDAY: 8:00 AM - 8:00 PM");
+          outputFile.println("SUNDAY: 9:00 AM - 4:00 PM ");
+          outputFile.println("NO CASH REFUNDS ");
+          outputFile.println("STORE CREDIT / EXCHANGE ONLY WITH ORIGINAL RECEIPT");
+          
           outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
           outputFile.println("----------------------------------------");
           
@@ -3079,7 +3309,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       int selectedColumn = table.getSelectedColumn();
 
       if (isValidRowAndColumn(selectedRow, selectedColumn)) {
-          String inputQty = JOptionPane.showInputDialog(table, "Enter the Product Name:", table_manager.getData(table, selectedRow, selectedColumn).toString());
+          String inputQty = JOptionPane.showInputDialog(null, "Enter the Product Name:", table_manager.getData(table, selectedRow, selectedColumn).toString());
 
           model.getColumnCount();
           model.getRowCount();
@@ -3176,6 +3406,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 
 }
   public void updateTax(){
+	  
   if(table.isEditing()){table.getCellEditor().stopCellEditing();}
   
   int i = 0;
@@ -3201,9 +3432,13 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 
 
 
+  
+  
+
   public void updateDiscount(){
   
   int i = 0; int j = 0;
+  
   if(table.isEditing()){table.getCellEditor().stopCellEditing();}
   
   	formatter = new DecimalFormat("#0.00");
@@ -3235,13 +3470,114 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
       
   }
 */
-  public void uploadLineItem( int i ) { 
-      String[] temp = new String[table.getColumnCount()*2];
+  
+  
+  public void downloadAPILineItem( ) 
+  { 
+	  
+	  System.out.println("Function Action: downloadLineItem -> row: " + i);
+	  
+	  
+	  /*
+	  String[] temp = new String[table.getColumnCount()*2];
       j = 0;
       for(int k = 0; k < table.getColumnCount(); k++) { // Per column  
     	  if(table_manager.getData(table,i,j) == null) { // Column value is null 
+    		  temp[k] = "";
+//    		  temp[i] = String.valueOf("");
   	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
-  	} else { temp[k] = table_manager.getData(table,i,j).toString(); }
+  	} else { 
+  		
+  		temp[k] = table_manager.getData(table,i,j).toString();
+  	
+  	}
+  	j++;
+  	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
+  }
+
+  temp[10] = String.valueOf( invoice.getInvoiceNumber() );
+  temp[11] = "download";
+  //  temp[12] = "";
+  temp[13] = invoice.getIssuerUUID();
+  temp[14] = invoice.getLocationUUID();
+  temp[15] = invoice.getTransactionUUID();
+
+
+      */
+
+  
+  
+  
+  System.out.println("Register::Enter Key Action proc ->Action: DownloadLineItem -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
+  	  
+	  try { 
+			 API test = new API();
+			 invoice_number = Integer.parseInt(JOptionPane.showInputDialog(null,"Enter invoice number") );
+			 
+			 String issuer_uuid = "5d4de950d4f69";
+			 
+			 temp =  test.downloadAPILineItem(issuer_uuid,String.valueOf(invoice_number),"scanned","","","") ;
+			 Thread.sleep(2000);
+			 
+			 JOptionPane.showMessageDialog(null,temp);
+			 System.out.println(temp);
+			 
+			 StringTokenizer str = new StringTokenizer(temp,",");
+			 
+			 i = 0;
+			 j = 0;
+
+			 String token = "";
+			 int token_count = 0;
+			 
+			 int x = table_manager.getColumnCount();
+			 
+
+			 String csvString = "Name, Age, City\nJohn Doe, 30, New York\nJane Smith, 25, Los Angeles\nAlice Brown, 28, Chicago";
+
+	            // Tokenize the CSV String
+	            StringTokenizer tokenizer = new StringTokenizer(temp, ",");
+	            String[] columnNames = tokenizer.nextToken().split(", ");
+	            DefaultTableModel model = new DefaultTableModel(columnNames, 0);
+
+	            while (tokenizer.hasMoreTokens()) {
+	                String[] rowData = tokenizer.nextToken().split(", ");
+	                
+	            }
+
+					// System.out.println( table_manager.setData(table,i,j) );
+			 
+			 
+			 }
+			 catch(Exception e) {}
+			 
+	  	System.out.println("LINE ITEM DOWNLOAD COMPLETE");
+			 
+			 
+		 
+	  
+      
+//  table_manager.setData(table, i, 9, temp[12]); // set 
+
+	  
+	  
+  }
+  
+  public void uploadLineItem( int i ) { 
+	  System.out.println("Function Action: uploadLineItem -> row: " + i);
+	  
+	  String[] temp = new String[table.getColumnCount()*2];
+      j = 0;
+      for(int k = 0; k < table.getColumnCount(); k++) { // Per column  
+    	  if(table_manager.getData(table,i,j) == null) { // Column value is null 
+    		  temp[k] = "";
+//    		  temp[i] = String.valueOf("");
+  	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+  	} else { 
+  		
+  		temp[k] = table_manager.getData(table,i,j).toString();
+  	
+  	}
   	j++;
   	System.out.println("LINE ITEM COLUMN VALUE: " + j + " : " + temp[k]);
   }
@@ -3250,7 +3586,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
   
   temp[10] = String.valueOf( invoice.getInvoiceNumber() );
   temp[11] = "scanned";
-//  temp[12] = "";
+  //  temp[12] = "";
   temp[13] = invoice.getIssuerUUID();
   temp[14] = invoice.getLocationUUID();
   temp[15] = invoice.getTransactionUUID();
@@ -3262,6 +3598,27 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
   try {
 	  http.sendProductPostAPILineItem( temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] );;
 	  
+      }catch(Exception e) {};
+
+  
+  temp[10] = String.valueOf( invoice.getInvoiceNumber() );
+  temp[11] = "scanned";
+  //  temp[12] = "";
+  temp[13] = invoice.getIssuerUUID();
+  temp[14] = invoice.getLocationUUID();
+  temp[15] = invoice.getTransactionUUID();
+  
+  System.out.println("Register::Enter Key Action proc ->Action:Publish -> Data: ElectronicDocumentLineItem() -> Destination: https://www.Lockwind.com ");
+
+//  table_manager.setData(table, i, 9, temp[12]); // set 
+
+  try {
+	  
+	  FileWriter file = new FileWriter("shopping_cart.txt");
+	  PrintWriter outputFile = new PrintWriter(file);
+	  for(int ix = 0; ix < 16; ix++)   { outputFile.print(temp[ix] + ","); }
+	  // temp[0],temp[1],temp[2],temp[3],temp[4],temp[5],temp[6],temp[7],temp[8],temp[9], temp[10],temp[11],temp[12],temp[13],temp[14],temp[15] ) ;
+	  outputFile.close();
       }catch(Exception e) {};
 
   }
@@ -3276,6 +3633,7 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
   {
   	if(table_manager.getData(table,i,j) == null) { // Column value is null 
   	//System.out.println("NULL VALUE FOUND AT TABLE: " + i + "," + j);
+  		temp[k] = "";
   	}
   	else {
   	temp[k] = table_manager.getData(table,i,j).toString();
@@ -3441,21 +3799,22 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
           else{ item_count++; qty_count += Integer.parseInt(table_manager.getData(table, i, 1).toString() ) ; } }
 
           
-          outputFile.println("                         SUB TOTAL $"+ format_manager.formatDoubleUS(subtotal));
-          outputFile.println("                         SALES TAX $"+ format_manager.formatDoubleUS(totaltaxes));
+		  String receipt_spacing = "                         ";
+          outputFile.println(receipt_spacing + "SUB TOTAL $"+ format_manager.formatDoubleUS(subtotal));
+          outputFile.println(receipt_spacing + "SALES TAX $"+ format_manager.formatDoubleUS(totaltaxes));
           if(discount != 0.00) {
-          outputFile.println("                         DISCOUNT  $"+ format_manager.formatDoubleUS(discount));} else{}
+          outputFile.println(receipt_spacing + "DISCOUNT  $"+ format_manager.formatDoubleUS(discount));} else{}
           
           
-          outputFile.println("                         TOTAL     $"+ format_manager.formatDoubleUS(total));
+          outputFile.println(receipt_spacing + "TOTAL     $"+ format_manager.formatDoubleUS(total));
           outputFile.println("");
-          outputFile.println("                         TENDERED  $"+ format_manager.formatDoubleUS(tendered));
-          outputFile.println("                         CHANGE    $"+ format_manager.formatDoubleUS(change));
+          outputFile.println(receipt_spacing + "TENDERED  $"+ format_manager.formatDoubleUS(tendered));
+          outputFile.println(receipt_spacing + "CHANGE    $"+ format_manager.formatDoubleUS(change));
           
-          outputFile.println("                         \nAddenda: "+ addenda.getText() );
+          outputFile.println(receipt_spacing + "\nAddenda: "+ addenda.getText() );
           
-          outputFile.println("                         \nLine Item Count: "+ item_count );
-          outputFile.println("                         \nUnit Item Count: "+ qty_count );
+          outputFile.println(receipt_spacing + "\nLine Item Count: "+ item_count );
+          outputFile.println(receipt_spacing + "\nUnit Item Count: "+ qty_count );
 
           // refreshTotal(table,tendered,change);
           
@@ -3471,8 +3830,9 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
           outputFile.println("----------------------------------------");
           outputFile.close();
           
+          System.out.println("Saving invoice to Local File System for loading later");
           
-          
+          saveInvoice();
           
           try {
         	  
@@ -3535,8 +3895,8 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
       
       http.IncrementInvoiceNumber( invoice.getIssuerUUID() );
       
-      invoice										= new Invoice( retailerUUID );
-      setInvoiceDefaultValues();
+      invoice										= new Invoice( retailerUUID, posUUID,client_id );
+      invoice.setInvoiceDefaultValues();
 	  System.out.println("Register-> setInvoiceDefaultValues() -> ** retailer_uuid: " + retailerUUID);
 	  System.out.println("Register-> setInvoiceDefaultValues() -> ** invoice_number: " + invoice.getInvoiceNumber() );
 	  System.out.println("Register-> setInvoiceDefaultValues() -> ** transaction_uuid: " + invoice.getTransactionUUID() );
@@ -3586,8 +3946,9 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 
 			if(payment_method.getSelectedItem().toString().equalsIgnoreCase("CASH") ) {
 			//Display mesasge on verifone
-			try { register_verifone.displayMessage("Balance Due: $0.00",10); /* Thread.sleep(5000); */ register_verifone.endSession(); }
-			catch(Exception e){ System.out.println(e.toString() ); }
+			// try { register_verifone.displayMessage("Balance Due: $0.00",10); /* Thread.sleep(5000); */ register_verifone.endSession(); }
+			// catch(Exception e){ System.out.println(e.toString() ); }
+			
 			}else{
 			
 			
@@ -3597,11 +3958,11 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 			
 			  try { 
 
-				  register_verifone.captureCardEarlyReturn();
+//				  register_verifone.captureCardEarlyReturn();
 				  Thread.sleep(1000);
-				  register_verifone.authorizeCard();
+//				  register_verifone.authorizeCard();
 				  Thread.sleep(1000);
-				  register_verifone.endSession();
+ // register_verifone.endSession();
 //				  Thread.sleep(2000);
 
 				  }catch(Exception verifone_exception) {
@@ -3612,34 +3973,13 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
 }
 				
 			}
-
-			
-		  
-
-
-
   } // close function tenderAction(double)
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
-  
   
 
   
 public static void main(String[] args){Register test = new Register();
 
-System.out.println("This is Lockwind POS Version 3.9 with a modification date of 2/21/24");
+System.out.println("This is Lockwind POS Version 4.13 with a modification date of 5/4/24");
 System.out.println("\n\n********************************************************************************");
 // test.printMethods(); -> this method can be used to view the stack of methods currently operating.
 }

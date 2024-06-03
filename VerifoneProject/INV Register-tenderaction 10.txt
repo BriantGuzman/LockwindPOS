@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 2/25/24    05:11:48 PM   Invoice No: 10
+ 6/2/24    11:19:06 AM   Invoice No: 10
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,19 +14,19 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+ 1   XT                  GENERIC PRODUCT0.99
+ GENERIC                                   
 
-                         SUB TOTAL $2.99
-                         SALES TAX $0.27
-                         TOTAL     $3.26
+                         SUB TOTAL $0.99
+                         SALES TAX $0.09
+                         TOTAL     $1.08
 
-                         TENDERED  $30.00
-                         CHANGE    $26.74
+                         TENDERED  $2.00
+                         CHANGE    $0.92
                          
 Addenda: 
                          
-Line Item Count: 2
+Line Item Count: 4
                          
 Unit Item Count: 1.0
 ----------------------------------------

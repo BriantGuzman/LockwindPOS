@@ -642,12 +642,12 @@ System.out.format("COUNTER is 1. MAC is %s%n", mac);
 
 public void getCounter() throws Exception {
 
-// Point SCA 4.0 Engage Integration Guide 3.00 Page 79
-
-// get counter and calculate mac
-nextCounter = String.valueOf(++counter);
-mac = printMacAsBase64(macKey, nextCounter);
-System.out.format("COUNTER is 1. MAC is %s%n", mac);
+	// Point SCA 4.0 Engage Integration Guide 3.00 Page 79
+	
+	// get counter and calculate mac
+	nextCounter = String.valueOf(++counter);
+	mac = printMacAsBase64(macKey, nextCounter);
+	System.out.format("COUNTER is 1. MAC is %s%n", mac);
 
 	
 	// build request
@@ -677,21 +677,21 @@ System.out.format("COUNTER is 1. MAC is %s%n", mac);
 public void removeLineItem(String subtotal,String tax_amount,String trans_amount, String line_item_id, String SKU,String UPC, String line_item_description,String quantity, String unit_price,String extended_price) throws Exception {
 
 
-// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
-
-// generate a random ENTRY_CODE
-generator = new Random();
-entryCode = String.valueOf(generator.nextInt(9999));
-
-// print out entry code to the user through the UI
-System.out.printf("ENTRY_CODE is %s%n", entryCode);
-
-//JOptionPane.showMessageDialog(null, entryCode);
-
-// get counter and calculate mac
-nextCounter = String.valueOf(++counter);
-mac = printMacAsBase64(macKey, nextCounter);
-System.out.format("COUNTER is 1. MAC is %s%n", mac);
+	// Point SCA 4.0 Engage Integration Guide 3.00 Page 137
+	
+	// generate a random ENTRY_CODE
+	generator = new Random();
+	entryCode = String.valueOf(generator.nextInt(9999));
+	
+	// print out entry code to the user through the UI
+	System.out.printf("ENTRY_CODE is %s%n", entryCode);
+	
+	//JOptionPane.showMessageDialog(null, entryCode);
+	
+	// get counter and calculate mac
+	nextCounter = String.valueOf(++counter);
+	mac = printMacAsBase64(macKey, nextCounter);
+	System.out.format("COUNTER is 1. MAC is %s%n", mac);
 
 	
 	// build request

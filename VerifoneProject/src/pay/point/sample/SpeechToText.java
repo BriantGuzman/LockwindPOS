@@ -1,5 +1,6 @@
 package pay.point.sample;
 
+/*
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.Scanner;
@@ -60,3 +61,5 @@ public class SpeechToText {
     }
   }
 }
+
+*/

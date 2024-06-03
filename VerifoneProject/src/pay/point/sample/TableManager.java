@@ -97,7 +97,23 @@ public class TableManager {
 	public void addColumnNames(){ }
 	
 	public Object getData(JTable table,int row_index,int col_index)
-	{return table.getModel().getValueAt(row_index,col_index);}
+	{
+		Object temp = null;
+		try { 
+		
+			if(table.getModel().getValueAt(row_index,col_index) != null)
+			{
+				temp = table.getModel().getValueAt(row_index,col_index);
+			}
+		
+		}catch(Exception e) {
+			
+			System.out.println("Error: TableManager->getData -> Exception: Table cell is null");
+			
+		}
+		
+		return temp;
+		}
 
 	public void setData(JTable table,int row_index, int col_index,String value)
 	{table.getModel().setValueAt(value,row_index,col_index);}
