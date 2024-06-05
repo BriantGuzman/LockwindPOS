@@ -2205,6 +2205,7 @@ public void buildActionListener() {
 // 		changeLabel.setText(	"$ " + formatter.format(Double.parseDouble( invoice.getTransactionChangeValue() 	))); // Set value to UI Labeloip=q1		
  		}
  		
+
  		try {
  			if(table_manager.getData(table, i,9) == null || table_manager.getData(table, i,9).toString().equalsIgnoreCase("") ) {
 		            String line_item_uuid = http.getUUID();
@@ -2212,10 +2213,13 @@ public void buildActionListener() {
 			  		table_manager.setData( table,i,9,line_item.getUUID());	            	
 	            }else { System.out.println("Enter key action proc: line item already assigned" ); }
 	
+ 		updateLineItemUUID(i);
  	 	uploadLineItem(i);
 // 	 	saveShoppingCart(i);
  		table.changeSelection(i+1,0, false,false);
 		table.requestFocus();
+		
+		
 		}catch(Exception e) {
 				System.out.println("Error: Code Blue: uploading line item to Lockwind cloud ");
 				System.out.println( e.toString() );
@@ -2449,7 +2453,24 @@ public void focusLost(FocusEvent e) {
     	  
     	  if(menu_item.getName().equalsIgnoreCase("Customers")) { JOptionPane.showMessageDialog(null,"Opening CRM"); }
     	  if(menu_item.getName().equalsIgnoreCase("ParkTransaction")) { saveTable(); }
-    	  if(menu_item.getName().equalsIgnoreCase("CopyLastTransaction")) { loadInvoice(); }
+    	  if(menu_item.getName().equalsIgnoreCase("CopyLastTransaction")) { loadInvoice();
+    	  
+
+    	  Object temp = null;
+    	  row = 0;
+    	  
+    	  do {
+    		  
+    		  temp = table_manager.getData(table, row, 0);
+    		  updateLineItemUUID(row);
+    		  uploadLineItem(row);	
+    		  row++; 	
+    		  System.out.println("Updating Line Item with new UUID" + row);
+    	  
+    	  }while( temp != null);
+    	  }
+
+    		  
     	  
     	  
     	  
@@ -2773,14 +2794,11 @@ public void focusLost(FocusEvent e) {
               ex.printStackTrace();
               JOptionPane.showMessageDialog(this, "Error loading table.", "Error", JOptionPane.ERROR_MESSAGE);
           }
+           table_manager.clearTableColumn(table,9); 
+          // clear line item UUID -> reload with new values for the line items.
       }
       
-  
-  
-  
-  
-  
-  
+  	
   private void saveTable() {
       JFileChooser fileChooser = new JFileChooser();
       fileChooser.setCurrentDirectory(new File(System.getProperty("user.home") + "/invoice/parked/"));
@@ -2822,13 +2840,9 @@ public void focusLost(FocusEvent e) {
               JOptionPane.showMessageDialog(this, "Error loading table.", "Error", JOptionPane.ERROR_MESSAGE);
           }
       }
+      table_manager.clearTableColumn(table,9);
+
   }  
-  
-  
-  
-  
-  
-  
   
   
   
@@ -3563,6 +3577,27 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 	  
   }
   
+  public void updateLineItemUUID(int i) { 
+	  
+		try {
+ 			if(table_manager.getData(table, i,9) == null || table_manager.getData(table, i,9).toString().equalsIgnoreCase("") ) {
+ 				String line_item_uuid = "";
+ 			    System.out.println( " line item uuid new one is: " + line_item_uuid);
+			  	
+ 			    line_item_uuid = http.getUUID();
+ 				
+		            System.out.println( " line item uuid new one is: " + line_item_uuid);
+			  		line_item.setUUID(line_item_uuid);
+			  		table_manager.setData( table,i,9,line_item.getUUID());	            	
+	            }else { System.out.println("Enter key action proc: line item already assigned" ); }
+		}catch( Exception e) {
+			System.out.println("System error at updateLineItemUUID");
+			
+		}
+	
+ 			
+  }
+  
   public void uploadLineItem( int i ) { 
 	  System.out.println("Function Action: uploadLineItem -> row: " + i);
 	  
@@ -3979,7 +4014,7 @@ System.out.println("Register tenderAction Error: Credit card payment terminal ca
   
 public static void main(String[] args){Register test = new Register();
 
-System.out.println("This is Lockwind POS Version 4.13 with a modification date of 5/4/24");
+System.out.println("This is Lockwind POS Version 4.14 with a modification date of 6/4/24");
 System.out.println("\n\n********************************************************************************");
 // test.printMethods(); -> this method can be used to view the stack of methods currently operating.
 }

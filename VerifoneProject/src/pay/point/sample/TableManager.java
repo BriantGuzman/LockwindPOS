@@ -83,6 +83,10 @@ public class TableManager {
 	{
 		return columnMapper.getColumnCount();
 	}
+	public int getRowCount(JTable table)
+	{
+		return table.getRowCount();
+	}
 
 
 	public void setRetailerUUID(String uuid) {
@@ -137,6 +141,25 @@ public class TableManager {
 
 	}
 
+public void clearTableColumn(JTable table,int columnSelected){
+		
+		int row = 0;
+
+		while( row < table.getModel().getRowCount()){
+				setData(table,row,columnSelected,"");
+				// System.out.println("Clearing table row " + row + " at column " + columnSelected);
+				row++;
+			}
+//			columnSelected = 0;
+}
+
+		
+	
+	
+	
+	
+	
+	
 /*	    	  
 	    	  Process p = null;
 	    	  p =  Runtime.getRuntime().exec("cmd /c echo                                         > COM1" ); }
