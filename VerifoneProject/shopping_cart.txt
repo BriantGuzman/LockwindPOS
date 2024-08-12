@@ -1,1 +1,1 @@
-xt,1,GENERIC,GENERIC PRODUCT,0.99,0.99,0.0888525,,,6661e64a28e1d6661e64a28e23,18,scanned,null,5d4de950d4f69,65cbcf67af4bb65cbcf67af508,665f3c7511b06,
+,,,,,,,,,,21,scanned,null,5d4de950d4f69,65cbcf67af4bb65cbcf67af508,66b4bc48041d9,

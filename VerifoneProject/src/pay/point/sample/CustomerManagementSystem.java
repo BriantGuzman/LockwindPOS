@@ -41,8 +41,8 @@ public class CustomerManagementSystem extends Service {
 		int i = 0;
 		
 		Customer customer_temp = null;
-		customer_temp = new Customer("Generic");
-
+		// customer_temp = new Customer("Generic");
+		customer_temp = new Customer(customer_code);
 		try { 
 
 			}catch(Exception e) {
@@ -115,6 +115,8 @@ public class CustomerManagementSystem extends Service {
 		         line = inputFile.nextLine();
 	             str =  new StringTokenizer(line,",");
 	             
+	             System.out.println(line);
+	             
 	             if(str.hasMoreTokens())
 	             {
 	                 customer = new Customer();
@@ -122,6 +124,12 @@ public class CustomerManagementSystem extends Service {
 	                 customer.setBillToName(str.nextToken() );
 	                 customer.setBillToPhoneNumber( str.nextToken() );
 	                 customer.setBillToEmailAddress( str.nextToken() );
+	                 customer.setBillToAddress( str.nextToken() );
+	                 customer.setBillToCity( str.nextToken() );
+	                 customer.setBillToState( str.nextToken() );
+	                 customer.setBillToZipcode( str.nextToken() );
+	                 customer.setBillToCountry( str.nextToken() );
+	                 
 	                 this.add(customer);
 	                 // System.out.println(customer.toString());
 	                 
@@ -153,6 +161,12 @@ public class CustomerManagementSystem extends Service {
 	     
 	     for(int i = 0; i < customerList.size(); i++) {
 	         System.out.println(customerList.get(i).getBillToName());
+			  System.out.println(customerList.get(i).getBillToAddress());
+			  System.out.println(customerList.get(i).getBillToCity());
+			  System.out.println(customerList.get(i).getBillToState());
+			  System.out.println(customerList.get(i).getBillToZipcode());
+			  System.out.println(customerList.get(i).getBillToCountry());
+
 	     }
 	 }
 	 
@@ -162,6 +176,7 @@ public class CustomerManagementSystem extends Service {
 	     
 	     for(int i = 0; i < customerList.size(); i++) {
 	             list[i] = customerList.get(i).getBillToCode();
+	             
 	     }
 	     return list;
 	 }

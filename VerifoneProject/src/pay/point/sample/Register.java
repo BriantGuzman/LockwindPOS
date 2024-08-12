@@ -846,7 +846,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 
 	  }
 	  public void setVerifoneDefaultValues() {
-		   	address 									= "192.168.50.197"; // Update this to be set depending on the POS network and verifone IP address per client.
+		   	address 									= "192.168.50.198"; // Update this to be set depending on the POS network and verifone IP address per client.
  		    port 										= 5015;
  		    secondary_port 								= 5016;
  		
@@ -1516,6 +1516,8 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			// No Copy Last Transaction Module built yet
 	        menuItem 			= new JMenuItem("Copy Last Transaction",KeyEvent.VK_C);
 	        menuItem			. setName("CopyLastTransaction");
+	        menuItem.setBackground(Color.decode("#FFFF00"));
+			menuItem.setForeground(Color.decode("#000000"));  
 	        menuItem			. addActionListener(this);
 	        menu				. add(menuItem);
 	        	        
@@ -2454,7 +2456,7 @@ public void focusLost(FocusEvent e) {
     	  if(menu_item.getName().equalsIgnoreCase("Customers")) { JOptionPane.showMessageDialog(null,"Opening CRM"); }
     	  if(menu_item.getName().equalsIgnoreCase("ParkTransaction")) { saveTable(); }
     	  if(menu_item.getName().equalsIgnoreCase("CopyLastTransaction")) { loadInvoice();
-    	  
+    	  if(menu_item.getName().equalsIgnoreCase("AddInvoiceComment")) { addenda.requestFocus(); } 
 
     	  Object temp = null;
     	  row = 0;
@@ -2504,20 +2506,37 @@ public void focusLost(FocusEvent e) {
           {
               customer_selected = account_name_input.getSelectedItem().toString();
 			  
-			  Customer customer = null;
+              System.out.println("Customer Selected = " + customer_selected  );
+			  JOptionPane.showMessageDialog(null,"Selected Account: " + account_name_input.getSelectedItem() );
+
+              Customer customer = null;
 			  customer = customer_management_system.getCustomerTarget(customer_selected);
 
+			  
+			  
 			  // Fix the lines below and make sure that the invoices data are being set by the transaction.
 
-//             invoice.setBillToCustomerNameData( customer.getCustomerBillToName() );
-//			 invoice.setBillToCustomerCodeData( customer.getCustomerBillToCodeData() );
-  //           invoice.setBillToCustomerAddressData(customer_management_system.getCustomerBillToAddress(customer_selected));
-    //         invoice.setBillToCustomerCityData(customer_management_system.getCustomerBillToCity(customer_selected));
-      //     invoice.setBillToCustomerStateData(customer_management_system.getCustomerBillToState(customer_selected));
-       //      invoice.setBillToCustomerZipcodeData(customer_management_system.getCustomerBillToZipcode(customer_selected));
-          //   invoice.setBillToCustomerCountryData(customer_management_system.getCustomerBillToCountry(customer_selected));
+			  System.out.println("-------------------------------------------------");
+			  System.out.println( "@@ Printing our customer bill to data. " );
+			  System.out.println(customer.getBillToName() );
+			  System.out.println(customer.getBillToAddress());
+			  System.out.println(customer.getBillToCity());
+			  System.out.println(customer.getBillToState());
+			  System.out.println(customer.getBillToZipcode());
+			  System.out.println(customer.getBillToCountry());
+			  System.out.println("-------------------------------------------------");
+			  
+			  
+			  
+            invoice.setBillToCustomerNameData( customer.getBillToName() );
+			invoice.setBillToCustomerCodeData( customer.getBillToCode() );
+			invoice.setBillToCustomerAddressData(customer.getBillToAddress());
+           	invoice.setBillToCustomerCityData(customer.getBillToCity());
+           	invoice.setBillToCustomerStateData(customer.getBillToState());
+           	invoice.setBillToCustomerZipcodeData(customer.getBillToZipcode());
+           	invoice.setBillToCustomerCountryData(customer.getBillToCountry());
               
-		//	 label_bill_to_customer_name_data.setText( customer.getCustomerBillToName() );
+           	  label_bill_to_customer_name_data.setText( customer.getBillToName() );
 
 			  label_bill_to_customer_address_data.setText( invoice.getBillToCustomerAddressData() );
               label_bill_to_customer_city_data.setText( invoice.getBillToCustomerCityData() );
@@ -2538,7 +2557,7 @@ public void focusLost(FocusEvent e) {
 
 
 
-			  //			  JOptionPane.showMessageDialog(null,"Selected Account: " + account_name_input.getSelectedItem() );
+			  
 			  //               customer_management_system.getCustomerBillToName( customer_selected ) ;
               
               // This must be updated to reflect all of the customer information in the customer fields. For both bill to and ship to.
@@ -2620,7 +2639,7 @@ public void focusLost(FocusEvent e) {
               
               NewSupplier test = new NewSupplier();
               test.setScreenSize();
-              test.setFrame();
+              test.setFrame();	
               test.setComponentDefaultValues();
               test.finishFrame();
               
@@ -2681,12 +2700,14 @@ public void focusLost(FocusEvent e) {
           if( temp.getName().equalsIgnoreCase("verifone_manager"))
           {
 
-      		String verifone_device_address = "192.168.50.197";
+      		String verifone_device_address = "192.168.50.198";
     		int verifone_main_port = 5015;
     		int verifone_secondary_port = 5016; 
 
       		SessionManager client = new SessionManager(verifone_device_address, verifone_main_port,verifone_secondary_port);
-    		client.setVisible(true);
+
+      		client.setVisible(true);
+      		
           }
           
           
