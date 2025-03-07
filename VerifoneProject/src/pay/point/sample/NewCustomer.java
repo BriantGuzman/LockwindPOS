@@ -49,12 +49,22 @@ public class NewCustomer {
     private JTextField nameText;
     private JTextField phoneNumberTextField;
     private JTextField emailTextField;
+    private JTextField address;
+    private JTextField city;
+    private JTextField state;
+    private JTextField zipcode;
+    private JTextField country;
 
-    private JLabel CustomerCodeLabel;
+    private JLabel customerCodeLabel;
     private JLabel nameLabel;
     private JLabel phoneNumberLabel;
     private JLabel emailLabel;
-
+    private JLabel addressLabel;
+    private JLabel cityLabel;
+    private JLabel stateLabel;
+    private JLabel zipcodeLabel;
+    private JLabel countryLabel;
+    
     private JButton update;
     private JButton clear;
     private JButton exit;
@@ -72,11 +82,24 @@ public class NewCustomer {
         nameText = null;
         emailTextField = null;
         phoneNumberTextField = null;
+        address = null;
+        city = null;
+        state = null;
+        zipcode = null;
+        country = null;
         
-        CustomerCodeLabel = null;
+        customerCodeLabel = null;
         nameLabel = null;
         emailLabel = null;
         phoneNumberLabel = null;
+        
+        addressLabel = null;
+        cityLabel = null;
+        stateLabel = null;
+        zipcodeLabel = null;
+        countryLabel = null;
+        
+        
         
         clear = null;
         update = null;
@@ -120,7 +143,7 @@ public class NewCustomer {
     public void setFrame()
     {
         frame = new JFrame();
-        frame.setPreferredSize(new Dimension(/*getScreenWidth(),getScreenHeight()*/400,230));
+        frame.setPreferredSize(new Dimension(getScreenWidth()/2,getScreenHeight()/2));
         frame.setTitle("CUSTOMER INFORMATION");
     }
 
@@ -138,10 +161,25 @@ public class NewCustomer {
         phoneNumberTextField = new JTextField(20);
         emailTextField = new JTextField(20);
         
-        CustomerCodeLabel = new JLabel("CODE");
+        address = new JTextField(20);
+        city = new JTextField(20);
+        state = new JTextField(20);
+        zipcode = new JTextField(20);
+        country = new JTextField(20);
+        
+        
+        customerCodeLabel = new JLabel("CODE");
         nameLabel = new JLabel("Name");
         phoneNumberLabel = new JLabel("Phone Number");
         emailLabel = new JLabel("Email");
+
+        
+        addressLabel = new JLabel("Address");
+        cityLabel = new JLabel("City");
+        stateLabel = new JLabel("State");
+        zipcodeLabel = new JLabel("Zipcode");
+        countryLabel = new JLabel("Country");
+
         
         update = new JButton("UPDATE");
         clear = new JButton("CLEAR");
@@ -153,24 +191,57 @@ public class NewCustomer {
         springLayout.putConstraint(springLayout.NORTH, phoneNumberTextField,90,springLayout.NORTH, panel);
         springLayout.putConstraint(springLayout.NORTH, emailTextField,120,springLayout.NORTH, panel);
         
-        springLayout.putConstraint(springLayout.NORTH, CustomerCodeLabel,30,springLayout.NORTH, panel);
+// textfields north position here
+        springLayout.putConstraint(springLayout.NORTH, address,150,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, city,180,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, state,210,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, zipcode,240,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, country,270,springLayout.NORTH, panel);
+
+        // label north position here     
+        springLayout.putConstraint(springLayout.NORTH, customerCodeLabel,30,springLayout.NORTH, panel);
         springLayout.putConstraint(springLayout.NORTH, nameLabel,60,springLayout.NORTH, panel);
         springLayout.putConstraint(springLayout.NORTH, phoneNumberLabel,90,springLayout.NORTH, panel);
         springLayout.putConstraint(springLayout.NORTH, emailLabel,120,springLayout.NORTH, panel);
+
+        springLayout.putConstraint(springLayout.NORTH, addressLabel,150,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, cityLabel,180,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, stateLabel,210,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, zipcodeLabel,240,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, countryLabel,270,springLayout.NORTH, panel);
+
+        springLayout.putConstraint(springLayout.NORTH, update,300,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, clear,300,springLayout.NORTH, panel);
+        springLayout.putConstraint(springLayout.NORTH, exit,300,springLayout.NORTH, panel);
         
-        springLayout.putConstraint(springLayout.NORTH, update,150,springLayout.NORTH, panel);
-        springLayout.putConstraint(springLayout.NORTH, clear,150,springLayout.NORTH, panel);
-        springLayout.putConstraint(springLayout.NORTH, exit,150,springLayout.NORTH, panel);
+        // Text fields west position here
         
         springLayout.putConstraint(springLayout.WEST, customerCodeTextField,120,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, nameText,120,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, phoneNumberTextField,120,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, emailTextField,120,springLayout.WEST, panel);
         
-        springLayout.putConstraint(springLayout.WEST, CustomerCodeLabel,20,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, address,120,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, city,120,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, state,120,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, zipcode,120,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, country,120,springLayout.WEST, panel);
+
+        
+        
+        // Labels west position here
+        springLayout.putConstraint(springLayout.WEST, customerCodeLabel,20,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, nameLabel,20,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, phoneNumberLabel,20,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, emailLabel,20,springLayout.WEST, panel);
+        
+        springLayout.putConstraint(springLayout.WEST, addressLabel,20,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, cityLabel,20,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, stateLabel,20,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, zipcodeLabel,20,springLayout.WEST, panel);
+        springLayout.putConstraint(springLayout.WEST, countryLabel,20,springLayout.WEST, panel);
+
+        
         
         springLayout.putConstraint(springLayout.WEST, update,20,springLayout.WEST, panel);
         springLayout.putConstraint(springLayout.WEST, clear,120,springLayout.WEST, panel);
@@ -181,10 +252,23 @@ public class NewCustomer {
         panel.add(phoneNumberTextField);
         panel.add(emailTextField);
         
-        panel.add(CustomerCodeLabel);
+        panel.add(address);
+        panel.add(city);
+        panel.add(state);
+        panel.add(zipcode);
+        panel.add(country);
+        
+        panel.add(customerCodeLabel);
         panel.add(nameLabel);
         panel.add(phoneNumberLabel);
         panel.add(emailLabel);
+
+        panel.add(addressLabel);
+        panel.add(cityLabel);
+        panel.add(stateLabel);
+        panel.add(zipcodeLabel);
+        panel.add(countryLabel);
+
         
         panel.add(clear);
         panel.add(update);
@@ -205,7 +289,7 @@ public class NewCustomer {
                     String first = "";
                     StringTokenizer str = null;
                     
-                    File file = new File("src/main/java/lockwind/com/NewCustomer.csv");
+                    File file = new File("./NewCustomer.csv");
                     Scanner inputFile = new Scanner(file);
                     
                     while(inputFile.hasNextLine()){
@@ -225,17 +309,39 @@ public class NewCustomer {
                             if(first.equalsIgnoreCase(u)){
                                 nameText.setText(str.nextToken());
                                 phoneNumberTextField.setText(str.nextToken() );
-                                emailTextField.setText(str.nextToken());}
+                                emailTextField.setText(str.nextToken());
+                                
+                                address.setText(str.nextToken());
+                                city.setText(str.nextToken());
+                                state.setText(str.nextToken());
+                                zipcode.setText(str.nextToken());
+                                country.setText(str.nextToken());
+                                
+                            }
                             else{
                                 nameText.setText("");
                                 phoneNumberTextField.setText("");
                                 emailTextField.setText("");
+                                
+                                address.setText("");
+                                city.setText("");
+                                state.setText("");
+                                zipcode.setText("");
+                                country.setText("");
+                                
                             }}}
                     
                     if(target == null || target.equalsIgnoreCase("")){
                         nameText.setText("");
                         phoneNumberTextField.setText("");
                         emailTextField.setText("");
+
+                        address.setText("");
+                        city.setText("");
+                        state.setText("");
+                        zipcode.setText("");
+                        country.setText("");
+
                     }
                 inputFile.close();    
                 }
@@ -249,24 +355,39 @@ public class NewCustomer {
                 nameText.setText("");
                 phoneNumberTextField.setText("");
                 emailTextField.setText("");
+
+                address.setText("");
+                city.setText("");
+                state.setText("");
+                zipcode.setText("");
+                state.setText("");
+                country.setText("");
+
                 customerCodeTextField.requestFocus();
+
+            
             }});
         
         update.addActionListener(new ActionListener(){
-            public void actionPerformed(ActionEvent e){
+            public void actionPerformed(ActionEvent exxe){
                 
                 
                 //BEGIN UPDATE OF NEW STOCK
                 try{
-                    String a = "";
-                    String b = "";
-                    String c = "";
-                    String d = "";
+                    
+                	String a,b,c,d,e,f,g,h,i;
+                    
                     
                     a = customerCodeTextField.getText();
                     b = nameText.getText();
                     c = phoneNumberTextField.getText();
                     d = emailTextField.getText();
+                    
+                    e = address.getText();
+                    f = city.getText();
+                    g = state.getText();
+                    h = zipcode.getText();
+                    i = country.getText();
                     
                     if(a.equalsIgnoreCase("")  || a == null || b.equalsIgnoreCase("")  || b == null || c.equalsIgnoreCase("")  || c == null || d.equalsIgnoreCase("")  || d == null)
                     {
@@ -276,7 +397,7 @@ public class NewCustomer {
                     {
                         
                         
-                        FileWriter file = new FileWriter("src/main/java/lockwind/com/NewCustomer.csv",true);
+                        FileWriter file = new FileWriter("./NewCustomer.csv",true);
                         PrintWriter outputFile = new PrintWriter(file);
                         
                         
@@ -294,7 +415,7 @@ public class NewCustomer {
                         simpDate             =     new SimpleDateFormat("hh:mm:ss a");
                         Date today = new Date();
                         
-                        outputFile.println(a+","+b+","+c+","+d+",NewCustomer,"+fmt.format(today)+","+simpDate.format(today)+",");
+                        outputFile.println(a+","+b+","+c+","+d+","+e+","+f+","+g+","+h+","+i+",NewCustomer,"+fmt.format(today)+","+simpDate.format(today)+",");
                         outputFile.close();
                         
                         JOptionPane.showMessageDialog(null,("Successfully added:\n"+a+"\n"+b+"\n"+c+"\n"+d));
@@ -303,11 +424,17 @@ public class NewCustomer {
                         nameText.setText("");
                         phoneNumberTextField.setText("");
                         emailTextField.setText("");
+                        address.setText("");
+                        city.setText("");
+                        state.setText("");
+                        zipcode.setText("");
+                        country.setText("");
+                        
                         customerCodeTextField.requestFocus();
                         
                     }}
                 
-                catch(IOException exx){}
+                catch(IOException exex){}
                 
             }});
         

@@ -131,15 +131,26 @@ import javax.crypto.spec.SecretKeySpec;
 import javax.swing.JOptionPane;
 
 // import jakarta.xml.bind.DatatypeConverter;	
-//import org.w3c.dom.Document;
-//import org.w3c.dom.Element;
  import javax.xml.bind.DatatypeConverter;
+
+// import org.w3c.dom.Document;
+// import org.w3c.dom.Element;
+
  import java.lang.reflect.Method;
 
+/* Code removed from Register class
+	  
+	  private String[] column_header 			= 		{"UPC","QTY","DESCRIPTION","PRICE","SUBTOTAL","TAX","DISCOUNT","ONHAND"};
+      private String[] column_header 			= 		{"UPC","QTY","CATEGORY","DESCRIPTION","PRICE","SUBTOTAL","TAX","DISCOUNT","ONHAND"};
+	  private int[]    column_width  			= 		{135,55,100,100,55,85,55,75,75};
+
+*
+*
+*/
 
 
 //---------------------------------------------------- CLASS REGISTER : THIS IS THE MAIN CLASS
-public class Register  extends JFrame implements ActionListener,FocusListener {
+public class Register2  extends JFrame implements ActionListener,FocusListener {
 
 	  // private RegisterVerifone 	register_verifone;
 	  private APIVerifone 								verifone;
@@ -152,7 +163,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  private int[]    styles        			=       {FULL,LONG,MEDIUM,SHORT};
 	  
 	  
-      private String[] paymentMethods 			= 		new String[] {"CASH","CREDIT CARD/APPLE PAY","ON ACCOUNT","CHECK"};
+      private String[] paymentMethods 			= 		new String[] {"CASH","CREDIT/DEBIT CARD / APPLE PAY","ON ACCOUNT","CHECK"};
       private String transaction_payment_method = 		"";
 	  
 	  private String[] column_header 			= 		{"UPC","QTY","CATEGORY","DESCRIPTION","PRICE","SUBTOTAL","TAX","DISCOUNT","ONHAND","LINE ITEM"};
@@ -296,8 +307,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 
 	  // UI BUTTONS
 	  private JButton button_tender;
-	  private JButton button_tender_digital;
-	  private JButton button_tender_on_account;
 	  private JButton b,c,d,e,f,g,z,zz;
 	  private JButton bx001; // customers
 	  private JButton bx002; // suppliers
@@ -330,7 +339,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  
 	  private double total;
 	  
-	  private Font 		font1,font2,font3;
+	  private Font 		font1,font2;
       private Timer 	timer;
 
       private String 	account_selected;
@@ -392,35 +401,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  
 	  private JButton saveTable;
 	  private JButton loadTable;
-	  
-	  
-	  private static void restartApplication() {
-	        try {
-	            // Get the current Java runtime
-	            String java = System.getProperty("java.home") + "/bin/java";
-	            
-	            // Get the current classpath
-	            String classPath = System.getProperty("java.class.path");
-	            
-	            // Get the current class name
-	            String className = Register.class.getName();
-	            
-	            // Build the command to restart the application
-	            ProcessBuilder processBuilder = new ProcessBuilder(
-	                    java, "-cp", classPath, className
-	            );
-	            
-	            // Start the new process
-	            processBuilder.inheritIO();
-	            Process process = processBuilder.start();
-	            
-	            // Exit the current process
-	            System.exit(0);
-	        } catch (IOException e) {
-	            e.printStackTrace();
-	        }
-	    }
-	  
 	  
 	  
 	  public void printMethods() { 
@@ -501,7 +481,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  	invoice                						= null;
 		  	font1                						= null;
 		  	font2                						= null;
-		  	font3                						= null;
 		  	
 		  	width                						= 0.00;
 		    height               						= 0.00;
@@ -544,8 +523,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 //		    bx008                   					= null;
 		    
 		    button_tender               			    = null;
-		    button_tender_digital               		= null;
-		    button_tender_on_account               		= null;
 		    z                   						= null;
 		    zz                  						= null;
 		    pim_button									= null;
@@ -671,11 +648,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 //		  	register_verifone							= new RegisterVerifone();
 //		    verifone									= new APIVerifone();
 
-		  
-		  	// -> LoadRetailerUUID();
-		  	// -> posUUID(); // -> This value should be stored locally on the machine
-		  
-		  	retailerUUID                   				= "5d4de950d4f69";
+		  retailerUUID                   				= "5d4de950d4f69";
 		    posUUID                   					= "65cbcf67af4bb65cbcf67af508";
 			client_id                   				= "5d4de950d4f69";
 			
@@ -707,7 +680,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    simpDate                    				= new SimpleDateFormat("hh:mm:ss a");
 		    font1										= new Font("Times New Roman", Font.BOLD, 15);
 			font2										= new Font("Tahoma",Font.BOLD,12);
-		    font3										= new Font("Times New Roman", Font.BOLD, 20);
 		    
 		    table                       				= new JTable(model);
 		    today                       				= new Date();
@@ -788,12 +760,10 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    bx006                          				= new JButton("");
 		    bx007                          				= new JButton("");
 //		    bx008                          				= new JButton("");
-		    saveTable									= new JButton("Save Invoice");
-			loadTable									= new JButton("Load Invoice");
+		    saveTable									= new JButton("Save Table");
+			loadTable									= new JButton("Load Table");
 
 		    button_tender              				 	= new JButton("");
-		    button_tender_digital              			= new JButton("");
-		    button_tender_on_account              			= new JButton("");
   		    pim_button				  				 	= new JButton("");
 		    
 		    springLayout                				= new SpringLayout();
@@ -806,8 +776,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			customer_management_system					. loadCustomerDatabase();
 		    printer_management_system					. loadPrinterDatabase();
 		    account_name_input  						= new JComboBox<String>( customer_management_system.printComboBoxList() );
-		   
-		    
 		    default_printer_receipt						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_invoice						= new JComboBox<String>( printer_management_system.printComboBoxList() );
 		    default_printer_display						= new JComboBox<String>( printer_management_system.printComboBoxList() );
@@ -820,29 +788,14 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    validator									. setRowCount(table_row_count);
 			validator									. setColumnCount(table_col_count);
 
-			line_item 								= new ElectronicDocumentLineItem();
-
 			
 			// Compile time errands
 			System.out.println("Compile time functions being loaded");
-
-
+			
 			invoice										= new Invoice( retailerUUID,posUUID,client_id );
-						
-			System.out.println("SetComponentDefaultValues: -> retailer UUID" + retailerUUID);
-			System.out.println("SetComponentDefaultValues: -> pos UUID" + posUUID);
-			System.out.println("SetComponentDefaultValues: -> client ID" + client_id);
-			
-			
 			invoice										. setInvoiceDefaultValues();
-			
-			 if(invoice.getInvoiceNumber().equalsIgnoreCase("-401") ) {
-				 
-			 }else {
-					invoice. setTransactionUUID( invoice.getIssuerUUID() );			
-			        System.out.println("Register -> Invoice Number: " + invoice.getInvoiceNumber() + " -> UUID: " + invoice.getTransactionUUID() );
-			 }
-
+			invoice. setTransactionUUID( invoice.getIssuerUUID() );			
+	        System.out.println("Register -> Invoice Number: " + invoice.getInvoiceNumber() + " -> UUID: " + invoice.getTransactionUUID() );
 	        
 	        
 			product_management_system	  				. setRetailerUUID( invoice.getIssuerUUID() );
@@ -870,7 +823,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  	account_name_input							. setName("account_name_input");
 		  	
 		  	account_name_input							. addActionListener(this);
-		  	account_name_input							. setEditable(true);
 		    fmt                         				= DateFormat.getDateInstance(styles[3], locale[0]);
 			
 		  	frame										. setLayout(springLayout);
@@ -915,9 +867,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    loadTable									. setName("load_table");
 		    
 		    button_tender								. setName("tender");
-		    button_tender_digital						. setName("tender_digital");
-		    button_tender_on_account					. setName("tender_on_account");
-		    
 			pim_button									. setName("pim_button");
 			salesReport									. setName("sales_report_button");
 			payment_method								. setName("payment_method");
@@ -934,15 +883,12 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			bx006										. setText("Add Inventory"); // 2nd Column of buttons, 3rd from the top
 			bx007										. setText("Verifone Manager"); // 2nd Column of buttons, 3rd from the top
 			// bx008										. setText("Extra button"); // 2nd Column of buttons, 3rd from the top
-			saveTable									. setText("Park");
-			loadTable									. setText("Load");
+			saveTable									. setText("Save Table");
+			loadTable									. setText("Load Table");
 			
 			
 			salesReport									. setText("Sales Report"); // 3rd Column of buttons, 2nd from the top 
-			button_tender								. setText("Cash"); // 3rd Column of buttons, 1st from the top
-			button_tender_digital						. setText("CC/DC"); // 3rd Column of buttons, 1st from the top
-			button_tender_on_account					. setText("On Account"); // 3rd Column of buttons, 1st from the top
-
+			button_tender								. setText("Tender"); // 3rd Column of buttons, 1st from the top
 			pim_button									. setText("PIM"); // 3rd Column of buttons, 3rd from the top
 		    account_name_label							. setText("Customer");		    
 		    subtotalLabelDescription					. setText("Sub-Total:");
@@ -958,9 +904,9 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			changeLabel									. setText("$ 0.00");
 			discountLabel								. setText("$ 0.00");
 			label_addenda								. setText("Addenda");
-			default_printer_receipt_label				. setText("Receipt: ");
-			default_printer_invoice_label				. setText("Invoice: ");
-			default_printer_display_label				. setText("Display: ");
+			default_printer_receipt_label				. setText("Receipt Printer: ");
+			default_printer_invoice_label				. setText("Invoice Printer: ");
+			default_printer_display_label				. setText("Display Printer: ");
 			
 			label_bill_to_customer_name					. setText( invoice.getBillToCustomerNameLabel() );
 			label_bill_to_customer_name_data			. setText( invoice.getBillToCustomerNameData() );
@@ -1000,16 +946,12 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  }
 	  
 	  public void setComponentFontValues() {
-
-		  storeName									. setFont(font1);
+		  	storeName									. setFont(font1);
 			storePhoneNumber							. setFont(font1);
 			storeFaxNumber								. setFont(font1);
 			subtotalLabel								. setFont(font1);
 			taxesLabel									. setFont(font1);
 			totalLabel									. setFont(font1);
-	        // totalLabel									. setFont(new Font("Times New Roman", Font.BOLD, 30));
-	        // totalLabel									.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,"",0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), totalLabel.getBorder()));
-
 			tenderLabel									. setFont(font1);
 			changeLabel									. setFont(font1);
 			discountLabel								. setFont(font1);
@@ -1023,16 +965,12 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			bx006										. setFont(font2);
 			bx007										. setFont(font2);
 //			bx008										. setFont(font2);
-			button_tender								. setFont(font3);
-			button_tender_digital						. setFont(font3);
-			button_tender_on_account					. setFont(font3);
-			saveTable								. setFont(font3);
-			loadTable								. setFont(font3);
+			button_tender								. setFont(font2);
 			pim_button									. setFont(font2);
 	  }
 	  
 	  public void setColorScheme() {
-		  	panel										. setBackground(Color.decode("#F0F0F0"));
+		  panel											. setBackground(Color.decode("#F0F0F0"));
 		    bottomPanel									. setBackground(Color.decode("#F0F0F0"));
 		    tablePanel									. setBackground(Color.decode("#000000"));
 			bx001										. setBackground(Color.WHITE);
@@ -1053,39 +991,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    bx006										. setForeground(Color.BLUE);
 		    bx007										. setForeground(Color.BLUE);
 //		    bx008										. setForeground(Color.BLUE);
-		    button_tender								. setBackground(Color.decode("#FFFFFF"));
 			button_tender								. setForeground(Color.BLACK);
-			button_tender.setFocusPainted(false);
-			button_tender.setOpaque(true);
-			 button_tender.setContentAreaFilled(true);
-//		        button_tender.setBorderPainted(false);
-
-			 
-			    button_tender_digital								. setBackground(Color.decode("#FFFFFF"));
-				button_tender_digital								. setForeground(Color.BLACK);
-				button_tender_digital.setFocusPainted(false);
-				button_tender_digital.setOpaque(true);
-				 button_tender_digital.setContentAreaFilled(true);
-
-				 
-				    button_tender_on_account			. setBackground(Color.decode("#FFFFFF"));
-					button_tender_on_account						. setForeground(Color.BLACK);
-					button_tender_on_account.setFocusPainted(false);
-					button_tender_on_account.setOpaque(true);
-					button_tender_on_account.setContentAreaFilled(true);
-
-			 
-			 
-		        // Remove the border for simplicity (optional)
-		    saveTable								. setBackground(Color.decode("#FFFFFF"));
-			saveTable								. setForeground(Color.BLACK);
-			saveTable.setFocusPainted(false);
-			saveTable.setOpaque(true);
-		    loadTable								. setBackground(Color.decode("#FFFFFF"));
-			loadTable								. setForeground(Color.BLACK);
-			loadTable.setFocusPainted(false);
-			loadTable.setOpaque(true);
-		    
 			pim_button									. setForeground(Color.BLACK);
 			
 	  }
@@ -1093,9 +999,9 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  public void setComponentDimensionValues() {
 		    frame							.setPreferredSize(new Dimension(w,h-30));
 		    panel							.setPreferredSize(new Dimension(w,250));
-			tablePanel						.setPreferredSize(new Dimension(w,550));
-			bottomPanel						.setPreferredSize(new Dimension(w,200));
+			bottomPanel						.setPreferredSize(new Dimension(w,100));
 
+			tablePanel						.setPreferredSize(new Dimension(w,700));
 			bx001							.setPreferredSize(new Dimension(130,30));
 			bx002							.setPreferredSize(new Dimension(130,30));
 			bx003							.setPreferredSize(new Dimension(130,30));
@@ -1103,23 +1009,16 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 			bx005							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
 			bx006							.setPreferredSize(new Dimension(130,30));
-			bx007							.setPreferredSize(new Dimension(130,30));
-			
-			button_tender					.setPreferredSize(new Dimension(130,65)); 
-			button_tender_digital			.setPreferredSize(new Dimension(130,65)); 
-			button_tender_on_account		.setPreferredSize(new Dimension(130,65)); 
-			
-			pim_button						.setPreferredSize(new Dimension(130,30));
-		    salesReport						.setPreferredSize(new Dimension(130,30));
-		    addenda							.setPreferredSize(new Dimension(200,100));
-		    label_addenda					.setPreferredSize(new Dimension(130,30));
-		    saveTable						.setPreferredSize(new Dimension(130,65));
-			loadTable						.setPreferredSize(new Dimension(130,65));
+			saveTable							.setPreferredSize(new Dimension(130,30));
+			loadTable							.setPreferredSize(new Dimension(130,30));
 
-			payment_method					.setPreferredSize(new Dimension(150,30));
+			button_tender					.setPreferredSize(new Dimension(130,30)); 
+			pim_button						.setPreferredSize(new Dimension(130,30));
+		    payment_method					.setPreferredSize(new Dimension(150,30));
 		    tender_amount					.setPreferredSize(new Dimension(150,30));
-		    tender_amount					.setHorizontalAlignment(SwingConstants.CENTER);
-			
+		    salesReport						.setPreferredSize(new Dimension(130,30));
+		    addenda							.setPreferredSize(new Dimension(150,30));
+		    label_addenda					.setPreferredSize(new Dimension(150,30));
 	  }
 	  public void setActionListener() {
 		    bx001							.addActionListener(this);
@@ -1130,13 +1029,10 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    bx006							.addActionListener(this);
 		    bx007							.addActionListener(this);
 //		    bx008							.addActionListener(this);
-		    
-		    button_tender					.addActionListener(this);
-		    button_tender_digital			.addActionListener(this);
-		    button_tender_on_account		.addActionListener(this);
 		    saveTable						.addActionListener(this);
 		    loadTable						.addActionListener(this);
-
+		    
+		    button_tender					.addActionListener(this);
 		    salesReport						.addActionListener(this);
 		    pim_button						.addActionListener(this);
 		    payment_method					.addActionListener(this);
@@ -1148,176 +1044,145 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  public void setUILayout() {
 		  
 		  springLayout.putConstraint(SpringLayout.NORTH, panel,0,SpringLayout.NORTH, frame);
-		  springLayout.putConstraint(SpringLayout.NORTH, tablePanel,200,SpringLayout.NORTH, frame);
-		  springLayout.putConstraint(SpringLayout.SOUTH, bottomPanel,0,SpringLayout.SOUTH, frame);
+		  springLayout.putConstraint(SpringLayout.NORTH, bottomPanel,250,SpringLayout.NORTH, frame);
+		  springLayout.putConstraint(SpringLayout.NORTH, tablePanel,350,SpringLayout.NORTH, frame);
 
 
 		  panelLayout.putConstraint(panelLayout.NORTH, timeLabel,00,layout.NORTH, panel);
 		  
+		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabel,70,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabelDescription,70,layout.NORTH, panel);
 
-		  panelLayout.putConstraint(panelLayout.NORTH, account_name_input,70,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, account_name_label,75,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, account_name_input,90,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, account_name_label,95,layout.NORTH, panel);
 		  
-		  panelLayout.putConstraint(panelLayout.NORTH, payment_method,100,panelLayout.NORTH, panel);
-  	      panelLayout.putConstraint(panelLayout.NORTH, tender_amount,130,panelLayout.NORTH, panel);
-
+		  panelLayout.putConstraint(panelLayout.NORTH, internetLabel,120,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, verifoneLabel,140,layout.NORTH, panel);
 		  
-		  panelLayout.putConstraint(panelLayout.NORTH, storeName,0,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, storePhoneNumber,15,layout.NORTH, bottomPanel);
-		  // panelLayout.putConstraint(panelLayout.NORTH, storeFaxNumber,30,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, internetLabel,30,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, verifoneLabel,45,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, retailerUUIDDescription,60,layout.NORTH, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.NORTH, storeName,160,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, storePhoneNumber,180,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, storeFaxNumber,200,layout.NORTH, panel);
 
 		  
-		   int label_north = 20;
-		   int label_west = 30;
-		   
-		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabel,label_north-10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, subtotalLabel,label_north+10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, taxesLabel,label_north+30,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, totalLabel,label_north+50,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, tenderLabel,label_north+70,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, changeLabel,label_north+90,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, discountLabel,label_north+110,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, subtotalLabel,10,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, taxesLabel,30,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, totalLabel,50,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, tenderLabel,70,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, changeLabel,90,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, discountLabel,110,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, subtotalLabelDescription,10,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, taxesLabelDescription,30,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, totalLabelDescription,50,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, tenderLabelDescription,70,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, changeLabelDescription,90,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, discountLabelDescription,110,layout.NORTH, panel);
 		  
-		  panelLayout.putConstraint(panelLayout.NORTH, invoiceNumberLabelDescription,label_north-10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, subtotalLabelDescription,label_north+10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, taxesLabelDescription,label_north+30,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, totalLabelDescription,label_north+50,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, tenderLabelDescription,label_north+70,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, changeLabelDescription,label_north+90,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, discountLabelDescription,label_north+110,layout.NORTH, panel);
-		  		  
 		  panelLayout.putConstraint(panelLayout.NORTH, bx001,5,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx002,30,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx003,55,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx004,80,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx005,105,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx006,130,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, bx007,130,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx002,50,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx003,100,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx004,5,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx005,50,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx006,100,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, bx007,150,layout.NORTH, panel);
 //		  panelLayout.putConstraint(panelLayout.NORTH, bx008,200,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, saveTable,200,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, loadTable,220,layout.NORTH, panel);
 		  
-		  
-		  
-		  panelLayout.putConstraint(panelLayout.NORTH, button_tender,5,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, button_tender_digital,5,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, button_tender_on_account,5,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, saveTable,5,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, loadTable,5,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, button_tender,5,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, salesReport,50,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, pim_button,100,layout.NORTH, panel);
 
-		  panelLayout.putConstraint(panelLayout.NORTH, salesReport,30,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, pim_button,55,layout.NORTH, panel);
-
-
-  	      panelLayout.putConstraint(panelLayout.NORTH, addenda, 35, panelLayout.NORTH, panel);
-          panelLayout.putConstraint(panelLayout.NORTH, label_addenda, 0, panelLayout.NORTH, panel);
-
-		  
-		  
 		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_receipt,00,layout.NORTH, bottomPanel);
 		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_invoice,30,layout.NORTH, bottomPanel);
 		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_display,60,layout.NORTH, bottomPanel);
 
-		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_receipt_label,3,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_invoice_label,33,layout.NORTH, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_display_label,63,layout.NORTH, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_receipt_label,0,layout.NORTH, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_invoice_label,30,layout.NORTH, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.NORTH, default_printer_display_label,60,layout.NORTH, bottomPanel);
 
+		  panelLayout.putConstraint(panelLayout.NORTH, payment_method,10,panelLayout.NORTH, bottomPanel);
+  	      panelLayout.putConstraint(panelLayout.NORTH, tender_amount,60,panelLayout.NORTH, bottomPanel);
+  	      panelLayout.putConstraint(panelLayout.NORTH, addenda, 30, panelLayout.NORTH, bottomPanel);
+          panelLayout.putConstraint(panelLayout.NORTH, label_addenda, 0, panelLayout.NORTH, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.NORTH, retailerUUIDDescription,5,layout.NORTH, bottomPanel);
   	      
 		  springLayout.putConstraint(SpringLayout.WEST, panel,0,SpringLayout.WEST, frame);
 		  springLayout.putConstraint(SpringLayout.WEST, tablePanel,000,SpringLayout.WEST, frame);
 		  springLayout.putConstraint(SpringLayout.WEST, bottomPanel,000,SpringLayout.WEST, frame);
 		  
-		  panelLayout.putConstraint(panelLayout.WEST, storeName,30,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, storePhoneNumber,30,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, storeFaxNumber,30,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST,   storeName,30,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST,   storePhoneNumber,30,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST,   storeFaxNumber,30,layout.WEST, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.WEST, timeLabel,30,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, account_name_input,105,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, account_name_label,35,layout.WEST, panel);
-		  
-		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabelDescription,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, subtotalLabel,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, taxesLabel,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, totalLabel,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, tenderLabel,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, changeLabel,label_west+300,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, discountLabel,label_west+300,layout.WEST, panel);
-		  
-		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabel,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, subtotalLabelDescription,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, taxesLabelDescription,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, totalLabelDescription,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, tenderLabelDescription,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, changeLabelDescription,label_west+220,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, discountLabelDescription,label_west+220,layout.WEST, panel);
-
-		  panelLayout.putConstraint(panelLayout.WEST, payment_method,30,panelLayout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, tender_amount,30,panelLayout.WEST, panel);
-
-		  
-		  panelLayout.putConstraint(panelLayout.WEST, internetLabel,30,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, verifoneLabel,30,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, retailerUUIDDescription,30,layout.WEST, panel);
-
-		  
+		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabel,35,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, invoiceNumberLabelDescription,110,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, internetLabel,35,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, verifoneLabel,35,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, subtotalLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, taxesLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, totalLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, tenderLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, changeLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, discountLabel,300,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, subtotalLabelDescription,220,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, taxesLabelDescription,220,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, totalLabelDescription,220,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, tenderLabelDescription,220,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, changeLabelDescription,220,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, discountLabelDescription,220,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx001,400,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx002,400,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx003,400,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, bx004,400,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, bx005,400,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, bx006,400,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, bx004,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, bx005,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, bx006,550,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, bx007,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, saveTable,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, loadTable,550,layout.WEST, panel);
 ///		  panelLayout.putConstraint(panelLayout.WEST, bx008,550,layout.WEST, panel);
 		  
-		  panelLayout.putConstraint(panelLayout.WEST, button_tender,600,layout.WEST, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.WEST, button_tender_digital,750,layout.WEST, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.WEST, button_tender_on_account,900,layout.WEST, bottomPanel);
-		  panelLayout.putConstraint(panelLayout.WEST, saveTable,1050,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, loadTable,1200,layout.WEST, panel);
-
-		  panelLayout.putConstraint(panelLayout.WEST, salesReport,550,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, pim_button,550,layout.WEST, panel);
-		  
-
+		  panelLayout.putConstraint(panelLayout.WEST, button_tender,700,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, salesReport,700,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, pim_button,700,layout.WEST, panel);
 		  
 		  int bill_to_north 		= 10;
 		  int bill_to_north_data 	= 30;
 
 		  // SHIP TO COMPONENTS
-		  int bill_to_west 			= 700; 
-		  int bill_to_west_data 	= 700;// original 970
-		  int north_push = 25;
-
-		  // label_bill_to_customer_name		.setFont(new Font("Times New Roman", Font.BOLD, 10));
-	      // label_bill_to_customer_name		.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,"",0,0,new Font("Times New Roman", Font.BOLD, 10), Color.BLUE), label.getBorder()));
+		  int bill_to_west 			= 850;
+		  int bill_to_west_data 	= 970;
+//	      label_bill_to_customer_name		.setFont(new Font("Times New Roman", Font.BOLD, 10));
+//	      label_bill_to_customer_name		.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,"today",0,0,new Font("Times New Roman", Font.BOLD, 10), Color.BLUE), timeLabel.getBorder()));
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_name,10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_name_data,10+north_push,layout.NORTH, panel);
-		  
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_name_data,10,layout.NORTH, panel);
+
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_address,35,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_address_data,35+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_address_data,35,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_city,60,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_city_data,60+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_city_data,60,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_state,85,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_state_data,85+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_state_data,85,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_zipcode,110,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_zipcode_data,110+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_zipcode_data,110,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_country,135,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_country_data,135+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_country_data,135,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_email_address,160,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_email_address_data,85+north_push,layout.NORTH, panel); // 160
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_email_address_data,160,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_phone_number,185,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_phone_number_data,110+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_bill_to_customer_phone_number_data,185,layout.NORTH, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_name,bill_to_west,layout.WEST, panel);// 970
-		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_name_data,bill_to_west,layout.WEST, panel); // 970
+		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_name,bill_to_west,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_name_data,bill_to_west_data,layout.WEST, panel);
 
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_address,bill_to_west,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_address_data,bill_to_west_data,layout.WEST, panel);
@@ -1341,34 +1206,32 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, label_bill_to_customer_phone_number_data,bill_to_west_data,layout.WEST, panel);
 
 		  // BILL TO COMPONENTS
-		  int ship_to_west 		= 900; // 1150
-		  int ship_to_west_data = 900;
-		  int addenda_west 		= 1100;
-		  
+		  int ship_to_west 		= 1100;
+		  int ship_to_west_data = 1250;
 		  
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_name,10,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_name_data,10+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_name_data,10,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_address,35,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_address_data,35+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_address_data,35,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_city,60,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_city_data,60+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_city_data,60,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_state,85,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_state_data,85+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_state_data,85,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_zipcode,110,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_zipcode_data,110+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_zipcode_data,110,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_country,135,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_country_data,135+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_country_data,135,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_email_address,160,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_email_address_data,85+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_email_address_data,160,layout.NORTH, panel);
 
 		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_phone_number,185,layout.NORTH, panel);
-		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_phone_number_data,110+north_push,layout.NORTH, panel);
+		  panelLayout.putConstraint(panelLayout.NORTH, label_ship_to_customer_phone_number_data,185,layout.NORTH, panel);
 		  
 		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name,ship_to_west,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_name_data,ship_to_west_data,layout.WEST, panel);
@@ -1394,17 +1257,20 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number,ship_to_west,layout.WEST, panel);
 		  panelLayout.putConstraint(panelLayout.WEST, label_ship_to_customer_phone_number_data,ship_to_west_data,layout.WEST, panel);
 		  
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_receipt,275,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_invoice,275,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_display,275,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_receipt,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_invoice,550,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_display,550,layout.WEST, panel);
 
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_receipt_label,225,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_invoice_label,225,layout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, default_printer_display_label,225,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_receipt_label,400,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_invoice_label,400,layout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, default_printer_display_label,400,layout.WEST, panel);
 		  
 		  
-		  panelLayout.putConstraint(panelLayout.WEST, addenda, addenda_west, panelLayout.WEST, panel);
-		  panelLayout.putConstraint(panelLayout.WEST, label_addenda, addenda_west, panelLayout.WEST, panel);
+		  panelLayout.putConstraint(panelLayout.WEST, payment_method,30,panelLayout.WEST, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.WEST, tender_amount,30,panelLayout.WEST, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.WEST, addenda, 220, panelLayout.WEST, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.WEST, label_addenda, 220, panelLayout.WEST, bottomPanel);
+		  panelLayout.putConstraint(panelLayout.WEST, retailerUUIDDescription,850,panelLayout.WEST, bottomPanel);
 
 	  	}
 	  
@@ -1412,14 +1278,10 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	  public void setUIComponent() {
 		  
 		  // Add UI Elements
-		  bottomPanel.add(storeName);
-		  bottomPanel.add(storePhoneNumber);
-//		  bottomPanel.add(storeFaxNumber);
-		  bottomPanel.add(internetLabel);
-		  bottomPanel.add(verifoneLabel);
-		  bottomPanel.add(retailerUUIDDescription);
-
-		  
+		  panel.add(storeName);
+		  panel.add(storePhoneNumber);
+		  panel.add(storeFaxNumber);
+		
 		  panel.add(bx001);
 		  panel.add(bx002);
 		  panel.add(bx003);
@@ -1427,19 +1289,20 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  panel.add(bx005);
 		  panel.add(bx006);
 		  panel.add(bx007);
+		  panel.add(saveTable);
+		  panel.add(loadTable);
 //		  panel.add(bx008);
 		  
 		  
-		  bottomPanel.add(button_tender);
-		  bottomPanel.add(button_tender_digital);
-		  bottomPanel.add(button_tender_on_account);
-		  bottomPanel.add(saveTable);
-		  bottomPanel.add(loadTable);
+		  panel.add(button_tender);
 		  
 		  panel.add(account_name_input);
 		  panel.add(account_name_label);
 
 		// Made adjustment 
+		  panel.add(invoiceNumberLabel);
+		  panel.add(internetLabel);
+		  panel.add(verifoneLabel);
 		  panel.add(totalLabel);
 		  panel.add(subtotalLabel);
 		  panel.add(taxesLabel);
@@ -1447,7 +1310,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  panel.add(changeLabel);
 		  panel.add(discountLabel);
 
-		  panel.add(invoiceNumberLabel);
 		  panel.add(invoiceNumberLabelDescription);
 		  panel.add(subtotalLabelDescription);
 		  panel.add(taxesLabelDescription);
@@ -1455,7 +1317,7 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  panel.add(tenderLabelDescription);
 		  panel.add(changeLabelDescription);
 		  panel.add(discountLabelDescription);
-
+		  
 		  
 		  panel.add(timeLabel);
 		  panel.add(salesReport);
@@ -1463,47 +1325,37 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 
 		  panel.add(label_bill_to_customer_name);
 		  panel.add(label_bill_to_customer_name_data);
- 		  //panel.add(label_bill_to_customer_address);
+ 		  panel.add(label_bill_to_customer_address);
 		  panel.add(label_bill_to_customer_address_data);
-		  //panel.add(label_bill_to_customer_city);
+		  panel.add(label_bill_to_customer_city);
 		  panel.add(label_bill_to_customer_city_data);
-		  // panel.add(label_bill_to_customer_state);
-		  // panel.add(label_bill_to_customer_state_data);
-		  // panel.add(label_bill_to_customer_zipcode);
-		  //panel.add(label_bill_to_customer_zipcode_data);
-		  //panel.add(label_bill_to_customer_country);
-		  // panel.add(label_bill_to_customer_country_data);
-		  //panel.add(label_bill_to_customer_email_address);
+		  panel.add(label_bill_to_customer_state);
+		  panel.add(label_bill_to_customer_state_data);
+		  panel.add(label_bill_to_customer_zipcode);
+		  panel.add(label_bill_to_customer_zipcode_data);
+		  panel.add(label_bill_to_customer_country);
+		  panel.add(label_bill_to_customer_country_data);
+		  panel.add(label_bill_to_customer_email_address);
 		  panel.add(label_bill_to_customer_email_address_data);
-		  //panel.add(label_bill_to_customer_phone_number);
+		  panel.add(label_bill_to_customer_phone_number);
 		  panel.add(label_bill_to_customer_phone_number_data);
 		  
 		  panel.add(label_ship_to_customer_name);
 		  panel.add(label_ship_to_customer_name_data);
-		  //panel.add(label_ship_to_customer_address);
+		  panel.add(label_ship_to_customer_address);
 		  panel.add(label_ship_to_customer_address_data);
-		  //panel.add(label_ship_to_customer_city);
+		  panel.add(label_ship_to_customer_city);
 		  panel.add(label_ship_to_customer_city_data);
-		  //panel.add(label_ship_to_customer_state);
-		  //panel.add(label_ship_to_customer_state_data);
-		 // panel.add(label_ship_to_customer_zipcode);
-		  //panel.add(label_ship_to_customer_zipcode_data);
-		 // panel.add(label_ship_to_customer_country);
-		 //panel.add(label_ship_to_customer_country_data);
-		 // panel.add(label_ship_to_customer_email_address);
+		  panel.add(label_ship_to_customer_state);
+		  panel.add(label_ship_to_customer_state_data);
+		  panel.add(label_ship_to_customer_zipcode);
+		  panel.add(label_ship_to_customer_zipcode_data);
+		  panel.add(label_ship_to_customer_country);
+		  panel.add(label_ship_to_customer_country_data);
+		  panel.add(label_ship_to_customer_email_address);
 		  panel.add(label_ship_to_customer_email_address_data);
-		  //panel.add(label_ship_to_customer_phone_number);
+		  panel.add(label_ship_to_customer_phone_number);
 		  panel.add(label_ship_to_customer_phone_number_data);
-		  panel.add(addenda);
-	      panel.add(label_addenda);
-
-	      panel.add(payment_method);
-	      panel.add(tender_amount);
-
-	      
-	      //	      bottomPanel.add(label_addenda);
-
-//	      bottomPanel.add(addenda);
 		  
 		  bottomPanel.add(default_printer_receipt);
 		  bottomPanel.add(default_printer_invoice);
@@ -1514,7 +1366,12 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  bottomPanel.add(default_printer_display_label);
 
 		  
-		  
+	      bottomPanel.add(payment_method);
+	      bottomPanel.add(tender_amount);
+	      bottomPanel.add(addenda);
+	      bottomPanel.add(label_addenda);
+		  bottomPanel.add(retailerUUIDDescription);
+
 	  }
 	  
 
@@ -1527,8 +1384,8 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		  } catch(Exception e) {			System.out.println(  e.toString( )); }  
 		        
 
-		  timeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 30));
-		  timeLabel						.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,fmt.format(today),0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), timeLabel.getBorder()));
+		        timeLabel						.setFont(new Font("Times New Roman", Font.BOLD, 30));
+		        timeLabel						.setBorder(new CompoundBorder(BorderFactory.createTitledBorder(null,fmt.format(today),0,0,new Font("Times New Roman", Font.BOLD, 20), Color.BLUE), timeLabel.getBorder()));
 		      		          
 		        ActionListener taskPerformer = new ActionListener() {
 		        	public void actionPerformed(ActionEvent evt) {
@@ -1538,12 +1395,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		              timeLabel			. setText(simpDate.format(today) );
 		              internetLabel		. setText( internet.checkConnection() );
 		              
-		              if( internetLabel.getText().equalsIgnoreCase("No Internet Available" ) ){	  			
-		            	  
-		            	  internetLabel.setBackground(Color.decode("#000000"));		              
-				  		  internetLabel.setForeground(Color.decode("#FF0000"));
-		              }
-
 		          
 		        }};
 		        
@@ -1640,10 +1491,10 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	        menuItem.setName("ParkTransaction");
 	        menuItem.addActionListener(this);
 			menuItem.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent ev) { 
-				//JOptionPane.showMessageDialog(null,"Parking Transaction"); 
-				System.out.println("User Action: Parking Transaction");}});
+			public void actionPerformed(ActionEvent ev) { JOptionPane.showMessageDialog(null,"Parking Transaction"); System.out.println("User Action: Parking Transaction");}});
 			// this.parkTransaction();
+						
+		    
    		   menuItem.setBackground(Color.decode("#FFFF00"));
 		   menuItem.setForeground(Color.decode("#000000"));  
 	       menu.add(menuItem);
@@ -1664,8 +1515,6 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 
 	        menuItem = new JMenuItem("Restart Program",KeyEvent.VK_C);
 	        menuItem.setName("RestartProgram");
-	   		menuItem.setBackground(Color.decode("#00FF0F"));
-			menuItem.setForeground(Color.decode("#000000"));  
 	        menuItem.addActionListener(this);
 	        menu.add(menuItem);
 
@@ -1975,10 +1824,10 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 //frame.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getResource(".\\upc.png"))); 
 //DOES NOT WORK FOR JAR FILE? BUT IT WORKS IN THE CLASS FILE
 //-----------------------------------------------------------------------------------------------
-	    
+	    // account_name_input.setEditable(true);
 
 //		CONSTRUCTOR
-public Register(){
+public Register2(){
 	
 	
 	setConstructorValues();
@@ -2008,8 +1857,8 @@ public Register(){
 	table.setFillsViewportHeight(true);
 	
 	frame.add(panel);
-	frame.add(tablePanel);
 	frame.add(bottomPanel);
+	frame.add(tablePanel);
 	
 	frame.pack();
 	frame.setVisible(true);
@@ -2136,7 +1985,7 @@ public void clearRegister() {
   
 
 
-/*
+
 public void restartApplication() {
     try {
         // Get the current Java binary path
@@ -2159,7 +2008,7 @@ public void restartApplication() {
         e.printStackTrace();
     }
 }
-*/
+
 
 
 
@@ -2536,7 +2385,7 @@ public void buildActionListener() {
 	if(table_manager.getData(table,row,col) == null || table_manager.getData(table,row,col).toString().equalsIgnoreCase("") ) {
 	if(col == 0){ editTableCell(); }
 	if(col == 1) { JOptionPane.showMessageDialog(null,"Action at Quantity Column = product is null"); }
-	// if(col == 6) {  updateDiscount(); }
+	//	if(col == 6) { /*updateDiscount(); */}
 	}
 	else
 	{
@@ -2624,8 +2473,9 @@ public void focusLost(FocusEvent e) {
     	  if(menu_item.getName().equalsIgnoreCase("ParkTransaction")) { saveTable(); }
     	  if(menu_item.getName().equalsIgnoreCase("CopyLastTransaction")) { loadInvoice(); }
     	  if(menu_item.getName().equalsIgnoreCase("AddInvoiceComment")) { addenda.requestFocus(); } 
-    	  if(menu_item.getName().equalsIgnoreCase("SalesReport")) { 
+    	  if(menu_item.getName().equalsIgnoreCase("RestartProgram")) { restartApplication();  
 
+    	  
     	   
 
     	  Object temp = null;
@@ -2694,66 +2544,29 @@ public void focusLost(FocusEvent e) {
 			  System.out.println(customer.getBillToState());
 			  System.out.println(customer.getBillToZipcode());
 			  System.out.println(customer.getBillToCountry());
-			  System.out.println(customer.getBillToEmailAddress());
-			  System.out.println(customer.getBillToPhoneNumber());
-			  System.out.println( "@@ Printing our customer ship to data. " );
-			  System.out.println(customer.getShipToName() );
-			  System.out.println(customer.getShipToAddress());
-			  System.out.println(customer.getShipToCity());
-			  System.out.println(customer.getShipToState());
-			  System.out.println(customer.getShipToZipcode());
-			  System.out.println(customer.getShipToCountry());
-			  System.out.println(customer.getShipToEmailAddress());
-			  System.out.println(customer.getShipToPhoneNumber());
 			  System.out.println("-------------------------------------------------");
 			  
 			  
 			  
-			  invoice.setBillToCustomerNameData( customer.getBillToName() );
-			  invoice.setBillToCustomerCodeData( customer.getBillToCode() );
-			  invoice.setBillToCustomerAddressData(customer.getBillToAddress());
-           	  invoice.setBillToCustomerCityData(customer.getBillToCity());
-           	  invoice.setBillToCustomerStateData(customer.getBillToState());
-           	  invoice.setBillToCustomerZipcodeData(customer.getBillToZipcode());
-           	  invoice.setBillToCustomerCountryData(customer.getBillToCountry());
-              invoice.setBillToCustomerEmailAddressData(customer.getBillToEmailAddress());
-              invoice.setBillToCustomerPhoneNumberData(customer.getBillToPhoneNumber() );
-
-              
-			  invoice.setShipToCustomerNameData( customer.getShipToName() );
-			  invoice.setShipToCustomerCodeData( customer.getShipToCode() );
-			  invoice.setShipToCustomerAddressData(customer.getShipToAddress());
-           	  invoice.setShipToCustomerCityData(customer.getShipToCity());
-           	  invoice.setShipToCustomerStateData(customer.getShipToState());
-           	  invoice.setShipToCustomerZipcodeData(customer.getShipToZipcode());
-           	  invoice.setShipToCustomerCountryData(customer.getShipToCountry());
-              invoice.setShipToCustomerEmailAddressData(customer.getShipToEmailAddress());
-              invoice.setShipToCustomerPhoneNumberData(customer.getShipToPhoneNumber() );
-
-              
+            invoice.setBillToCustomerNameData( customer.getBillToName() );
+			invoice.setBillToCustomerCodeData( customer.getBillToCode() );
+			invoice.setBillToCustomerAddressData(customer.getBillToAddress());
+           	invoice.setBillToCustomerCityData(customer.getBillToCity());
+           	invoice.setBillToCustomerStateData(customer.getBillToState());
+           	invoice.setBillToCustomerZipcodeData(customer.getBillToZipcode());
+           	invoice.setBillToCustomerCountryData(customer.getBillToCountry());
               
            	  label_bill_to_customer_name_data.setText( customer.getBillToName() );
+
 			  label_bill_to_customer_address_data.setText( invoice.getBillToCustomerAddressData() );
-              label_bill_to_customer_city_data.setText( invoice.getBillToCustomerCityData() + ", " + invoice.getBillToCustomerStateData() + ", " + invoice.getBillToCustomerZipcodeData()+ ", " + invoice.getBillToCustomerCountryData() );              
-              
-              // label_bill_to_customer_state_data.setText( invoice.getBillToCustomerCountryData() );
-              // label_bill_to_customer_state_data.setText( invoice.getBillToCustomerStateData() );
-  //            label_bill_to_customer_zipcode_data.setText( invoice.getBillToCustomerZipcodeData() );
+              label_bill_to_customer_city_data.setText( invoice.getBillToCustomerCityData() );
+              label_bill_to_customer_state_data.setText( invoice.getBillToCustomerStateData() );
+              label_bill_to_customer_zipcode_data.setText( invoice.getBillToCustomerZipcodeData() );
               label_bill_to_customer_country_data.setText( invoice.getBillToCustomerCountryData() );
               label_bill_to_customer_phone_number_data.setText( invoice.getBillToCustomerPhoneNumberData() );
               label_bill_to_customer_email_address_data.setText( invoice.getBillToCustomerEmailAddressData());
 
 
-           	  label_ship_to_customer_name_data.setText( customer.getShipToName() );
-			  label_ship_to_customer_address_data.setText( invoice.getShipToCustomerAddressData() );
-              label_ship_to_customer_city_data.setText( invoice.getShipToCustomerCityData() + ", " + invoice.getShipToCustomerStateData() + ", " + invoice.getShipToCustomerZipcodeData()+ ", " + invoice.getShipToCustomerCountryData() );
-
-              label_ship_to_customer_country_data.setText( invoice.getShipToCustomerCountryData() );
-              label_ship_to_customer_phone_number_data.setText( invoice.getShipToCustomerPhoneNumberData() );
-              label_ship_to_customer_email_address_data.setText( invoice.getShipToCustomerEmailAddressData());
-
-              
-              
 //			  invoice.setShipToCustomerCodeData(customer_management_system.getCustomerShipToName(customer_selected));
 //			  invoice.setShipToCustomerAddressData(customer_management_system.getCustomerShipToAddress(customer_selected));
 //			  invoice.setShipToCustomerCityData(customer_management_system.getCustomerShipToName(customer_selected));
@@ -2961,8 +2774,8 @@ public void focusLost(FocusEvent e) {
           if( temp.getName().equalsIgnoreCase("sales_report_button"))
           {
         	  try { 
-        	      Desktop.getDesktop().browse(new URI("https://lockwind.com/test/SalesReport.php"));
-        		  // downloadAPILineItem();
+        	        // Desktop.getDesktop().browse(new URI("https://lockwind.com/test/SalesReport.php"));
+        		  downloadAPILineItem();
         	    } catch (Exception e1) {
         	        e1.printStackTrace();
         	    }
@@ -3714,7 +3527,7 @@ if(inputQty == null || (inputQty != null && ("".equals(inputQty))))          {
 */
   
   
-  public void downloadAPILineItem() 
+  public void downloadAPILineItem( ) 
   { 
 	  
 	  System.out.println("Function Action: downloadLineItem -> row: " + i);
@@ -3933,11 +3746,6 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
       System.out.println("Register->@tenderAction()");
       System.out.println("Register -> Invoice Number: " + invoice.getInvoiceNumber() + " -> UUID: " + invoice.getTransactionUUID() );
 
-      if(line_item.getDescription().equalsIgnoreCase("") ) {
-    	  
-    	  JOptionPane.showMessageDialog(null, "Error:  line Item is null.");
-
-      }else {
       
       System.out.println( "LINE ITEM STATE: -- >"  + line_item.toString() );
       
@@ -4218,22 +4026,20 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 			// catch(Exception e){ System.out.println(e.toString() ); }
 			
 			}else{
-			}
 			
 			
 			
-				/*
 			if(registerStatus == true){
+			
 			
 			  try { 
 
- 				  register_verifone.captureCardEarlyReturn();
-
+//				  register_verifone.captureCardEarlyReturn();
 				  Thread.sleep(1000);
-				  register_verifone.authorizeCard();
+//				  register_verifone.authorizeCard();
 				  Thread.sleep(1000);
- 					register_verifone.endSession();
-				  Thread.sleep(2000);
+ // register_verifone.endSession();
+//				  Thread.sleep(2000);
 
 				  }catch(Exception verifone_exception) {
 					  System.out.println(verifone_exception.toString());
@@ -4241,20 +4047,15 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
 }else { 
 System.out.println("Register tenderAction Error: Credit card payment terminal cannot be reached");
 }
-			}
-
-*/
-
-			
-      } // close out check to see if line_item is null or not -> if not do not proess.
 				
+			}
   } // close function tenderAction(double)
   
 
   
-public static void main(String[] args){Register test = new Register();
+public static void main(String[] args){Register2 test = new Register2();
 
-System.out.println("This is Lockwind POS Version 4.15 with a modification date of 1/2/25");
+System.out.println("This is Lockwind POS Version 4.14 with a modification date of 6/4/24");
 System.out.println("\n\n********************************************************************************");
 // test.printMethods(); -> this method can be used to view the stack of methods currently operating.
 }

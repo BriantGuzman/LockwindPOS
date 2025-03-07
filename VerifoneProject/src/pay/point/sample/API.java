@@ -106,6 +106,7 @@ public class API {
 	}
 	 
 	 public void updateLineItemStatus(String uuid[],String action[]) {
+	// Current method used to update the line item status on  the cloud from the Register.java file.
 		 try {
 		 
 			 this.sendPost("https://lockwind.com/test/TM/AddTransactionLineItemAPIv2.php", uuid,action);

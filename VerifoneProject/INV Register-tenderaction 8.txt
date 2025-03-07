@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 6/2/24    11:10:46 AM   Invoice No: 8
+ 1/6/25    08:51:51 PM   Invoice No: 8
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,22 +14,19 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   801654111254         NAIL CUTTER LARGE1.99
- NAIL CUTTER                               
+ 2   2332334458911       POWER CLEAN HEAVY DUTY TRASH BAGS 55 GALLONS27.99
+ TRASH BAG                                 
 
- 1   645397939160        NEBO COLUMBO KEYCHAIN FLASHLIGHT11.99
- FLASHLIGHT                                
+                         SUB TOTAL $55.98
+                         SALES TAX $5.02
+                         TOTAL     $61.00
 
-                         SUB TOTAL $13.98
-                         SALES TAX $1.25
-                         TOTAL     $15.23
-
-                         TENDERED  $20.00
-                         CHANGE    $4.77
+                         TENDERED  $100.00
+                         CHANGE    $39.00
                          
 Addenda: 
                          
-Line Item Count: 2
+Line Item Count: 1
                          
 Unit Item Count: 2.0
 ----------------------------------------

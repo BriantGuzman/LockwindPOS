@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Scanner;
 
+import javax.swing.JOptionPane;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -220,7 +221,9 @@ public class ElectronicDocument extends ServiceData {
 	     transaction_type		 = "";
 	     transaction_number		 = "";
 	     
-		 invoice_number 		 = "";
+		 invoice_number 		 = "-1";
+		 JOptionPane.showMessageDialog(null,"Electronic Document Invoice Number =" + invoice_number);
+		 
 		 po_number			 	 = "";
 	     
 	     transaction_number      = "";
@@ -262,7 +265,11 @@ public class ElectronicDocument extends ServiceData {
 	     line_item_manager 		= new ElectronicDocumentLineItemManager();
 		 this.setIssuerUUID(issuer_uuid);
 		 this.setInvoiceNumber();
+		 
+		 if(this.getInvoiceNumber().equalsIgnoreCase("") ) {
+		 }else {
 		 this.setTransactionUUID( this.getIssuerUUID() );
+		 }
 	 }
 
 	 // ************************************************************************************************************************
@@ -282,10 +289,11 @@ public class ElectronicDocument extends ServiceData {
 		  API http = new API();
 		 
 		 this.setInvoiceNumber();
-		 this.transaction_uuid = http.getTransactionUUID( this.getIssuerUUID(), this.getInvoiceNumber());
-			
-			System.out.println("Result: ElectronicDocument->setTransactionUUID: -> " + http.getTransactionUUID( this.getIssuerUUID(), this.getInvoiceNumber()));
-			System.out.println("Result: ElectronicDocument->setTransactionUUID: -> " + this.transaction_uuid);
+		 
+		 // When the internet is not working the program should still load but not request a transaction UUID.
+		  this.transaction_uuid = http.getTransactionUUID( this.getIssuerUUID(), this.getInvoiceNumber());	
+			 System.out.println("Result: ElectronicDocument->setTransactionUUID: -> " + http.getTransactionUUID( this.getIssuerUUID(), this.getInvoiceNumber()));
+			 System.out.println("Result: ElectronicDocument->setTransactionUUID: -> " + this.transaction_uuid);
 			
 		 }catch(Exception e) {
 //				System.out.println("Result: ElectronicDocument->setTransactionUUID: -> " + this.transaction_uuid);
@@ -297,9 +305,13 @@ public class ElectronicDocument extends ServiceData {
 
 	 // INVOICE NUMBER
 	 private void setInvoiceNumber() {
-		  try { 
-			  	http = new API();
-				String temp = http.getCurrentInvoiceNumber(this.getIssuerUUID());
+		 
+		 // If the internet is not working set the invoice number to -401.
+
+		 try { 
+//			  	http = new API();
+			  	String temp = http.getCurrentInvoiceNumber(this.getIssuerUUID());
+				
 
 				if( this.getIssuerUUID() == null || this.getIssuerUUID().equalsIgnoreCase("") ) { 
 					System.out.println("System Error:  ElectronicDocument-> setInvoiceNumber() retailer uuid is required");
@@ -310,8 +322,7 @@ public class ElectronicDocument extends ServiceData {
 
 					if(temp.equalsIgnoreCase("java.net.UnknownHostException: lockwind.com")) { invoice_number = "-401"; }
 					else { 
-						
-						
+												
 						invoice_number = temp; 
 						System.out.println("Result: ElectronicDocument->setInvoiceNumber -> " + temp);
 						System.out.println("Result: ElectronicDocument-> invoice_number -> " + invoice_number);
@@ -319,11 +330,14 @@ public class ElectronicDocument extends ServiceData {
 					} }
 
 			} catch(Exception e){ }
+		 
 	 }
 //	 public void 		setInvoiceNumber(String invoice_number) { this.invoice_number = invoice_number; }
 	 public String 		getInvoiceNumber() {  
-		 if( invoice_number.equalsIgnoreCase("") || invoice_number == null)  { this.setInvoiceNumber(); }else { }
-		 return this.invoice_number; }
+		 invoice_number = "1";
+//		 if( invoice_number.equalsIgnoreCase("") || invoice_number == null)  { this.setInvoiceNumber(); }else { }
+		 return this.invoice_number; 
+	 }
 //	 public String 		getInvoiceNumber() { setInvoiceNumber(); return this.invoice_number; }
 
 	 // SYSTEM OF ORIGIN
@@ -571,7 +585,10 @@ public class ElectronicDocument extends ServiceData {
 
 	 public void 		setShipToCustomerNameData(String value){ label_ship_to_customer_name_data = value; }
 	 public String 		getShipToCustomerNameData(){ return label_ship_to_customer_name_data; }
-		 
+
+	 public void 		setShipToCustomerCodeData(String value){ label_ship_to_customer_code_data = value; }
+	 public String 		getShipToCustomerCodeData(){ return label_ship_to_customer_code_data; }
+
 	 public void 		setShipToCustomerAddressLabel(String value) { label_ship_to_customer_address = value; }
 	 public String 		getShipToCustomerAddressLabel(){ return label_ship_to_customer_address; }
 	 

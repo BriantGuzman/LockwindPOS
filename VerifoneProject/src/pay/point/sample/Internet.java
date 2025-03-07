@@ -22,10 +22,10 @@ class Internet {
 	         temp = "Internet connected";
 	         //         System.out.println("Internet is connected");
 	     } catch (MalformedURLException e) {
-	         temp = "No Internet available";
+	         temp = "No Internet";
 	         // System.out.println("Internet is not connected");
 	     } catch (IOException e) {
-	         temp = "No Internet available";
+	         temp = "No Internet";
 	         //         System.out.println("Internet is not connected");
 	     }
 	     return temp;

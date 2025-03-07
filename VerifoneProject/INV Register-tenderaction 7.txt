@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 6/2/24    11:02:21 AM   Invoice No: 7
+ 1/6/25    07:32:43 PM   Invoice No: 7
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,15 +14,15 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+ 1   081099008450        US GYPSUM COMPOUND24.99
+ COMPOUND                                  
 
-                         SUB TOTAL $2.99
-                         SALES TAX $0.27
-                         TOTAL     $3.26
+                         SUB TOTAL $24.99
+                         SALES TAX $2.24
+                         TOTAL     $27.23
 
-                         TENDERED  $10.00
-                         CHANGE    $6.74
+                         TENDERED  $30.00
+                         CHANGE    $2.77
                          
 Addenda: 
                          

@@ -4,7 +4,7 @@
  Phone #: +1 212 740 4652       
 FAX:             
 
- 12/26/24    03:12:13 PM   Invoice No: 4
+ 9/4/24    02:29:00 PM   Invoice No: 23
  CUSTOMER CODE: CASH
  CUSTOMER Name: CASH
  CUSTOMER Phone Number: CASH
@@ -14,24 +14,21 @@ FAX:
 ----------------------------------------
  QTY UPC                 PRICE  SUBTOTAL
  DESCRIPTION                            
- 1   20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+ 1   671052596751        GERBER 8 SPT WALL MOUNT CENTER KITCHEN FAUCET169.99
+ FAUCET                                    
 
- 10  20                  GENERAL_PRODUCT_CODES PRODUCT A2.99
- GENERAL PRODUCT CODES                     
+                         SUB TOTAL $169.99
+                         SALES TAX $15.26
+                         TOTAL     $185.25
 
-                         SUB TOTAL $32.89
-                         SALES TAX $2.95
-                         TOTAL     $35.84
-
-                         TENDERED  $40.00
-                         CHANGE    $4.16
+                         TENDERED  $200.00
+                         CHANGE    $14.75
                          
 Addenda: 
                          
-Line Item Count: 3
+Line Item Count: 1
                          
-Unit Item Count: 11.0
+Unit Item Count: 1.0
 ----------------------------------------
 THANKS FOR SHOPPING AT 165 St. Hardware Inc. 
 

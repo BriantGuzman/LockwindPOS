@@ -86,71 +86,28 @@ public class Customer extends ServiceData {
 	  
 	  
 		// SHIP TO CUSTOMER INFORMATION = MUTATORS
-  	  public void setCustomerShipToCode(String x) {
-	  ship_to_customer_code_data			= 	x;
-	  }
+  	  public void setShipToCode(String x) 			{ ship_to_customer_code_data			= 	x; }
+  	  public void setShipToCodeData(String x) 		{ ship_to_customer_code_data			= 	x; }
+  	  public void setShipToName(String x) 			{ ship_to_customer_name_data			= 	x; }
+  	  public void setShipToAddress(String x)		{  ship_to_customer_address_data		= 	x; }
+  	  public void setShipToCity(String x) 			{ ship_to_customer_city_data			= 	x; }
+  	  public void setShipToState(String x) 			{ ship_to_customer_state_data			= 	x; }
+  	  public void setShipToZipcode(String x)		{ ship_to_customer_zipcode_data			= 	x; }
+  	  public void setShipToCountry(String x)		{  ship_to_customer_country_data		= 	x; }
+  	  public void setShipToPhoneNumber(String x) 	{ ship_to_customer_phone_number_data	= 	x; }
+  	  public void setShipToEmailAddress(String x) 	{ ship_to_customer_email_address_data	= 	x; }
 
-	  	  public void setCustomerShipToName(String x) {
-		  ship_to_customer_name_data			= 	x;
-		  }
-		  public void setCustomerShipToAddress(String x) { 
-		  ship_to_customer_address_data		= 	x;
-		  }
+		// SHIP TO CUSTOMER INFORMATION = ACCESSORS
 
-		  public void setCustomerShipToCity(String x) {
-		  ship_to_customer_city_data			= 	x;
-		  }
-
-		  public void setCustomerShipToState(String x) {
-		  ship_to_customer_state_data		= 	x;
-		  }
-
-		  public void setCustomerShipToZipcode(String x) {
-		  ship_to_customer_zipcode_data		= 	x;
-		  }
-		  public void setCustomerShipToCountry(String x) { 
-		  ship_to_customer_country_data		= 	x;
-		  }
-		  public void setCustomerShipToPhoneNumber(String x) { 
-		  ship_to_customer_phone_number_data	= 	x;
-		  }
-		  public void setCustomerShipToEmailAddress(String x) { 
-		  ship_to_customer_email_address_data	= 	x;
-
-		  }
-			// SHIP TO CUSTOMER INFORMATION = ACCESSORS
-
-		  public String getCustomerShipToCode() {
-		  return ship_to_customer_code_data;
-		  }
-		  public String getCustomerShipToName() {
-		  return ship_to_customer_name_data;
-		  }
-
-		  public String getCustomerShipToAddress() { 
-		  return ship_to_customer_address_data;
-		  }
-
-		  public String getCustomerShipToCity() {
-		  return ship_to_customer_city_data;
-		  }
-
-		  public String getCustomerShipToState() {
-		  return ship_to_customer_state_data;
-		  }
-
-		  public String getCustomerShipToZipcode() {
-		  return ship_to_customer_zipcode_data;
-		  }
-		  public String getCustomerShipToCountry() { 
-		  return ship_to_customer_country_data;
-		  }
-		  public String getCustomerShipToPhoneNumber() { 
-		  return ship_to_customer_phone_number_data;
-		  }
-		  public String getCustomerShipToEmailAddress() { 
-		  return ship_to_customer_email_address_data;
-		  }
+  	  public String getShipToCode() 		{ return ship_to_customer_code_data; }
+  	  public String getShipToName() 		{ return ship_to_customer_name_data; }
+  	  public String getShipToAddress() 		{  return ship_to_customer_address_data; }
+  	  public String getShipToCity() 		{ return ship_to_customer_city_data; }
+  	  public String getShipToState() 		{ return ship_to_customer_state_data; }
+  	  public String getShipToZipcode() 		{ return ship_to_customer_zipcode_data; }
+  	  public String getShipToCountry() 		{ return ship_to_customer_country_data; }
+  	  public String getShipToPhoneNumber() 	{ return ship_to_customer_phone_number_data; }
+  	  public String getShipToEmailAddress() {  return ship_to_customer_email_address_data; }
 	  
 	  
 

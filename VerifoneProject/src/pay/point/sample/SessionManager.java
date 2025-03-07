@@ -74,7 +74,6 @@ testCases()
 public class SessionManager extends JFrame implements WindowListener {
 
 	private SampleClientRegisterEncryption verifone;
-
 	
 	public SessionManager(String address, int port, int secondary_port) {
     
@@ -145,10 +144,6 @@ public class SessionManager extends JFrame implements WindowListener {
         JButton setIdleScreenButton 	= new JButton("Set Message for Idle Screen");
         JButton laneClosedButton 		= new JButton("Lane Closed");
         JButton displayMessage			= new JButton("Display Message"); // Will show balance due
-        
-        
-        
-        
 
         // Add button listeners
         registerPOSButton.addActionListener(new ActionListener() {
@@ -696,14 +691,15 @@ public class SessionManager extends JFrame implements WindowListener {
     	   setIdleScreenButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-            	try { 
-                verifone.setIdleScreen();
-            	}catch(Exception ee) { 
             	
+            	try { 
+                
+            		verifone.setIdleScreen();
+            	
+            	} catch(Exception ee) { 
             	System.out.println("Exception e SessionManager -> setIdleScreen Button");
             	ee.printStackTrace();
             	}
-            	
             }
         });
         
@@ -716,9 +712,7 @@ public class SessionManager extends JFrame implements WindowListener {
             	
             	System.out.println("Exception e SessionManager -> Lane Closed Button");
             	ee.printStackTrace();
-            	
             	}
-            	
             }
         });
         
@@ -733,9 +727,7 @@ public class SessionManager extends JFrame implements WindowListener {
             	
             	System.out.println("Exception e SessionManager -> Display Message Button");
             	ee.printStackTrace();
-            	
             	}
-            	
             }
         });
         
@@ -757,12 +749,9 @@ public class SessionManager extends JFrame implements WindowListener {
         
         add(unregisterPOSButton);
         add(unregisterPOSAll);
-
         
         add(startSessionButton);
         add(endSessionButton);
-        
-        
         
         add(addLineItem);
         add(overrideLineItem);
@@ -803,7 +792,6 @@ public class SessionManager extends JFrame implements WindowListener {
         add(laneClosedButton);
         add(displayMessage);
         
-        
     }
 
 	
@@ -819,7 +807,6 @@ public class SessionManager extends JFrame implements WindowListener {
 	// overriding windowClosing() method of WindowListener interface which prints the given string when we attempt to close window from system menu  
 	public void windowClosing (WindowEvent arg0) {    
 	    System.out.println("JFrame Window closing");
-	    
 	    dispose();    
 	}    
 	  

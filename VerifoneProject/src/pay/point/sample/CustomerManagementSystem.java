@@ -6,6 +6,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.StringTokenizer;
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLEncoder;
 
 public class CustomerManagementSystem extends Service {
 	 
@@ -37,12 +43,23 @@ public class CustomerManagementSystem extends Service {
 	 {
 		// This method should be documented and implemented
 		 
-		boolean found = false;
 		int i = 0;
-		
+		boolean found = false;
 		Customer customer_temp = null;
-		// customer_temp = new Customer("Generic");
-		customer_temp = new Customer(customer_code);
+		
+		while(i < customerList.size() ) {
+			
+			customer_temp = customerList.get(i);
+			if(customer_temp.getBillToCode().equalsIgnoreCase(customer_code))
+			{
+				i = customerList.size();
+			}
+			else { 
+				i++;
+			}
+			System.out.println(i);
+		}
+		
 		try { 
 
 			}catch(Exception e) {
@@ -50,7 +67,7 @@ public class CustomerManagementSystem extends Service {
 				System.out.println("Error at CustomerManagementSystem.getCustomerTarget ");
 		
 			}
-		return customer;
+		return customer_temp;
 	 }
 
 
@@ -92,6 +109,102 @@ public class CustomerManagementSystem extends Service {
 	 }
 
 	 
+	 
+	 /*
+	 public void loadCustomerDatabase() {
+
+
+	     customerList.clear();
+
+		 
+		    try {
+	            // URL of the resource to fetch
+	            URL url = new URL("https://lockwind.com/test/JAVAPOS_API_GET_CUSTOMER_DATABASE.php");
+
+	            // Open connection to the URL
+	            HttpURLConnection connection = (HttpURLConnection) url.openConnection();
+	            connection.setRequestMethod("POST");
+	            connection.setDoOutput(true);
+
+	            // Add POST parameters
+	            String urlParameters = "client_id=" + URLEncoder.encode("27", "UTF-8");
+
+	            // Send POST request
+	            DataOutputStream out = new DataOutputStream(connection.getOutputStream());
+	            out.writeBytes(urlParameters);
+	            out.flush();
+	            out.close();
+
+	            // Check for successful response
+	            int responseCode = connection.getResponseCode();
+	            if (responseCode == HttpURLConnection.HTTP_OK) {
+
+	                // Read the response from the input stream
+	                BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream()));
+	                String line;
+	                List<Customer> customers = new ArrayList<>();
+
+	                // Parse each line
+	                while ((line = in.readLine()) != null) {
+	                    StringTokenizer str = new StringTokenizer(line, ",");
+	                    
+	                    if (str.hasMoreTokens()) {
+		                    customer = null;
+	                        Customer customer = new Customer();
+	                        customer.setBillToCode(str.nextToken());
+	                        System.out.println(customer.getBillToCode());
+	                        
+	                        customer.setBillToName(str.nextToken());
+	                        System.out.println(customer.getBillToName());
+	                        
+	                        customer.setBillToPhoneNumber(str.nextToken());
+	                        System.out.println(customer.getBillToPhoneNumber());
+	                        
+	                        customer.setBillToEmailAddress(str.nextToken());
+	                        System.out.println(customer.getBillToEmailAddress());
+	                        
+	                        customer.setBillToAddress(str.nextToken());
+	                        System.out.println(customer.getBillToAddress());
+
+	                        customer.setBillToCity(str.nextToken());
+	                        System.out.println(customer.getBillToCity());
+	                        
+	                        customer.setBillToState(str.nextToken());
+	                        System.out.println(customer.getBillToState());
+	                        
+	                        customer.setBillToZipcode(str.nextToken());
+	                        System.out.println(customer.getBillToZipcode());
+	                        
+	                        customer.setBillToCountry(str.nextToken());
+	                        System.out.println(customer.getBillToCountry());
+
+	                        
+	                        this.add(customer);
+	                        System.out.println(customer.toString());
+	                        // Optionally, print the customer object
+	                        
+	                    }
+	                }
+
+	                // Close the input stream
+	                in.close();
+
+	                // Output the number of customers processed
+	                System.out.println("Processed " + customers.size() + " customers.");
+	            } else {
+	                System.out.println("POST request failed with response code: " + responseCode);
+	            }
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	        }
+	    }
+		 
+		 */
+		 
+		 
+		 
+
+	 
 	 public void loadCustomerDatabase()
 	 {
 	     customerList.clear();
@@ -105,7 +218,7 @@ public class CustomerManagementSystem extends Service {
 	         str = null;
 	         
 	         
-	         file = new File("NewCustomer.csv");
+	         file = new File("./NewCustomer.csv");
 	         inputFile = new Scanner(file);
 	         customer = null;
 	         
@@ -116,19 +229,47 @@ public class CustomerManagementSystem extends Service {
 	             str =  new StringTokenizer(line,",");
 	             
 	             System.out.println(line);
+	             String x = "";
 	             
 	             if(str.hasMoreTokens())
 	             {
 	                 customer = new Customer();
-	                 customer.setBillToCode( str.nextToken() );
-	                 customer.setBillToName(str.nextToken() );
-	                 customer.setBillToPhoneNumber( str.nextToken() );
-	                 customer.setBillToEmailAddress( str.nextToken() );
-	                 customer.setBillToAddress( str.nextToken() );
-	                 customer.setBillToCity( str.nextToken() );
-	                 customer.setBillToState( str.nextToken() );
-	                 customer.setBillToZipcode( str.nextToken() );
-	                 customer.setBillToCountry( str.nextToken() );
+	                 
+	                 x = str.nextToken();
+	                 customer.setBillToCode( x );
+	                 customer.setShipToCode( x );
+	                 
+	                 x = str.nextToken();
+	                 customer.setBillToName(x);
+	                 customer.setShipToName(x);
+
+	                 x = str.nextToken();
+	                 customer.setBillToPhoneNumber( x );
+	                 customer.setShipToPhoneNumber( x );
+	                 
+	                 x = str.nextToken();
+	                 customer.setBillToEmailAddress( x );
+	                 customer.setShipToEmailAddress( x );
+
+	                 x = str.nextToken();
+	                 customer.setBillToAddress( x );
+	                 customer.setShipToAddress( x );
+
+	                 x = str.nextToken();
+	                 customer.setBillToCity( x );
+	                 customer.setShipToCity( x );
+
+	                 x = str.nextToken();
+	                 customer.setBillToState( x );
+	                 customer.setShipToState( x );
+	                 
+	                 x = str.nextToken();
+	                 customer.setBillToZipcode( x );
+	                 customer.setShipToZipcode( x );
+	                 
+	                 x = str.nextToken();
+	                 customer.setBillToCountry( x );
+	                 customer.setShipToCountry( x );
 	                 
 	                 this.add(customer);
 	                 // System.out.println(customer.toString());
@@ -142,7 +283,7 @@ public class CustomerManagementSystem extends Service {
 	             
 	 
 	 }
-	     
+	    
 	     
 	 public void add(Customer c)
 	 {
@@ -160,12 +301,39 @@ public class CustomerManagementSystem extends Service {
 	 {
 	     
 	     for(int i = 0; i < customerList.size(); i++) {
-	         System.out.println(customerList.get(i).getBillToName());
-			  System.out.println(customerList.get(i).getBillToAddress());
-			  System.out.println(customerList.get(i).getBillToCity());
-			  System.out.println(customerList.get(i).getBillToState());
-			  System.out.println(customerList.get(i).getBillToZipcode());
-			  System.out.println(customerList.get(i).getBillToCountry());
+	    	 
+	          System.out.print(customerList.get(i).getBillToName());
+	          System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToAddress());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToCity());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToState());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToZipcode());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToCountry());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToEmailAddress());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getBillToPhoneNumber());
+
+	          System.out.print(customerList.get(i).getShipToName());
+	          System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToAddress());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToCity());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToState());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToZipcode());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToCountry());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToEmailAddress());
+		      System.out.print(" ");
+			  System.out.print(customerList.get(i).getShipToPhoneNumber());
+			  System.out.println(" ");
 
 	     }
 	 }
@@ -206,8 +374,27 @@ public class CustomerManagementSystem extends Service {
 		 CustomerManagementSystem test = new CustomerManagementSystem();
 		 
 		 test.loadCustomerDatabase();
+		 
+		 System.out.println( " ************************ ");
+/*		 Customer temp = test.getCustomerTarget("ALITA");
+		 
+		 System.out.println ( temp.getBillToName() );
+		 System.out.println ( temp.getBillToCode() );
+		 System.out.println ( temp.getBillToAddress() );
+		 System.out.println ( temp.getBillToCity() );
+		 System.out.println ( temp.getBillToState() );
+		 System.out.println ( temp.getBillToZipcode() );
+		 System.out.println ( temp.getBillToCountry() );
+		 System.out.println ( temp.getBillToPhoneNumber() );
+		 System.out.println ( temp.getBillToEmailAddress() );
+	 
+		 // test.printCustomerList();
+		 
+		  * */
 		 test.printCustomerList();
-		 System.out.println("Finished printing customer database");
+		System.out.println("CustomerManagementSystem -> Completed Action -> Load Customer Database");
+		 System.out.println( " ************************ ");
+
 		 System.exit(0);
 	 }
 	 
