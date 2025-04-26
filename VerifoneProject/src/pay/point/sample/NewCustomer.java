@@ -143,7 +143,8 @@ public class NewCustomer {
     public void setFrame()
     {
         frame = new JFrame();
-        frame.setPreferredSize(new Dimension(getScreenWidth()/2,getScreenHeight()/2));
+//        frame.setPreferredSize(new Dimension(getScreenWidth(),getScreenHeight()));
+      frame.setPreferredSize(new Dimension(400,400) );
         frame.setTitle("CUSTOMER INFORMATION");
     }
 

@@ -219,6 +219,57 @@ public class API {
 	     return response_buffer.toString();
 	     
 	 }
+	 
+	 
+	 public String getVerifoneDeviceAddress(String posUUID) throws Exception {
+	     
+//	     System.out.println("API->getCurrentInvoiceNumber()");
+//	   	 System.out.println("API->getCurrentInvoiceNumber(" + posUUID + ")");
+
+
+	     url = "https://lockwind.com/test/javapos_client_verifone_device_address.php";
+	     obj = new URL(url);
+	     con = (HttpURLConnection) obj.openConnection();
+	     
+	     //add request header
+	     con.setRequestMethod("POST");
+	     con.setRequestProperty("User-Agent", USER_AGENT);
+	     con.setRequestProperty("Accept-Language", "en-US,en;q=0.5");
+	     
+	     String urlParameters = "";
+	     
+	     
+	     urlParameters =  "pos_uuid="+ posUUID +"&" ;
+	     
+	     // Send post request
+	     con.setDoOutput(true);
+	     wr = new DataOutputStream(con.getOutputStream());
+	     wr.writeBytes(urlParameters);
+	     wr.flush();
+	     wr.close();
+	     
+	     responseCode = con.getResponseCode();
+	     System.out.println("\nSending 'POST' request to URL : " + url);
+	     System.out.println("Post parameters : " + urlParameters);
+	     System.out.println("Response Code : " + responseCode);
+	     
+	     in = new BufferedReader( new InputStreamReader(con.getInputStream()) );
+	     response_buffer = new StringBuffer();
+	     
+	     while ((inputLine = in.readLine()) != null) {
+	         response_buffer.append(inputLine);
+	     }
+	     in.close();
+	     
+	     //print result
+//	     System.out.println(response_buffer.toString());
+	     
+	     return response_buffer.toString();
+	     
+	 }
+	 
+	 
+	 
 
 	 public String IncrementInvoiceNumber(String retailerUUID) throws Exception {
 	     

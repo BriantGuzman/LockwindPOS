@@ -1,4 +1,4 @@
-//Last Update: 4/10/2024
+//Last Update: 4/25/2025
 
 package pay.point.sample;
 
@@ -879,8 +879,22 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 		    bottomPanel									. setLayout(panelLayout);
 
 	  }
+	  public String getVerifoneDeviceAddress(String pos_uuid) {
+		  
+		  String temp = "";
+		  try {
+		  temp = http.getVerifoneDeviceAddress(posUUID);
+		  }catch(Exception e) {
+			  
+			  e.printStackTrace();
+		  }
+		  return temp;
+		  
+	  }
 	  public void setVerifoneDefaultValues() {
-		   	address 									= "192.168.50.198"; // Update this to be set depending on the POS network and verifone IP address per client.
+		  	address										= getVerifoneDeviceAddress(posUUID);
+		  	
+//		   	address 									= "192.168.50.198"; // Update this to be set depending on the POS network and verifone IP address per client.
  		    port 										= 5015;
  		    secondary_port 								= 5016;
  		
@@ -1660,6 +1674,11 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	        menuItem.setName("AddInvoiceComment");
 	        menuItem.setAccelerator(KeyStroke.getKeyStroke( KeyEvent.VK_8, ActionEvent.ALT_MASK));
 	        menuItem.getAccessibleContext().setAccessibleDescription("add invoice comment");
+			menuItem.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent ev) { 
+				//JOptionPane.showMessageDialog(null,"Parking Transaction"); 
+				addenda.requestFocus();
+				}});
 	        menu.add(menuItem);
 
 	        menuItem = new JMenuItem("Restart Program",KeyEvent.VK_C);
@@ -1696,6 +1715,11 @@ public class Register  extends JFrame implements ActionListener,FocusListener {
 	        menuItem.setName("SalesReport");
 	        menuItem.addActionListener(this);
 	        menu.getAccessibleContext().setAccessibleDescription("View the Sales Report");
+	        menuItem.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent ev) { 
+					//JOptionPane.showMessageDialog(null,"Parking Transaction"); 
+					addenda.requestFocus();
+					}});
 	        menu.add(menuItem);
 	        
 	        menuItem = new JMenuItem("Find Receipt",KeyEvent.VK_C);
@@ -2907,13 +2931,23 @@ public void focusLost(FocusEvent e) {
           if( temp.getName().equalsIgnoreCase("verifone_manager"))
           {
 
-      		String verifone_device_address = "192.168.50.198";
-    		int verifone_main_port = 5015;
+      		//String verifone_device_address = "192.168.50.198";
+        	  try { 
+    		String verifone_device_address = http.getVerifoneDeviceAddress(posUUID);
+    		System.out.println();
+    		System.out.println("New Verifone Device Address:\n\n *** " + verifone_device_address + " *** " );
+      		int verifone_main_port = 5015;
     		int verifone_secondary_port = 5016; 
 
       		SessionManager client = new SessionManager(verifone_device_address, verifone_main_port,verifone_secondary_port);
+    		client.setVisible(true);
 
-      		client.setVisible(true);
+        	  }
+        	  catch(Exception exxx)
+        	  {
+        		  exxx.printStackTrace();
+        	  }
+        	  
       		
           }
           
@@ -4072,8 +4106,6 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
           outputFile.println(receipt_spacing + "SALES TAX $"+ format_manager.formatDoubleUS(totaltaxes));
           if(discount != 0.00) {
           outputFile.println(receipt_spacing + "DISCOUNT  $"+ format_manager.formatDoubleUS(discount));} else{}
-          
-          
           outputFile.println(receipt_spacing + "TOTAL     $"+ format_manager.formatDoubleUS(total));
           outputFile.println("");
           outputFile.println(receipt_spacing + "TENDERED  $"+ format_manager.formatDoubleUS(tendered));
@@ -4090,8 +4122,7 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
           outputFile.println("----------------------------------------");
           outputFile.print("THANKS FOR SHOPPING AT");
           
-          store_print_name = " " + invoice.getStoreName().trim() + " ";
-          
+          store_print_name = " " + invoice.getStoreName().trim() + " ";          
           outputFile.println(store_print_name);
           outputFile.println("");
           outputFile.println("For the best Point of Sale System call Lockwind at +1 347 808 5425");
@@ -4121,7 +4152,10 @@ for(int k = 0; k < table.getColumnCount(); k++) // Per column
       
    
 // PrintReceipt function
-     
+
+      
+      
+      
      try {
     	   PrintReceipt test = new PrintReceipt();
     	 System.out.println("Printing receipt to this printer: " + default_printer_receipt.getSelectedItem().toString());
